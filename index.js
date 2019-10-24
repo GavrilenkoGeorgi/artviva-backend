@@ -7,15 +7,8 @@ app.use(cors())
 app.use(bodyParser.json())
 
 // Run the app by serving the static files
-// in the dist directory
+// in the build directory
 app.use(express.static(__dirname + '/build'))
-
-/*
-// For all GET requests, send back index.html
-// so that PathLocationStrategy can be used
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/build/index.html'))
-})*/
 
 let notes = [
   {
@@ -42,11 +35,11 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/notes', (req, res) => {
+app.get('/api/notes', (req, res) => {
   res.json(notes)
 })
 
-app.get('/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   const note = notes.find(note => {
     console.log(note.id, typeof note.id, id, typeof id, note.id === id)
@@ -60,7 +53,7 @@ app.get('/notes/:id', (request, response) => {
   }
 })
 
-app.delete('/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   notes = notes.filter(note => note.id !== id)
 
@@ -74,7 +67,7 @@ const generateId = () => {
   return maxId + 1
 }
 
-app.post('/notes', (request, response) => {
+app.post('/api/notes', (request, response) => {
   const body = request.body
 
   if (!body.content) {
@@ -95,7 +88,7 @@ app.post('/notes', (request, response) => {
   response.json(note)
 })
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
