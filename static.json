@@ -1,0 +1,11 @@
+{
+  "root": "build/",
+  "clean_urls": true,
+  "routes": {
+      "/*.js": "/",
+      "/*.css": "/",
+      "/*.map": "/",
+      "/*.ico": "/",
+      "/**": "index.html"
+  }
+}
