@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+/*
 const url = process.env.MONGODB_URI
 
 mongoose.set('useFindAndModify', false)
@@ -11,7 +12,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
-  })
+  }) */
 
 const noteSchema = new mongoose.Schema({
   content:  {
