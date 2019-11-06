@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../fullstackopen/part2/notes && npm run build --prod && cp -r build ../../../fullstackopenbackend/",
     "deploy": "git push heroku part3-nodejs-and-express:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "node_modules/.bin/eslint ."
   },
   "keywords": [
     "Node.js",
@@ -25,6 +26,7 @@
     "mongoose": "^5.7.6"
   },
   "devDependencies": {
+    "eslint": "^6.6.0",
     "nodemon": "^1.19.4"
   }
 }
