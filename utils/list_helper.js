@@ -1,7 +1,3 @@
-const dummy = blogs => {
-  return 1
-}
-
 const totalLikes = blogsList => {
   if (!blogsList.length) {
     return 0
@@ -79,7 +75,6 @@ const mostLikes = blogsList => {
 }
 
 module.exports = {
-  dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
