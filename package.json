@@ -12,7 +12,8 @@
     "deploy": "git push heroku part3-nodejs-and-express:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "lint": "node_modules/.bin/eslint ."
+    "lint": "node_modules/.bin/eslint .",
+    "sprvise": "npx supervisor index.js"
   },
   "keywords": [
     "Node.js",
