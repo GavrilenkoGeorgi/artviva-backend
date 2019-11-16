@@ -6,17 +6,6 @@ const checkNameAndPass = (name, pass) => {
   const validPass = pass.match(validPassPattern)
 
   return (validName && validPass ? true : false)
-
-  /*
-
-  if(validName && validPass) {
-    return true
-  } else {
-    return false
-  }
-*/
-  // const result = validName && validPass ? true :false
-
 }
 
 module.exports = {
