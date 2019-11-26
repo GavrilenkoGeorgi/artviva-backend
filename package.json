@@ -1,10 +1,10 @@
 {
   "name": "fullstackopen-backend",
-  "version": "0.0.2",
-  "description": "",
+  "version": "0.0.3",
+  "description": "Blog list",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "test:api": "cross-env NODE_ENV=test jest tests/blogs_api.test.js --verbose --runInBand",
