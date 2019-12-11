@@ -10,7 +10,7 @@
     "test:api": "npx jest tests/note_api.test.js --runInBand",
     "test:userapi": "npx jest tests/user_api.test.js --runInBand",
     "build:ui": "rm -rf build && cd ../fullstackopen/part2/notes && npm run build --prod && cp -r build ../../../fullstackopenbackend/",
-    "deploy": "git push heroku part4-notes:master",
+    "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "lint": "eslint .",
