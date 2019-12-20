@@ -7,9 +7,10 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
-    "test:api": "cross-env NODE_ENV=test jest tests/blogs_api.test.js --verbose --runInBand",
-    "build:ui": "rm -rf build && cd ../bloglist-frontend && npm run build --prod && cp -r build ../fullstackopenbackend/",
-    "deploy": "git push heroku master",
+    "test:api": "npx jest tests/note_api.test.js --runInBand",
+    "test:userapi": "npx jest tests/user_api.test.js --runInBand",
+    "build:ui": "rm -rf build && cd ../fullstackopen/part2/notes && npm run build --prod && cp -r build ../../../fullstackopenbackend/",
+    "deploy": "git push heroku part4-notes:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "lint": "node_modules/.bin/eslint .",
@@ -37,8 +38,5 @@
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }
