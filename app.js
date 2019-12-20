@@ -16,18 +16,23 @@ mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connection to MongoDB:', error.message)
-  })
+	.then(() => {
+		logger.info('connected to MongoDB')
+	})
+	.catch((error) => {
+		logger.error('error connection to MongoDB:', error.message)
+	})
 
 app.use(cors())
 app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
+
+if (process.env.NODE_ENV === 'test') {
+	const testingRouter = require('./controllers/testing')
+	app.use('/api/testing', testingRouter)
+}
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
