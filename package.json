@@ -1,7 +1,7 @@
 {
   "name": "fullstackopen-backend",
-  "version": "0.2.0",
-  "description": "Node.js backend with MongoDb",
+  "version": "0.0.3",
+  "description": "Blog list",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
@@ -13,7 +13,8 @@
     "deploy": "git push heroku part4-notes:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "lint": "eslint .",
+    "lint": "node_modules/.bin/eslint .",
+    "sprvise": "npx supervisor index.js",
     "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "keywords": [
