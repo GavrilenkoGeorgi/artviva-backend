@@ -7,9 +7,13 @@ loginRouter.post('/', async (request, response, next) => {
 
 	try {
 		const body = request.body
-		console.log('Request body is', request.body)
-		console.log('Email to search', body.email)
 		const user = await User.findOne({ email: body.email })
+
+		if (!body.password || !body.email) {
+			return response.status(400).json({
+				error: 'router is missing user data'
+			})
+		}
 
 		const passwordCorrect = user === null
 			? false
@@ -20,12 +24,10 @@ loginRouter.post('/', async (request, response, next) => {
 				error: 'invalid username or password'
 			})
 		} else {
-			console.log('User id is: ', user.id)
 			const userForToken = {
 				email: user.email,
 				id: user.id
 			}
-
 			const token = jwt.sign(userForToken, process.env.SECRET)
 
 			return response
