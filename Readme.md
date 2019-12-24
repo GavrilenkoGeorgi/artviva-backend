@@ -1,9 +1,12 @@
-# fullstackopen-backend
-https://flstk-open.herokuapp.com
+## Backend
+### Node.js, Express, MongoDB, Mongoose, Jest, ESLint
+Master branch is on https://flstk-open.herokuapp.com
 
-Backend for the fullstackopen course
+Demo user account: john@aol.com
+Password: Default1
 
-Node.js, Express, MongoDB
+Frontend [repo](https://github.com/GavrilenkoGeorgi/bloglist-frontend)
+
 ### Build Setup
 
 ``` bash
@@ -20,7 +23,7 @@ npm run watch
 npm run test
 
 # run api test
-npm run test:api
+npm run test:userapi
 
 #build react user ui
 npm run build:ui
