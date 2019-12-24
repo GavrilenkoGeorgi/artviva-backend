@@ -1,1 +1,0 @@
-{"version":3,"sources":["notification.css","index.css"],"names":[],"mappings":"AAAA,UACE,oBACF,CAEA,YACE,sBACF,CCJA,EACE,cACF","file":"main.40f5eeac.chunk.css","sourcesContent":["div.ERROR {\r\n  border: 1px solid red;\r\n}\r\n\r\ndiv.SUCCESS {\r\n  border: 1px solid green;\r\n}\r\n","@import url(\"notification.css\");\r\n\r\na {\r\n  padding: 0 .5em;\r\n}\r\n"]}
