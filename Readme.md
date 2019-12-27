@@ -30,4 +30,7 @@ npm run build:ui
 
 #build ui and deploy
 npm run deploy:full
+
+#start in a test environment mode
+npm run start:test
 ```

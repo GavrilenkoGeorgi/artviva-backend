@@ -2,7 +2,17 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 const validateUserCreds = require('../utils/val_user_input').checkNameAndPass
+const jwt = require('jsonwebtoken')
 
+const getTokenFrom = request => {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		return authorization.substring(7)
+	}
+	return null
+}
+
+// create user
 usersRouter.post('/', async (request, response, next) => {
 	try {
 		const body = request.body
@@ -27,9 +37,23 @@ usersRouter.post('/', async (request, response, next) => {
 	}
 })
 
-usersRouter.get('/', async (request, response) => {
-	const users = await User.find({}).populate('blogs', { url: 1, title: 1, author: 1 })
-	response.json(users.map(user => user.toJSON()))
+//get all users
+usersRouter.get('/', async (request, response, next) => {
+	const token = getTokenFrom(request)
+
+	try {
+		const decodedToken = jwt.verify(token, process.env.SECRET)
+		if (!token || !decodedToken.id) {
+			return response.status(401).json({
+				error: 'token is missing or invalid'
+			})
+		}
+
+		const users = await User.find({}).populate('blogs', { url: 1, title: 1, author: 1 })
+		response.json(users.map(user => user.toJSON()))
+	} catch (exception) {
+		next(exception)
+	}
 })
 
 module.exports = usersRouter
