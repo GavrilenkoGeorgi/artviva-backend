@@ -1,11 +1,7 @@
-## Backend
+## ArtViva school backend
 ### Node.js, Express, MongoDB, Mongoose, Jest, ESLint
-Master branch is on https://flstk-open.herokuapp.com
 
-Demo user account: john@aol.com
-Password: Default1
-
-Frontend [repo](https://github.com/GavrilenkoGeorgi/bloglist-frontend)
+Frontend [repo](https://github.com/GavrilenkoGeorgi/artviva-frontend)
 
 ### Build Setup
 
