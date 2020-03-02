@@ -1,7 +1,7 @@
 {
-  "name": "fullstackopen-backend",
-  "version": "0.0.3",
-  "description": "Blog list",
+  "name": "artviva-backend",
+  "version": "0.0.1",
+  "description": "ArtViva school backend",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
@@ -9,7 +9,7 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "test:api": "npx jest tests/note_api.test.js --runInBand",
     "test:userapi": "npx jest tests/user_api.test.js --runInBand",
-    "build:ui": "rm -rf build && cd ../bloglist-frontend && npm run build --prod && cp -r build ../fullstackopenbackend/",
+    "build:ui": "rm -rf build && cd ../artviva-frontend && npm run build --prod && cp -r build ../artviva-backend/",
     "deploy": "git push heroku deploy:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
