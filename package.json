@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
-    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "test:api": "npx jest tests/note_api.test.js --runInBand",
     "test:userapi": "npx jest tests/user_api.test.js --runInBand",

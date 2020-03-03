@@ -21,7 +21,7 @@ loginRouter.post('/', async (request, response, next) => {
 
 		if (!(user && passwordCorrect)) {
 			return response.status(401).json({
-				error: 'invalid username or password'
+				error: 'Невірна адреса електронної пошти або пароль.'
 			})
 		} else {
 			const userForToken = {
