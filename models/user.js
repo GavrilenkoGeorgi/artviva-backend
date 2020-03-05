@@ -7,12 +7,25 @@ const userSchema = mongoose.Schema({
 		unique: true,
 		max: 45
 	},
-	username: {
+	name: {
+		type: String,
+		min: 3,
+		max: 45
+	},
+	middlename: {
+		type: String,
+		min: 3,
+		max: 45
+	},
+	lastname: {
 		type: String,
 		min: 3,
 		max: 45
 	},
 	passwordHash: String,
+	activationHash: String,
+	passResetHash: String,
+	passResetHashExpiresAt: Date,
 	blogs: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
