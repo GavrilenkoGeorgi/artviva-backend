@@ -2,11 +2,11 @@ const emailRouter = require('express').Router()
 const nodemailer = require('nodemailer')
 const mg = require('nodemailer-mailgun-transport')
 
-emailRouter.post('/send/contact', async (request, response, next) => {
+emailRouter.post('/contact', async (request, response, next) => {
 
-	const { name, senderEmail, message } = { ...request.body }
+	const { name, email, message } = { ...request.body }
 
-	if (!name || !senderEmail || !message) {
+	if (!name || !email || !message) {
 		return response.status(422).json({
 			error: 'Не вдається надіслати електронний лист, деякі поля даних відсутні.'
 		})
@@ -28,17 +28,17 @@ emailRouter.post('/send/contact', async (request, response, next) => {
 						Від: ${name}
 					</li>
 					<li>
-						Електронна пошта: ${senderEmail}
+						Електронна пошта: ${email}
 					</li>
 					<li>
 						Повідомлення: ${message}
 					</li>
 				</ul>`
 
-			const textOutput = `У вас є повідомлення від ${name}. Електронна пошта: ${senderEmail} Повідомлення: ${message}`
+			const textOutput = `У вас є повідомлення від ${name}. Електронна пошта: ${email} Повідомлення: ${message}`
 
 			nodemailerMailgun.sendMail({
-				from: senderEmail,
+				from: email,
 				to: process.env.TEST_EMAIL,
 				subject: 'Повідомлення з сайту ArtViva',
 				text: textOutput,
