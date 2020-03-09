@@ -7,13 +7,25 @@ const userSchema = mongoose.Schema({
 		unique: true,
 		max: 45
 	},
-	username: {
+	name: {
 		type: String,
 		min: 3,
 		max: 45
 	},
-	// name: String,
+	middlename: {
+		type: String,
+		min: 3,
+		max: 45
+	},
+	lastname: {
+		type: String,
+		min: 3,
+		max: 45
+	},
 	passwordHash: String,
+	activationHash: String,
+	passResetHash: String,
+	passResetHashExpiresAt: Date,
 	blogs: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +39,7 @@ userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {
 	transform: (document, returnedObject) => {
 		returnedObject.id = returnedObject._id.toString()
-		// delete returnedObject._id
+		delete returnedObject._id
 		delete returnedObject.__v
 		// the passwordHash should not be revealed
 		delete returnedObject.passwordHash

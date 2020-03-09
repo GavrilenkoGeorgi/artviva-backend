@@ -17,20 +17,25 @@ usersRouter.post('/', async (request, response, next) => {
 	try {
 		const body = request.body
 
-		if (validateUserCreds(body.email, body.username, body.password)) {
+		if (validateUserCreds(body.email, body.name, body.middlename, body.lastname, body.password)) {
 			const saltRounds = 10
 			const passwordHash = await bcrypt.hash(body.password, saltRounds)
 			const user = new User({
 				email: body.email,
-				username: body.username,
-				passwordHash
+				name: body.name,
+				middlename: body.middlename,
+				lastname: body.lastname,
+				passwordHash,
+				activationHash: '',
+				passResetHash: '',
+				passResetHashExpiresAt: '',
 			})
 
 			const savedUser = await user.save()
 
 			response.json(savedUser)
 		} else {
-			return response.status(400).json({ error: 'check username and/or password input' })
+			return response.status(400).json({ error: 'Перевірте ім\'я користувача та/або пароль.' })
 		}
 	} catch (exception) {
 		next(exception)
@@ -45,7 +50,7 @@ usersRouter.get('/', async (request, response, next) => {
 		const decodedToken = jwt.verify(token, process.env.SECRET)
 		if (!token || !decodedToken.id) {
 			return response.status(401).json({
-				error: 'token is missing or invalid'
+				error: 'Токен відсутній або недійсний.'
 			})
 		}
 

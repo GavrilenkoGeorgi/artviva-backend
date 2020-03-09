@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
-    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "test:api": "npx jest tests/note_api.test.js --runInBand",
     "test:userapi": "npx jest tests/user_api.test.js --runInBand",
@@ -30,12 +30,14 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.6",
-    "mongoose-unique-validator": "^2.0.3"
+    "mongoose-unique-validator": "^2.0.3",
+    "nodemailer": "^6.4.4",
+    "nodemailer-mailgun-transport": "^2.0.0"
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
     "eslint": "^6.6.0",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
   }
