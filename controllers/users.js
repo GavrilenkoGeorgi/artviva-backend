@@ -3,6 +3,7 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 const validateUserCreds = require('../utils/val_user_input').checkNameAndPass
 const jwt = require('jsonwebtoken')
+const requestPromise = require('request-promise')
 
 const getTokenFrom = request => {
 	const authorization = request.get('authorization')
@@ -56,6 +57,35 @@ usersRouter.get('/', async (request, response, next) => {
 
 		const users = await User.find({}).populate('blogs', { url: 1, title: 1, author: 1 })
 		response.json(users.map(user => user.toJSON()))
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// verify user recaptcha score
+usersRouter.post('/recaptcha/verify', async (request, response, next) => {
+	try {
+		const data = request.body
+
+		if (!data.captchaResp) {
+			return response.status(400).json({
+				error: 'Відсутня відповідь recaptcha з фронтенда.'
+			})
+		}
+
+		const options = {
+			method: 'POST',
+			uri: 'https://www.google.com/recaptcha/api/siteverify',
+			form: {
+				secret: process.env.RECAPTCHA_SECRET_KEY,
+				response: data.captchaResp
+			},
+			json: true // Automatically stringifies the body to JSON
+		}
+
+		const result = await requestPromise(options)
+		return response.status(200).json({ result })
+
 	} catch (exception) {
 		next(exception)
 	}
