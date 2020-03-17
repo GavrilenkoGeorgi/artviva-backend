@@ -22,8 +22,12 @@ const userSchema = mongoose.Schema({
 		min: 3,
 		max: 45
 	},
+	isActive: {
+		type: Boolean,
+		default: false
+	},
 	passwordHash: String,
-	activationHash: String,
+	activationUUID: String,
 	passResetHash: String,
 	passResetHashExpiresAt: Date,
 	blogs: [

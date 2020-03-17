@@ -34,7 +34,8 @@
     "nodemailer": "^6.4.4",
     "nodemailer-mailgun-transport": "^2.0.0",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
