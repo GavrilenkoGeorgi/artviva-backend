@@ -10,6 +10,7 @@ const emailRouter = require('./controllers/email')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 const logger = require('./utils/logger')
+const path = require('path')
 
 logger.info('connecting to', config.MONGODB_URI)
 
@@ -33,6 +34,15 @@ app.use(middleware.requestLogger)
 if (process.env.NODE_ENV === 'test') {
 	const testingRouter = require('./controllers/testing')
 	app.use('/api/testing', testingRouter)
+}
+
+if (process.env.NODE_ENV === 'production') {
+	// Serve any static files
+	app.use(express.static(path.join(__dirname, 'build')))
+	// Handle React routing, return all requests to React app
+	app.get('*', function(req, res) {
+		res.sendFile(path.join(__dirname, 'build', 'index.html'))
+	})
 }
 
 app.use('/api/blogs', blogsRouter)
