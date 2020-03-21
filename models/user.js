@@ -26,9 +26,20 @@ const userSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	passwordHash: String,
-	activationUUID: String,
-	passResetHash: String,
+	passwordHash: {
+		type: String,
+		unique: true,
+		max: 60
+	},
+	activationUUID: {
+		type: String,
+		unique: true,
+		max: 36
+	},
+	passResetHash: {
+		type: String,
+		unique: true
+	},
 	passResetHashExpiresAt: Date,
 	blogs: [
 		{

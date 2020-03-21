@@ -1,13 +1,7 @@
 const emailRouter = require('express').Router()
 const nodemailer = require('nodemailer')
 const mg = require('nodemailer-mailgun-transport')
-
-const mailerCreds = {
-	auth: {
-		api_key: process.env.MAILGUN_API_KEY,
-		domain: process.env.MAILGUN_DOMAIN
-	}
-}
+const mailerCreds = require('../utils/mailerCreds').mailerCreds
 
 // send account activation email
 emailRouter.post('/activation', async (request, response, next) => {
