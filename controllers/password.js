@@ -4,18 +4,44 @@ const User = require('../models/user')
 const validEmail = require('../utils/val_user_input').validateEmail
 const { v4: uuidv4 } = require('uuid')
 const passResetHashExpiry = require('../utils/dateAndTime').passResetHashExpiry
-const nodemailer = require('nodemailer')
-const mg = require('nodemailer-mailgun-transport')
-const mailerCreds = require('../utils/mailerCreds').mailerCreds
+const sendPassResetMessage = require('../utils/sendEmailMessage').sendPassResetMessage
+const sendAccountActivationMessage = require('../utils/sendEmailMessage').sendAccountActivationMessage
 
+// send account activation email
+passwordRouter.post('/activation', async (request, response, next) => {
+
+	const { name, email, activationUUID } = { ...request.body }
+
+	if (!name || !email || !activationUUID) {
+		return response.status(422).json({
+			error: 'Не вдається надіслати електронний лист, деякі поля даних відсутні.'
+		})
+	} else {
+		try {
+			// send activation message
+			const data = {
+				name,
+				email,
+				activationUUID,
+				response
+			}
+			sendAccountActivationMessage(data)
+		} catch (exception) {
+			next(exception)
+		}
+	}
+})
+
+// send password reset email
 passwordRouter.post('/recover', async (request, response, next) => {
 
-	const body = request.body
-	if (!body.email) {
+	const { email } = { ...request.body }
+
+	if (!email) {
 		return response.status(400).json({
 			error: 'Відсутня електронна адреса користувача.'
 		})
-	} else if (!validEmail(body.email)) {
+	} else if (!validEmail(email)) {
 		return response.status(422).json({
 			error: 'Email не є допустимим.'
 		})
@@ -28,7 +54,7 @@ passwordRouter.post('/recover', async (request, response, next) => {
 			const expiryDate = new Date(passResetHashExpiry(1)) // now plus one hour
 
 			// find and update user record
-			const filter = { email: body.email }
+			const filter = { email }
 			const update = {
 				passResetHash: hashedPassResetToken,
 				passResetHashExpiresAt: expiryDate
@@ -40,39 +66,15 @@ passwordRouter.post('/recover', async (request, response, next) => {
 				})
 			}
 
-			// send email message with link
-			const nodemailerMailgun = nodemailer.createTransport(mg(mailerCreds))
-			const htmlOutput = `
-				<h1>Скидання пароля на сайті ArtViva</h1>
-				<ul>
-					<li>
-						Добрий день, ${user.name}.
-					</li>
-					<li>
-						Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/activate/${passResetToken}
-					</li>
-				</ul>`
-			const textOutput = `Добрий день, ${user.name}. Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/activate/${passResetToken}`
+			// send email
+			const data = {
+				name: user.name,
+				email,
+				passResetToken,
+				response
+			}
 
-			nodemailerMailgun.sendMail({
-				from: 'info@artviva.school',
-				to: body.email,
-				subject: 'Скидання пароля на сайті ArtViva',
-				text: textOutput,
-				html: htmlOutput
-			}, (error, info) => {
-				if (error) {
-					return response.status(400).json({
-						message: `Повідомлення не надіслано: ${error}`
-					})
-				}
-				else {
-					return response.status(200).json({
-						message: `Електронна пошта для скидання пароля надіслана: ${info.message}`,
-						user
-					})
-				}
-			})
+			sendPassResetMessage(data)
 		} catch (exception) {
 			next(exception)
 		}
