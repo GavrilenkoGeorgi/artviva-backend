@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
-const validateUserCreds = require('../utils/val_user_input').checkNameAndPass
+const { validateUserRegData } = require('../utils/val_user_input')
 const jwt = require('jsonwebtoken')
 const requestPromise = require('request-promise')
 const { v4: uuidv4 } = require('uuid')
+const { hashString } = require('../utils/hashString')
 
 const getTokenFrom = request => {
 	const authorization = request.get('authorization')
@@ -17,17 +17,22 @@ const getTokenFrom = request => {
 // create user
 usersRouter.post('/', async (request, response, next) => {
 	try {
-		const body = request.body
+		const {
+			email,
+			name,
+			middlename,
+			lastname,
+			password
+		} = { ...request.body }
 
-		if (validateUserCreds(body.email, body.name, body.middlename, body.lastname, body.password)) {
-			const saltRounds = 10
-			const passwordHash = await bcrypt.hash(body.password, saltRounds)
+		if (validateUserRegData(email, name, middlename, lastname, password)) {
+			const passwordHash = await hashString(password)
 			const activationUUID = uuidv4()
 			const user = new User({
-				email: body.email,
-				name: body.name,
-				middlename: body.middlename,
-				lastname: body.lastname,
+				email,
+				name,
+				middlename,
+				lastname,
 				passwordHash,
 				activationUUID
 			})
@@ -80,11 +85,16 @@ usersRouter.get('/:id', async (request, response, next) => {
 usersRouter.post('/activate', async (request, response, next) => {
 	try {
 		const filter = { activationUUID: request.body.uuid }
-		const update = { isActive: true }
+		const update = {
+			isActive: true,
+			activationUUID: null
+		}
 		const user = await User.findOneAndUpdate(filter, update, { new: true })
 
 		if (!user) {
-			return response.status(400).json({ error: 'Користувача не знайдено, перевірте UUID.' })
+			return response.status(400).json({
+				message: 'Користувача не знайдено, перевірте UUID.'
+			})
 		}
 		return response.status(200).json({ user })
 
@@ -96,9 +106,9 @@ usersRouter.post('/activate', async (request, response, next) => {
 // verify user recaptcha score
 usersRouter.post('/recaptcha/verify', async (request, response, next) => {
 	try {
-		const data = request.body
+		const { captchaResp } = { ...request.body }
 
-		if (!data.captchaResp) {
+		if (!captchaResp) {
 			return response.status(400).json({
 				error: 'Відсутня відповідь recaptcha з фронтенда.'
 			})
@@ -109,7 +119,7 @@ usersRouter.post('/recaptcha/verify', async (request, response, next) => {
 			uri: 'https://www.google.com/recaptcha/api/siteverify',
 			form: {
 				secret: process.env.RECAPTCHA_SECRET_KEY,
-				response: data.captchaResp
+				response: captchaResp
 			},
 			json: true // Automatically stringifies the body to JSON
 		}

@@ -69,10 +69,13 @@ const sendPassResetMessage = ({ name, email, passResetToken, response }) => {
 				Добрий день, ${name}.
 			</li>
 			<li>
-				Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/passreset/${passResetToken}
+				Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/reset/${email}/${passResetToken}
+			</li>
+			<li>
+			 <a href="https://artviva.herokuapp.com/reset/${email}/${passResetToken}">Human readable</a>
 			</li>
 		</ul>`
-	const textOutput = `Добрий день, ${name}. Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/passreset/${passResetToken}`
+	const textOutput = `Добрий день, ${name}. Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/reset//${email}/${passResetToken}`
 
 	nodemailerMailgun.sendMail({
 		from: 'info@artviva.school',

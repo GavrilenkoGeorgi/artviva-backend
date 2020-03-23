@@ -1,5 +1,5 @@
 const emailRouter = require('express').Router()
-const sendContactMessage = require('../utils/sendEmailMessage').sendContactMessage
+const { sendContactMessage } = require('../utils/sendEmailMessage')
 
 // send contact email
 emailRouter.post('/contact', async (request, response, next) => {

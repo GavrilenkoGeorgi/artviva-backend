@@ -1,11 +1,9 @@
 const validEmailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
+const validUUIDv4Pattern = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
+const validPassPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+const validNamePattern = /^[^0-9]{3,45}$/
 // check user reg creds
-const checkNameAndPass = (email, name, middlename, lastname, pass) => {
-	// const validEmailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-	const validNamePattern = /^[^0-9]{3,45}$/
-	const validPassPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
-
+const validateUserRegData = (email, name, middlename, lastname, pass) => {
 	const validEmail = email.match(validEmailPattern)
 	const validName = name.match(validNamePattern)
 	const validMiddleName = middlename.match(validNamePattern)
@@ -20,7 +18,19 @@ const validateEmail = email => {
 	return validEmail ? true : false
 }
 
+const validateUUIDv4 = UUID => {
+	const validUUID = UUID.match(validUUIDv4Pattern)
+	return validUUID ? true : false
+}
+
+const validateUserPass = password => {
+	const validPassword = password.match(validPassPattern)
+	return validPassword ? true : false
+}
+
 module.exports = {
-	checkNameAndPass,
-	validateEmail
+	validateUserRegData,
+	validateEmail,
+	validateUUIDv4,
+	validateUserPass
 }
