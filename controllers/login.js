@@ -11,13 +11,13 @@ loginRouter.post('/', async (request, response, next) => {
 			password
 		} = { ...request.body }
 
-		const user = await User.findOne({ email: email })
-
 		if (!password || !email) {
 			return response.status(400).json({
-				error: 'router is missing user data'
+				error: 'Відсутні необхідні поля даних.'
 			})
 		}
+
+		const user = await User.findOne({ email: email })
 
 		const passwordCorrect = user === null
 			? false
@@ -27,24 +27,27 @@ loginRouter.post('/', async (request, response, next) => {
 			return response.status(401).json({
 				error: 'Невірна адреса електронної пошти або пароль.'
 			})
-		} else {
-			const userForToken = {
+		} else if (!user.isActive) return response.status(401).json({
+			error: 'Ви повинні активувати свій акаунт, щоб мати можливість увійти.'
+		})
+
+		const userForToken = {
+			email: user.email,
+			id: user.id
+		}
+		const token = jwt.sign(userForToken, process.env.SECRET)
+
+		return response
+			.status(200)
+			.send({
+				token,
+				name: user.name,
+				middlename: user.middlename,
+				lastname: user.lastname,
 				email: user.email,
 				id: user.id
-			}
-			const token = jwt.sign(userForToken, process.env.SECRET)
+			})
 
-			return response
-				.status(200)
-				.send({
-					token,
-					name: user.name,
-					middlename: user.middlename,
-					lastname: user.lastname,
-					email: user.email,
-					id: user.id
-				})
-		}
 	} catch (exception) {
 		next(exception)
 	}
