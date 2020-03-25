@@ -6,10 +6,14 @@ const User = require('../models/user')
 loginRouter.post('/', async (request, response, next) => {
 
 	try {
-		const body = request.body
-		const user = await User.findOne({ email: body.email })
+		const {
+			email,
+			password
+		} = { ...request.body }
 
-		if (!body.password || !body.email) {
+		const user = await User.findOne({ email: email })
+
+		if (!password || !email) {
 			return response.status(400).json({
 				error: 'router is missing user data'
 			})
@@ -17,7 +21,7 @@ loginRouter.post('/', async (request, response, next) => {
 
 		const passwordCorrect = user === null
 			? false
-			: await bcrypt.compare(body.password, user.passwordHash)
+			: await bcrypt.compare(password, user.passwordHash)
 
 		if (!(user && passwordCorrect)) {
 			return response.status(401).json({
