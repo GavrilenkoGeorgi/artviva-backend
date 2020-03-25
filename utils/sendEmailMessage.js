@@ -15,7 +15,7 @@ const nodemailerMailgun = nodemailer.createTransport(mg(mailerCreds))
  * @returns {Object} - Response with appropriate status code.
  */
 
-const sendAccountActivationMessage= ({ name, email, activationUUID, response }) => {
+const sendAccountActivationMessage = ({ name, email, activationUUID, response }) => {
 
 	const htmlOutput = `
 		<h1>Активація облікового запису на сайті ArtViva</h1>
@@ -24,10 +24,10 @@ const sendAccountActivationMessage= ({ name, email, activationUUID, response }) 
 				Добрий день, ${name}.
 			</li>
 			<li>
-				Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${activationUUID}
+				Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${email}/${activationUUID}
 			</li>
 		</ul>`
-	const textOutput = `Добрий день, ${name}. Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${activationUUID}`
+	const textOutput = `Добрий день, ${name}. Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${email}/${activationUUID}`
 
 	nodemailerMailgun.sendMail({
 		from: process.env.PROD_EMAIL,

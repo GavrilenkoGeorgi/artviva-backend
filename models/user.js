@@ -31,10 +31,10 @@ const userSchema = mongoose.Schema({
 		unique: true,
 		max: 60
 	},
-	activationUUID: {
+	activationHash: {
 		type: String,
 		unique: true,
-		max: 36
+		max: 60
 	},
 	passResetHash: {
 		type: String,
