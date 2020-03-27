@@ -68,8 +68,6 @@ usersRouter.post('/', async (request, response, next) => {
 				response
 			}
 			sendAccountActivationMessage(data)
-			// console.log(data)
-			// return response.status(200).json({ message: ' _message_ ' })
 
 		} else {
 			return response.status(422).json({

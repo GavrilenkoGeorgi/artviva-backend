@@ -13,7 +13,7 @@ loginRouter.post('/', async (request, response, next) => {
 
 		if (!password || !email) {
 			return response.status(400).json({
-				error: 'Відсутні необхідні поля даних.'
+				message: 'Відсутні необхідні поля даних.'
 			})
 		}
 
@@ -25,10 +25,10 @@ loginRouter.post('/', async (request, response, next) => {
 
 		if (!(user && passwordCorrect)) {
 			return response.status(401).json({
-				error: 'Невірна адреса електронної пошти або пароль.'
+				message: 'Невірна адреса електронної пошти або пароль.'
 			})
 		} else if (!user.isActive) return response.status(401).json({
-			error: 'Ви повинні активувати свій акаунт, щоб мати можливість увійти.'
+			message: 'Ви повинні активувати свій акаунт, щоб мати можливість увійти.'
 		})
 
 		const userForToken = {
