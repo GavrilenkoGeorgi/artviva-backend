@@ -42,7 +42,8 @@ usersRouter.post('/', async (request, response, next) => {
 		// check if email is already taken
 		const existingUser = await User.findOne({ email })
 		if (existingUser) return response.status(400).json({
-			message: 'Адреса електронної пошти вже зайнята, вкажіть іншу.'
+			message: 'Адреса електронної пошти вже зайнята, вкажіть іншу.',
+			cause: 'email'
 		})
 
 		if (validateUserRegData(email, name, middlename, lastname, password)) {

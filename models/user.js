@@ -33,12 +33,11 @@ const userSchema = mongoose.Schema({
 	},
 	activationHash: {
 		type: String,
-		unique: true,
 		max: 60
 	},
 	passResetHash: {
 		type: String,
-		unique: true
+		max: 60
 	},
 	passResetHashExpiresAt: Date,
 	blogs: [
