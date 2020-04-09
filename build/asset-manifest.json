@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/static/css/main.426ccdce.chunk.css",
-    "main.js": "/static/js/main.daabc96b.chunk.js",
-    "main.js.map": "/static/js/main.daabc96b.chunk.js.map",
+    "main.css": "/static/css/main.a9609997.chunk.css",
+    "main.js": "/static/js/main.f3d345f4.chunk.js",
+    "main.js.map": "/static/js/main.f3d345f4.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.536e6c63.js",
     "runtime-main.js.map": "/static/js/runtime-main.536e6c63.js.map",
-    "static/js/2.1087de3b.chunk.js": "/static/js/2.1087de3b.chunk.js",
-    "static/js/2.1087de3b.chunk.js.map": "/static/js/2.1087de3b.chunk.js.map",
+    "static/js/2.9c70a034.chunk.js": "/static/js/2.9c70a034.chunk.js",
+    "static/js/2.9c70a034.chunk.js.map": "/static/js/2.9c70a034.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.c1682ba56e3bff60f1ca148d5f86b0f5.js": "/precache-manifest.c1682ba56e3bff60f1ca148d5f86b0f5.js",
+    "precache-manifest.95ad8a9a8a90ae85237f4ab6114704f6.js": "/precache-manifest.95ad8a9a8a90ae85237f4ab6114704f6.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/main.426ccdce.chunk.css.map": "/static/css/main.426ccdce.chunk.css.map",
-    "static/js/2.1087de3b.chunk.js.LICENSE.txt": "/static/js/2.1087de3b.chunk.js.LICENSE.txt",
-    "static/media/close.75851f9d.svg": "/static/media/close.75851f9d.svg",
+    "static/css/main.a9609997.chunk.css.map": "/static/css/main.a9609997.chunk.css.map",
+    "static/js/2.9c70a034.chunk.js.LICENSE.txt": "/static/js/2.9c70a034.chunk.js.LICENSE.txt",
+    "static/media/close.631ba733.svg": "/static/media/close.631ba733.svg",
     "static/media/edit.b57d017b.svg": "/static/media/edit.b57d017b.svg",
     "static/media/facebook.585f4da8.svg": "/static/media/facebook.585f4da8.svg",
     "static/media/instagram.3c142933.svg": "/static/media/instagram.3c142933.svg",
     "static/media/love-song.2fe47c5e.svg": "/static/media/love-song.2fe47c5e.svg",
-    "static/media/menu.9e1f29ce.svg": "/static/media/menu.9e1f29ce.svg",
+    "static/media/menu.13d8cce2.svg": "/static/media/menu.13d8cce2.svg",
     "static/media/origami.1908464c.svg": "/static/media/origami.1908464c.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.536e6c63.js",
-    "static/js/2.1087de3b.chunk.js",
-    "static/css/main.426ccdce.chunk.css",
-    "static/js/main.daabc96b.chunk.js"
+    "static/js/2.9c70a034.chunk.js",
+    "static/css/main.a9609997.chunk.css",
+    "static/js/main.f3d345f4.chunk.js"
   ]
 }
