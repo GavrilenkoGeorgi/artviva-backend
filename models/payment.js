@@ -1,69 +1,147 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 const paymentSchema = mongoose.Schema({
-	teacher: {
+	payment_id: {
 		type: String,
-		max: 45
+		unique: true
 	},
-	specialty: {
+	action: {
 		type: String,
-		min: 3,
-		max: 45
+		max: 16
 	},
-	isSuccessful: {
-		type: Boolean,
-		default: false
+	status: {
+		type: String,
+		max: 16
+	},
+	version: {
+		type: Number,
+		max: 99
+	},
+	type: {
+		type: String,
+		max: 16
+	},
+	paytype: {
+		type: String,
+		max: 16
 	},
 	public_key: {
 		type: String,
 		min: 12,
 		max: 20
 	},
-	version: {
-		type: String,
-		max: 2
+	acq_id: {
+		type: Number,
+		max: 9999999
 	},
-	action: {
+	order_id: {
+		type: String,
+		max: 36
+	},
+	liqpay_order_id: {
+		type: String,
+		max: 24
+	},
+	description: {
+		type: String,
+		max: 254
+	},
+	sender_card_mask2: {
+		type: String,
+		max: 9
+	},
+	sender_card_bank: {
 		type: String,
 		max: 16
+	},
+	sender_card_type: {
+		type: String,
+		max: 16
+	},
+	sender_card_country: {
+		type: Number,
+		max: 9999
+	},
+	ip: {
+		type: String,
+		max: 15
 	},
 	amount: {
-		type: String,
-		max: 16
+		type: Number,
+		max: 1000000
 	},
 	currency: {
 		type: String,
 		max: 3
 	},
-	description: {
-		type: String,
-		max: 128
+	sender_commission: {
+		type: Number,
+		max: 1000000
 	},
-	paytypes: {
-		type: String,
-		max: 16
+	receiver_commission: {
+		type: Number,
+		max: 1000000
 	},
-	card: {
-		type: String,
-		max: 16
+	agent_commission: {
+		type: Number,
+		max: 1000000
 	},
-	card_exp_month: {
-		type: String,
-		max: 2
+	amount_debit: {
+		type: Number,
+		max: 1000000
 	},
-	card_exp_year: {
-		type: String,
-		max: 2
+	amount_credit: {
+		type: Number,
+		max: 1000000
 	},
-	card_cvv: {
+	commission_debit: {
+		type: Number,
+		max: 1000000
+	},
+	commission_credit: {
+		type: Number,
+		max: 1000000
+	},
+	currency_debit: {
 		type: String,
 		max: 3
 	},
-	result: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'PaymentResult'
+	currency_credit: {
+		type: String,
+		max: 3
+	},
+	sender_bonus: {
+		type: Number,
+		max: 1000000
+	},
+	amount_bonus: {
+		type: Number,
+		max: 1000000
+	},
+	mpi_eci: {
+		type: Number
+	},
+	is_3Ds: {
+		type: Boolean
+	},
+	language: {
+		type: String,
+		max: 3
+	},
+	create_date: {
+		type: Number
+	},
+	end_date: {
+		type: Number
+	},
+	transaction_id: {
+		type: Number,
+		max: 9999999999
 	}
 })
+
+paymentSchema.plugin(uniqueValidator)
 
 paymentSchema.set('toJSON', {
 	transform: (document, returnedObject) => {

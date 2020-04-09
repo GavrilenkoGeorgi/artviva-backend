@@ -6,11 +6,19 @@ const validNamePattern = /^[^0-9]{3,45}$/
 const validateUserRegData = (email, name, middlename, lastname, pass) => {
 	const validEmail = email.match(validEmailPattern)
 	const validName = name.match(validNamePattern)
-	const validMiddleName = middlename.match(validNamePattern)
-	const validLastName = lastname.match(validNamePattern)
+	const validMiddlename = middlename.match(validNamePattern)
+	const validLastname = lastname.match(validNamePattern)
 	const validPass = pass.match(validPassPattern)
 
-	return (validEmail && validName && validMiddleName && validLastName && validPass ? true : false)
+	return (validEmail && validName && validMiddlename && validLastname && validPass ? true : false)
+}
+
+const validateTeacherData = (name, middlename, lastname) => {
+	const validName = name.match(validNamePattern)
+	const validMiddlename = middlename.match(validNamePattern)
+	const validLastname = lastname.match(validNamePattern)
+
+	return (validName && validMiddlename && validLastname ? true : false)
 }
 
 const validateEmail = email => {

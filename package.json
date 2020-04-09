@@ -1,6 +1,6 @@
 {
   "name": "artviva-backend",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ArtViva school backend",
   "main": "index.js",
   "repository": {
@@ -31,6 +31,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "js-base64": "^2.5.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.5",
     "mongoose-unique-validator": "^2.0.3",
