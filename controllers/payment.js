@@ -29,19 +29,19 @@ paymentRouter.post('/result', async (request, response, next) => {
 
 			if (paymentData.err_code === 'cancel') {
 				return response
-					.redirect(301, process.env.PAYMENT_RESULT_URL)
+					.redirect(301, `${process.env.PAYMENT_RESULT_URL}/form`)
 			}
 
 			if (paymentData.status === 'success') {
-				const { payment_id } = { ...paymentData }
+				const { payment_id, status } = { ...paymentData }
 				const existingPayment = await Payment.findOne({ payment_id })
 
 				if (!existingPayment) { // save payment
 					const payment = new Payment({ ...paymentData })
 					await payment.save()
-				} else { // redirect to success page
+				} else { // redirect to result page
 					return response
-						.redirect(301, process.env.PAYMENT_RESULT_URL)
+						.redirect(301, `${process.env.PAYMENT_RESULT_URL}/${status}`)
 				}
 			}
 		}
