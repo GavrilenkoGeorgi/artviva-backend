@@ -29,7 +29,7 @@ paymentRouter.post('/result', async (request, response, next) => {
 
 			if (paymentData.err_code === 'cancel') {
 				return response
-					.redirect(301, `${process.env.PAYMENT_RESULT_URL}/form`)
+					.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
 			}
 
 			if (paymentData.status === 'success') {
@@ -38,14 +38,14 @@ paymentRouter.post('/result', async (request, response, next) => {
 
 				if (!existingPayment) { // save payment
 					const payment = new Payment({ ...paymentData })
-					await payment.save()
+					const savedPayment = await payment.save()
+					if (savedPayment) return response.status(204).send()
 				} else { // redirect to result page
 					return response
-						.redirect(301, `${process.env.PAYMENT_RESULT_URL}/${status}`)
+						.redirect(303, `${process.env.PAYMENT_RESULT_URL}/${status}`)
 				}
 			}
 		}
-
 	} catch (exception) {
 		next(exception)
 	}
