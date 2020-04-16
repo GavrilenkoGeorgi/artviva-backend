@@ -5,8 +5,8 @@ const specialtySchema = mongoose.Schema({
 	name: {
 		type: String,
 		unique: true,
-		min: 3,
-		max: 128,
+		minlength: 3,
+		maxlength: 128,
 		required: true
 	},
 	cost: {
@@ -15,8 +15,8 @@ const specialtySchema = mongoose.Schema({
 	},
 	info: {
 		type: String,
-		min: 3,
-		max: 255
+		minlength: 3,
+		maxlength: 255
 	},
 	teachers: [
 		{

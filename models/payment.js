@@ -4,60 +4,61 @@ const uniqueValidator = require('mongoose-unique-validator')
 const paymentSchema = mongoose.Schema({
 	payment_id: {
 		type: String,
+		minlength: 10,
+		maxlength: 10,
 		unique: true
 	},
 	action: {
 		type: String,
-		max: 16
+		maxlength: 10
 	},
 	status: {
 		type: String,
-		max: 16
+		maxlength: 32,
 	},
 	version: {
 		type: Number,
-		max: 99
+		max: 3
 	},
 	type: {
 		type: String,
-		max: 16
+		maxlength: 16
 	},
 	paytype: {
 		type: String,
-		max: 16
+		maxlength: 16
 	},
 	public_key: {
 		type: String,
-		min: 12,
-		max: 20
+		maxlength: 20
 	},
 	acq_id: {
 		type: Number,
-		max: 9999999
+		max: 999999
 	},
 	order_id: {
 		type: String,
-		max: 36
+		maxlength: 36
 	},
 	liqpay_order_id: {
 		type: String,
-		max: 24
+		maxlength: 24
 	},
 	description: {
 		type: String,
-		max: 254
+		maxlength: 255
 	},
 	sender_card_mask2: {
 		type: String,
-		max: 9
+		maxlength: 9
 	},
 	sender_card_bank: {
 		type: String,
-		max: 16
+		maxlength: 64
 	},
 	sender_card_type: {
 		type: String,
-		max: 16
+		maxlength: 32
 	},
 	sender_card_country: {
 		type: Number,
@@ -65,7 +66,7 @@ const paymentSchema = mongoose.Schema({
 	},
 	ip: {
 		type: String,
-		max: 15
+		maxlength: 15
 	},
 	amount: {
 		type: Number,
@@ -73,7 +74,7 @@ const paymentSchema = mongoose.Schema({
 	},
 	currency: {
 		type: String,
-		max: 3
+		maxlength: 3
 	},
 	sender_commission: {
 		type: Number,
@@ -105,11 +106,11 @@ const paymentSchema = mongoose.Schema({
 	},
 	currency_debit: {
 		type: String,
-		max: 3
+		maxlength: 3
 	},
 	currency_credit: {
 		type: String,
-		max: 3
+		maxlength: 3
 	},
 	sender_bonus: {
 		type: Number,
@@ -127,7 +128,7 @@ const paymentSchema = mongoose.Schema({
 	},
 	language: {
 		type: String,
-		max: 3
+		maxlength: 3
 	},
 	create_date: {
 		type: Number
