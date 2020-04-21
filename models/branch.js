@@ -29,16 +29,6 @@ const branchSchema = mongoose.Schema({
 		minlength: 3,
 		maxlength: 255
 	},
-	latitude: {
-		type: Number
-	},
-	longitude: {
-		type: Number
-	},
-	image: {
-		type: String,
-		maxlength: 255
-	},
 	teachers: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

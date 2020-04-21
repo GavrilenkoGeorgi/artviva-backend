@@ -16,25 +16,29 @@ branchesRouter.post('/', async (request, response, next) => {
 			})
 		}
 
-		const { name, town, address, phone, info, latitude, longitude, image } = { ...request.body }
+		const { name, town, address, phone, info } = { ...request.body }
 
 		if (!name // this doesn't spark joy
 			|| !town
 			|| !address
 			|| !phone
-			|| !info
-			|| !latitude
-			|| !longitude
-			|| !image)
+			|| !info)
 		{
 			return response.status(400).send({
 				error: 'Деякі поля даних відсутні.'
 			})
 		}
 
+		// check if branch name is already taken
+		const existingBranch = await Branch.findOne({ name })
+		if (existingBranch) return response.status(400).json({
+			message: 'Філія вже існує.',
+			cause: 'name'
+		})
+
 		const branch = new Branch(request.body)
 		console.log('Saving branch', branch)
-		// await branch.save()
+		await branch.save()
 		return response.status(200).send({ branch })
 
 	} catch (exception) {
@@ -69,7 +73,7 @@ branchesRouter.delete('/:id', async (request, response, next) => {
 			return response.status(404).send({ error: 'Branch not found' })
 		} /* else if (branch.user.toString() !== decodedToken.id.toString()) {
 			return response.status(400).send({ error: 'Not allowed to delete branches' })
-		}*/
+		} */
 
 		await Branch.findByIdAndRemove(branch.id)
 		return response.status(204).end()
