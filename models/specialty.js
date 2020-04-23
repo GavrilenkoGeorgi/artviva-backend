@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const specialtySchema = mongoose.Schema({
-	name: {
+	title: {
 		type: String,
 		unique: true,
 		minlength: 3,
@@ -11,7 +11,8 @@ const specialtySchema = mongoose.Schema({
 	},
 	cost: {
 		type: Number,
-		required: true
+		required: true,
+		max: 9999
 	},
 	info: {
 		type: String,
