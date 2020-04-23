@@ -28,7 +28,6 @@ const userSchema = mongoose.Schema({
 	},
 	passwordHash: {
 		type: String,
-		unique: true,
 		maxlength: 60
 	},
 	activationHash: {
@@ -39,13 +38,7 @@ const userSchema = mongoose.Schema({
 		type: String,
 		maxlength: 60
 	},
-	passResetHashExpiresAt: Date,
-	blogs: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Blog'
-		}
-	]
+	passResetHashExpiresAt: Date
 })
 
 userSchema.plugin(uniqueValidator)
