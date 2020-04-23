@@ -5,22 +5,22 @@ const userSchema = mongoose.Schema({
 	email: {
 		type: String,
 		unique: true,
-		max: 45
+		maxlength: 45
 	},
 	name: {
 		type: String,
-		min: 3,
-		max: 45
+		minlength: 3,
+		maxlength: 45
 	},
 	middlename: {
 		type: String,
-		min: 3,
-		max: 45
+		minlength: 3,
+		maxlength: 45
 	},
 	lastname: {
 		type: String,
-		min: 3,
-		max: 45
+		minlength: 3,
+		maxlength: 45
 	},
 	isActive: {
 		type: Boolean,
@@ -29,15 +29,15 @@ const userSchema = mongoose.Schema({
 	passwordHash: {
 		type: String,
 		unique: true,
-		max: 60
+		maxlength: 60
 	},
 	activationHash: {
 		type: String,
-		max: 60
+		maxlength: 60
 	},
 	passResetHash: {
 		type: String,
-		max: 60
+		maxlength: 60
 	},
 	passResetHashExpiresAt: Date,
 	blogs: [

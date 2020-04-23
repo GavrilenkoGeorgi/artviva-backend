@@ -1,6 +1,6 @@
 {
   "name": "artviva-backend",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "ArtViva school backend",
   "main": "index.js",
   "repository": {
@@ -14,11 +14,10 @@
     "test:api": "npx jest tests/note_api.test.js --runInBand",
     "test:userapi": "npx jest tests/user_api.test.js --runInBand",
     "build:ui": "rm -rf build && cd ../artviva-frontend && npm run build --prod && cp -r build ../artviva-backend/",
-    "deploy": "git push heroku deploy:master",
+    "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "lint": "node_modules/.bin/eslint .",
-    "sprvise": "npx supervisor index.js",
     "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "keywords": [
@@ -32,6 +31,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "js-base64": "^2.5.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.5",
     "mongoose-unique-validator": "^2.0.3",

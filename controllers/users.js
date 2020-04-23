@@ -68,7 +68,7 @@ usersRouter.post('/', async (request, response, next) => {
 				activationUUID,
 				response
 			}
-			sendAccountActivationMessage(data)
+			sendAccountActivationMessage(data)  //???
 
 		} else {
 			return response.status(422).json({
