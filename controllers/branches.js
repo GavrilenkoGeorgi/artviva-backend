@@ -39,7 +39,7 @@ branchesRouter.post('/', async (request, response, next) => {
 		const branch = new Branch(request.body)
 		console.log('Saving branch', branch)
 		await branch.save()
-		return response.status(200).send({ branch })
+		return response.status(200).send(branch.toJSON())
 
 	} catch (exception) {
 		next(exception)
@@ -78,6 +78,18 @@ branchesRouter.delete('/:id', async (request, response, next) => {
 		await Branch.findByIdAndRemove(branch.id)
 		return response.status(204).end()
 
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// update branch details
+branchesRouter.put('/:id', async (request, response, next) => {
+	try {
+		const updatedBranch = await Branch
+			.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+			// .populate('user', { username: 1, name: 1 })
+		return response.status(200).json(updatedBranch.toJSON())
 	} catch (exception) {
 		next(exception)
 	}
