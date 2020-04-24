@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 const teacherSchema = mongoose.Schema({
 	name: {
 		type: String,
-		mixlength: 2,
+		minlength: 2,
 		maxlength: 128,
-		required: true
+		required: true,
+		unique: true
 	},
 	specialties: [
 		{
@@ -32,6 +34,8 @@ const teacherSchema = mongoose.Schema({
 		}
 	]
 })
+
+teacherSchema.plugin(uniqueValidator)
 
 teacherSchema.set('toJSON', {
 	transform: (document, returnedObject) => {

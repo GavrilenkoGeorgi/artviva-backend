@@ -1,10 +1,10 @@
-const teachersRouter = require('express').Router()
-const Teacher = require('../models/teacher')
+const pupilsRouter = require('express').Router()
+const Pupil = require('../models/pupil')
 const jwt = require('jsonwebtoken')
 const { getTokenFromReq } = require('../utils/getTokenFromReq')
 
-// create new teacher
-teachersRouter.post('/', async (request, response, next) => {
+// create new pupil
+pupilsRouter.post('/', async (request, response, next) => {
 
 	const token = getTokenFromReq(request)
 
@@ -24,33 +24,33 @@ teachersRouter.post('/', async (request, response, next) => {
 		}
 
 		// check if specialty with this title already exists
-		const existingTeacher = await Teacher.findOne({ name })
-		if (existingTeacher) return response.status(400).json({
-			message: 'Вчитель з таким ім’ям вже існує.',
+		const existingPupil = await Pupil.findOne({ name })
+		if (existingPupil) return response.status(400).json({
+			message: 'Учень з таким ім’ям вже існує.',
 			cause: 'name'
 		})
 
-		const teacher = new Teacher(request.body)
-		await teacher.save()
+		const pupil = new Pupil(request.body)
+		await pupil.save()
 
-		return response.status(200).send(teacher.toJSON())
+		return response.status(200).send(pupil.toJSON())
 
 	} catch (exception) {
 		next(exception)
 	}
 })
 
-// get all teachers
-teachersRouter.get('/', async (request, response) => {
-	const teachers = await Teacher
+// get all pupils
+pupilsRouter.get('/', async (request, response) => {
+	const pupils = await Pupil
 		.find({})
 		// .populate('user', { username: 1, name: 1 })
 		// .populate('comments', { content: 1 })
-	return response.send(teachers.map(teacher => teacher.toJSON()))
+	return response.send(pupils.map(pupil => pupil.toJSON()))
 })
 
-// delete single teacher
-teachersRouter.delete('/:id', async (request, response, next) => {
+// delete single pupil
+pupilsRouter.delete('/:id', async (request, response, next) => {
 	const token = getTokenFromReq(request)
 	try {
 		const decodedToken = jwt.verify(token, process.env.SECRET)
@@ -58,13 +58,13 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 			return response.status(401).json({ error: 'Неаутентифіковані. Маркер відсутній або недійсний.' })
 		}
 
-		const teacher = await Teacher.findById(request.params.id)
+		const pupil = await Pupil.findById(request.params.id)
 
-		if (!teacher) {
-			return response.status(404).send({ error: 'Викладача із цим ідентифікатором не знайдено.' })
+		if (!pupil) {
+			return response.status(404).send({ error: 'Учня із цим ідентифікатором не знайдено.' })
 		}
 
-		await Teacher.findByIdAndRemove(teacher._id)
+		await Pupil.findByIdAndRemove(pupil._id)
 		response.status(204).end()
 
 	} catch (exception) {
@@ -72,15 +72,15 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 	}
 })
 
-// update teacher details
-teachersRouter.put('/:id', async (request, response, next) => {
+// update pupil details
+pupilsRouter.put('/:id', async (request, response, next) => {
 	try {
-		const updatedTeacher = await Teacher
+		const updatedPupil = await Pupil
 			.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
-		return response.status(200).json(updatedTeacher.toJSON())
+		return response.status(200).json(updatedPupil.toJSON())
 	} catch (exception) {
 		next(exception)
 	}
 })
 
-module.exports = teachersRouter
+module.exports = pupilsRouter

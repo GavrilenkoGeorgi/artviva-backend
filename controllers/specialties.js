@@ -66,7 +66,7 @@ specialtiesRouter.delete('/:id', async (request, response, next) => {
 		const specialty = await Specialty.findById(request.params.id)
 
 		if (!specialty) {
-			return response.status(404).send({ error: 'Specialty not found' })
+			return response.status(404).send({ error: 'Спеціальність з цім ID не знайдена.' })
 		}
 
 		await Specialty.findByIdAndRemove(specialty.id)

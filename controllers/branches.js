@@ -37,7 +37,6 @@ branchesRouter.post('/', async (request, response, next) => {
 		})
 
 		const branch = new Branch(request.body)
-		console.log('Saving branch', branch)
 		await branch.save()
 		return response.status(200).send(branch.toJSON())
 
@@ -70,7 +69,7 @@ branchesRouter.delete('/:id', async (request, response, next) => {
 		const branch = await Branch.findById(request.params.id)
 
 		if (!branch) {
-			return response.status(404).send({ error: 'Branch not found' })
+			return response.status(404).send({ error: 'Філія з цім ID не знайдена.' })
 		} /* else if (branch.user.toString() !== decodedToken.id.toString()) {
 			return response.status(400).send({ error: 'Not allowed to delete branches' })
 		} */
