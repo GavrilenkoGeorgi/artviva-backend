@@ -3,6 +3,7 @@ const Teacher = require('../models/teacher')
 const jwt = require('jsonwebtoken')
 const { getTokenFromReq } = require('../utils/getTokenFromReq')
 
+// create new teacher
 teachersRouter.post('/', async (request, response, next) => {
 
 	const token = getTokenFromReq(request)
@@ -66,6 +67,17 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 		await Teacher.findByIdAndRemove(teacher._id)
 		response.status(204).end()
 
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// update teacher details
+teachersRouter.put('/:id', async (request, response, next) => {
+	try {
+		const updatedTeacher = await Teacher
+			.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+		return response.status(200).json(updatedTeacher.toJSON())
 	} catch (exception) {
 		next(exception)
 	}
