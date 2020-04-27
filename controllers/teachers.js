@@ -44,7 +44,7 @@ teachersRouter.post('/', async (request, response, next) => {
 teachersRouter.get('/', async (request, response) => {
 	const teachers = await Teacher
 		.find({})
-		// .populate('user', { username: 1, name: 1 })
+		.populate('specialties', { title: 1 })
 		// .populate('comments', { content: 1 })
 	return response.send(teachers.map(teacher => teacher.toJSON()))
 })
@@ -79,6 +79,71 @@ teachersRouter.put('/:id', async (request, response, next) => {
 			.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 		return response.status(200).json(updatedTeacher.toJSON())
 	} catch (exception) {
+		next(exception)
+	}
+})
+
+// add teacher specialty
+teachersRouter.post('/:id/specialties', async (request, response, next) => {
+	try {
+		const { specialtyId } = { ...request.body }
+		if (!specialtyId) return response.status(400).send({
+			error: 'Деякі обов\'язкові поля даних відсутні.'
+		})
+
+		const teacher = await Teacher.findById(request.params.id)
+		if (teacher.specialties.indexOf(specialtyId) >= 0) {
+			return response.status(400).json({
+				error: 'Цей викладач вже має цю спеціальність.'
+			})
+		}
+
+		teacher.specialties = teacher.specialties.concat(specialtyId)
+		await teacher.save()
+		response.json(teacher.toJSON())
+
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// delete teacher specialty
+teachersRouter.patch('/:id/specialties', async (request, response, next) => {
+	try {
+		const { specialtyId } = { ...request.body }
+		if (!specialtyId) return response.status(400).send({
+			error: 'Деякі обов\'язкові поля даних відсутні.'
+		})
+
+		const teacher = await Teacher.findById(request.params.id)
+		if (teacher.specialties.indexOf(specialtyId) === -1) {
+			return response.status(400).json({
+				error: 'Цей викладач не має цієї спеціальності.'
+			})
+		}
+
+		const index = teacher.specialties.indexOf(specialtyId)
+		teacher.specialties.splice(index, 1)
+		await teacher.save()
+		response.json(teacher.toJSON())
+
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get single teacher info
+teachersRouter.get('/:id', async (request, response, next) => {
+	try {
+		const teacher = await Teacher.findOne({ _id: request.params.id })
+			.populate('specialties', { title: 1 } )
+		if (!teacher) return response.status(404).json({
+			error: 'Викладача із цим ID не знайдено.'
+		})
+
+		response.status(200).json(teacher.toJSON())
+
+	} catch(exception) {
 		next(exception)
 	}
 })
