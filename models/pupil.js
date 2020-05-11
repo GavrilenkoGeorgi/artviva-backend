@@ -14,16 +14,10 @@ const pupilSchema = mongoose.Schema({
 		minlength: 2,
 		maxlength: 255
 	},
-	teachers: [
+	schoolClasses: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Teacher'
-		}
-	],
-	specialties: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Specialty'
+			ref: 'SchoolClass'
 		}
 	]
 })

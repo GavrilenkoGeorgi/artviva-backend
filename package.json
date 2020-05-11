@@ -1,6 +1,6 @@
 {
   "name": "artviva-backend",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "ArtViva school backend",
   "main": "index.js",
   "repository": {
@@ -24,7 +24,7 @@
     "Node.js",
     "express"
   ],
-  "author": "Gavrilenko",
+  "author": "Gavrilenko Georgi <gavrilenko.georgi@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^4.0.1",

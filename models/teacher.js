@@ -21,12 +21,6 @@ const teacherSchema = mongoose.Schema({
 			ref: 'Payment'
 		}
 	],
-	pupils: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Pupil'
-		}
-	],
 	branches: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
