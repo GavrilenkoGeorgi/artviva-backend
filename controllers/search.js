@@ -7,16 +7,7 @@ const { getTokenFromReq } = require('../utils/getTokenFromReq')
 
 // search teachers by given value
 searchRouter.post('/teachers', async (request, response, next) => {
-
-	const token = getTokenFromReq(request)
-
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
-			})
-		}
 		const { value } = { ...request.body }
 
 		if (!value) {
@@ -65,16 +56,7 @@ searchRouter.post('/pupils', async (request, response, next) => {
 
 // search specialties by given value
 searchRouter.post('/specialties', async (request, response, next) => {
-
-	const token = getTokenFromReq(request)
-
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
-			})
-		}
 		const { value } = { ...request.body }
 
 		if (!value) {
