@@ -11,7 +11,6 @@ const schoolClassSchema = mongoose.Schema({
 	},
 	info: {
 		type: String,
-		minlength: 3,
 		maxlength: 255
 	},
 	teacher: {

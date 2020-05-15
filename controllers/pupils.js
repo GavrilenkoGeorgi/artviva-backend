@@ -44,8 +44,7 @@ pupilsRouter.post('/', async (request, response, next) => {
 pupilsRouter.get('/', async (request, response) => {
 	const pupils = await Pupil
 		.find({})
-		// .populate('user', { username: 1, name: 1 })
-		// .populate('comments', { content: 1 })
+		.populate('schoolClasses', { title: 1 })
 	return response.send(pupils.map(pupil => pupil.toJSON()))
 })
 

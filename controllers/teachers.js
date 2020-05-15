@@ -46,7 +46,7 @@ teachersRouter.get('/', async (request, response) => {
 	const teachers = await Teacher
 		.find({})
 		.populate('specialties', { title: 1 })
-		// .populate('comments', { content: 1 })
+		.populate('payments', { description: 1, create_date: 1 })
 	return response.send(teachers.map(teacher => teacher.toJSON()))
 })
 
@@ -77,7 +77,10 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 teachersRouter.put('/:id', async (request, response, next) => {
 	try {
 		await Teacher.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
-		const newlyUpdatedTeacher = await Teacher.findById(request.params.id).populate('specialties', { title: 1 })
+		const newlyUpdatedTeacher =
+			await Teacher.findById(request.params.id)
+				.populate('specialties', { title: 1 })
+				.populate('payments', { description: 1, create_date: 1 })
 
 		return response.status(200).json(newlyUpdatedTeacher.toJSON())
 	} catch (exception) {

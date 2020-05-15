@@ -21,7 +21,7 @@ classesRouter.post('/', async (request, response, next) => {
 
 		const { title, info, teacher, specialty, pupils } = { ...request.body }
 
-		if (!title || !info || !teacher || !specialty || !pupils )
+		if (!title || !teacher || !specialty || !pupils )
 			return response.status(400).send({
 				error: 'Деякі поля даних відсутні.'
 			})
@@ -104,15 +104,47 @@ classesRouter.post('/', async (request, response, next) => {
 })
 
 // get all classes
-classesRouter.get('/', async (request, response) => {
-	const schoolClasses = await SchoolClass
-		.find({})
-		.populate('teacher', { name: 1 })
-		.populate('specialty', { title: 1 })
-		.populate('pupils', { name: 1 })
-	return response.send(schoolClasses.map(schoolClass => schoolClass.toJSON()))
+classesRouter.get('/', async (request, response, next) => {
+	try {
+		const schoolClasses = await SchoolClass
+			.find({})
+			.populate('teacher', { name: 1 })
+			.populate('specialty', { title: 1 })
+			.populate('pupils', { name: 1, info: 1 })
+		response.send(schoolClasses.map(schoolClass => schoolClass.toJSON()))
+	} catch (exception) {
+		next(exception)
+	}
 })
 
+// get single class details by given id
+classesRouter.post('/:id', async (request, response, next) => {
+	try {
+		const token = getTokenFromReq(request)
+		const decodedToken = jwt.verify(token, process.env.SECRET)
+
+		if (!token || !decodedToken.id) {
+			return response.status(401).send({
+				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
+			})
+		}
+
+		const schoolClass = await SchoolClass
+			.findById(request.params.id)
+			.populate('pupils', { name: 1 })
+			.populate('teacher', { name: 1 })
+			.populate('specialty', { title: 1 })
+
+		if (!schoolClass)
+			return response.status(404)
+				.send({ error: 'Клас із заданим ідентифікатором не знайдено.' })
+
+		response.status(200).json(schoolClass.toJSON())
+
+	} catch (exception) {
+		next(exception)
+	}
+})
 
 // delete school class
 classesRouter.delete('/:id', async (request, response, next) => {
@@ -242,7 +274,7 @@ classesRouter.put('/:id', async (request, response, next) => {
 			.findByIdAndUpdate(request.params.id, { ...dataToSave }, { new: true })
 			.populate('teacher', { name: 1 })
 			.populate('specialty', { title: 1 })
-			.populate('pupils', { name: 1 })
+			.populate('pupils', { name: 1, info : 1 })
 		return response.status(200).json(updatedSchoolClass.toJSON())
 	} catch (exception) {
 		next(exception)

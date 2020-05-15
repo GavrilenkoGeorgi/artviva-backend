@@ -16,7 +16,6 @@ const specialtySchema = mongoose.Schema({
 	},
 	info: {
 		type: String,
-		minlength: 3,
 		maxlength: 255
 	},
 	schoolClasses: [

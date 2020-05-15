@@ -11,7 +11,6 @@ const pupilSchema = mongoose.Schema({
 	},
 	info: {
 		type: String,
-		minlength: 2,
 		maxlength: 255
 	},
 	schoolClasses: [
