@@ -76,6 +76,7 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 	try {
 		const updatedPupil = await Pupil
 			.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+			.populate('schoolClasses', { title: 1 })
 		return response.status(200).json(updatedPupil.toJSON())
 	} catch (exception) {
 		next(exception)
