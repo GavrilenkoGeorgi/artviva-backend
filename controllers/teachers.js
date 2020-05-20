@@ -138,10 +138,11 @@ teachersRouter.patch('/:id/specialties', async (request, response, next) => {
 })
 
 // get single teacher info
-teachersRouter.get('/:id', async (request, response, next) => {
+teachersRouter.post('/:id', async (request, response, next) => {
 	try {
 		const teacher = await Teacher.findOne({ _id: request.params.id })
 			.populate('specialties', { title: 1 } )
+			.populate('payments', { description: 1, create_date: 1 })
 		if (!teacher) return response.status(404).json({
 			error: 'Викладача із цим ID не знайдено.'
 		})
