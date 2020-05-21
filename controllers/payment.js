@@ -3,6 +3,7 @@ const Base64 = require('js-base64').Base64
 
 const Payment = require('../models/payment')
 const Teacher = require('../models/teacher')
+const PaymentDescr = require('../models/paymentDescr')
 const LiqPay = require('../utils/liqpay')
 
 const { getPaymentDataFromString } = require('../utils/processPaymentDescr')
@@ -41,10 +42,20 @@ paymentRouter.post('/result', async (request, response, next) => {
 				const { payment_id, status } = { ...paymentData }
 				const existingPayment = await Payment.findOne({ payment_id })
 
-				if (!existingPayment) { // save payment
+				if (!existingPayment) { // process payment
 					const payment = new Payment({ ...paymentData })
+					// parse descr string into object
+					const parsedDescr = getPaymentDataFromString(payment.description)
+
+					// create new payment description
+					const paymentDescr = new PaymentDescr({ ...parsedDescr })
+					paymentDescr.save()
+
+					// add parsed payment descr to the saved payment
+					payment.paymentDescr = paymentDescr._id
+
+					// save payment
 					const savedPayment = await payment.save()
-					const paymentDescr = getPaymentDataFromString(payment.description)
 
 					// if teacher name is correct, add payment
 					// to the teacher's list of payments
@@ -75,11 +86,20 @@ paymentRouter.get('/list', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const fields = 'description amount create_date status amount'
-			const payments = await Payment.find({}, fields)
-			if (!payments)
-				return response.status(404)
-					.send({ error: 'Не найдено ни одного платежа.' })
+			const payments = await Payment.find({}, fields).populate('paymentDescr')
 			response.status(200).send(payments.map(payment => payment.toJSON()))
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get all payment descriptions
+paymentRouter.get('/descr', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const descriptions = await PaymentDescr.find({})
+			response.status(200).json(descriptions.map(descr => descr.toJSON()))
 		}
 	} catch (exception) {
 		next(exception)
@@ -91,7 +111,8 @@ paymentRouter.get('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const fields = 'description amount create_date status'
-			const payment = await Payment.findById(request.params.id, fields)
+			const payment = await Payment
+				.findById(request.params.id, fields).populate('paymentDescr')
 
 			if (!payment)
 				return response.status(404)
@@ -109,12 +130,17 @@ paymentRouter.delete('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			// find payment
-			const payment = await Payment.findById(request.params.id, 'description')
+			const payment = await Payment.findById(request.params.id).populate('paymentDescr')
+			if (!payment)
+				return response.status(404)
+					.send({ error: 'Платежу із цим ідентифікатором не знайдено.' })
 
 			// remove it from the teacher's list
-			const paymentDescr = getPaymentDataFromString(payment.description)
-			await Teacher.findOneAndUpdate({ name: paymentDescr.teacher },
+			await Teacher.findOneAndUpdate({ name: payment.paymentDescr.teacher },
 				{ $pull: { payments: payment.id } }, { new: true })
+
+			// remove its description
+			await PaymentDescr.findByIdAndDelete(payment.paymentDescr._id)
 
 			// delete payment
 			await Payment.findByIdAndDelete(payment.id)
@@ -124,5 +150,6 @@ paymentRouter.delete('/:id', async (request, response, next) => {
 		next(exception)
 	}
 })
+
 
 module.exports = paymentRouter

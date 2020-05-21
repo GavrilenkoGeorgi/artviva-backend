@@ -139,7 +139,11 @@ const paymentSchema = mongoose.Schema({
 	transaction_id: {
 		type: Number,
 		max: 9999999999
-	}
+	},
+	paymentDescr: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'PaymentDescr'
+	},
 })
 
 paymentSchema.plugin(uniqueValidator)

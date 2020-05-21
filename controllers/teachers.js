@@ -46,7 +46,8 @@ teachersRouter.get('/', async (request, response) => {
 	const teachers = await Teacher
 		.find({})
 		.populate('specialties', { title: 1 })
-		.populate('payments', { description: 1, create_date: 1 })
+		// .populate('payments', { description: 1, create_date: 1 })
+		.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
 	return response.send(teachers.map(teacher => teacher.toJSON()))
 })
 
@@ -142,7 +143,8 @@ teachersRouter.post('/:id', async (request, response, next) => {
 	try {
 		const teacher = await Teacher.findOne({ _id: request.params.id })
 			.populate('specialties', { title: 1 } )
-			.populate('payments', { description: 1, create_date: 1 })
+			.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
+			// .populate('payments', { description: 1, create_date: 1 })
 		if (!teacher) return response.status(404).json({
 			error: 'Викладача із цим ID не знайдено.'
 		})
