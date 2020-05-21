@@ -1,32 +1,30 @@
 const paymentRouter = require('express').Router()
 const Base64 = require('js-base64').Base64
-const jwt = require('jsonwebtoken')
 
 const Payment = require('../models/payment')
 const Teacher = require('../models/teacher')
 const LiqPay = require('../utils/liqpay')
 
 const { getPaymentDataFromString } = require('../utils/processPaymentDescr')
-const { getTokenFromReq } = require('../utils/getTokenFromReq')
-
+const { checkAuth } = require('../utils/checkAuth')
 
 const liqpay = new LiqPay(process.env.LIQPAY_PUBLIC_KEY, process.env.LIQPAY_PRIVATE_KEY)
 
+// create new payment form data
 paymentRouter.post('/form', async (request, response, next) => {
 	try {
 		const { data, signature, language } = liqpay.cnb_form(request.body)
-		return response
-			.status(200)
-			.send({
-				data,
-				signature,
-				language
-			})
+		return response.status(200).send({
+			data,
+			signature,
+			language
+		})
 	} catch (exception) {
 		next(exception)
 	}
 })
 
+// save payment result that comes from liqpay server
 paymentRouter.post('/result', async (request, response, next) => {
 	try {
 		const { data, signature } = { ...request.body }
@@ -57,7 +55,7 @@ paymentRouter.post('/result', async (request, response, next) => {
 						console.log('Sending message to the teacher email.', savedPayment._id)
 					} else {
 						// notify the supervisor
-						console.log('Sending message to the supervisor, with payment details.', savedPayment._id)
+						console.log('Sending message to the supervisor with payment details.', savedPayment._id)
 					}
 
 					if (savedPayment) return response.status(204).send()
@@ -72,41 +70,56 @@ paymentRouter.post('/result', async (request, response, next) => {
 	}
 })
 
-paymentRouter.post('/list', async (request, response, next) => {
+// list all payments
+paymentRouter.get('/list', async (request, response, next) => {
 	try {
-		// check authentification
-		const token = getTokenFromReq(request)
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
-			})
+		if (checkAuth(request)) {
+			const fields = 'description amount create_date status amount'
+			const payments = await Payment.find({}, fields)
+			if (!payments)
+				return response.status(404)
+					.send({ error: 'Не найдено ни одного платежа.' })
+			response.status(200).send(payments.map(payment => payment.toJSON()))
 		}
-
-		const fields = 'description amount create_date status amount'
-		const payments = await Payment.find({}, fields)
-		response.status(200).send(payments.map(payment => payment.toJSON()))
-
 	} catch (exception) {
 		next(exception)
 	}
 })
 
-paymentRouter.post('/:id', async (request, response, next) => {
+// get single payment detail by given ID
+paymentRouter.get('/:id', async (request, response, next) => {
 	try {
-		// check authentification
-		const token = getTokenFromReq(request)
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
-			})
+		if (checkAuth(request)) {
+			const fields = 'description amount create_date status'
+			const payment = await Payment.findById(request.params.id, fields)
+
+			if (!payment)
+				return response.status(404)
+					.send({ error: 'Платежу із цим ідентифікатором не знайдено.' })
+
+			response.status(200).json(payment.toJSON())
 		}
+	} catch (exception) {
+		next(exception)
+	}
+})
 
-		const fields = 'description amount create_date status'
-		const payment = await Payment.findById(request.params.id, fields)
-		response.status(200).json(payment.toJSON())
+// delete payment
+paymentRouter.delete('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			// find payment
+			const payment = await Payment.findById(request.params.id, 'description')
 
+			// remove it from the teacher's list
+			const paymentDescr = getPaymentDataFromString(payment.description)
+			await Teacher.findOneAndUpdate({ name: paymentDescr.teacher },
+				{ $pull: { payments: payment.id } }, { new: true })
+
+			// delete payment
+			await Payment.findByIdAndDelete(payment.id)
+			response.status(204).end()
+		}
 	} catch (exception) {
 		next(exception)
 	}
