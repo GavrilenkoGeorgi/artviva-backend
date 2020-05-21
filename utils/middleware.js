@@ -25,7 +25,7 @@ const errorHandler = (error, request, response, next) => {
 		})
 	} else if (error.name === 'JsonWebTokenError') {
 		return response.status(401).json({
-			error: 'Неприпустимий токен.'
+			error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
 		})
 	}
 
