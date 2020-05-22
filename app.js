@@ -3,10 +3,15 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const cors = require('cors')
+
+const searchRouter = require('./controllers/search')
 const usersRouter = require('./controllers/users')
+const schoolRouter = require('./controllers/school')
 const teachersRouter = require('./controllers/teachers')
+const pupilsRouter = require('./controllers/pupils')
 const branchesRouter = require('./controllers/branches')
 const specialtiesRouter = require('./controllers/specialties')
+const schoolClassesRouter = require('./controllers/schoolClasses')
 const loginRouter = require('./controllers/login')
 const emailRouter = require('./controllers/email')
 const paymentRouter = require('./controllers/payment')
@@ -40,6 +45,19 @@ if (process.env.NODE_ENV === 'test') {
 	app.use('/api/testing', testingRouter)
 }
 
+app.use('/api/search', searchRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/school', schoolRouter)
+app.use('/api/teachers', teachersRouter)
+app.use('/api/pupils', pupilsRouter)
+app.use('/api/branches', branchesRouter)
+app.use('/api/specialties', specialtiesRouter)
+app.use('/api/schoolclasses', schoolClassesRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/email', emailRouter)
+app.use('/api/password', passwordRouter)
+app.use('/api/payment', paymentRouter)
+
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files
 	app.use(express.static(path.join(__dirname, 'build')))
@@ -49,14 +67,6 @@ if (process.env.NODE_ENV === 'production') {
 	})
 }
 
-app.use('/api/users', usersRouter)
-app.use('/api/teachers', teachersRouter)
-app.use('/api/branches', branchesRouter)
-app.use('/api/specialties', specialtiesRouter)
-app.use('/api/login', loginRouter)
-app.use('/api/email', emailRouter)
-app.use('/api/password', passwordRouter)
-app.use('/api/payment', paymentRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

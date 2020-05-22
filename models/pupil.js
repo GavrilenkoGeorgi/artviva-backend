@@ -1,18 +1,13 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
-const specialtySchema = mongoose.Schema({
-	title: {
+const pupilSchema = mongoose.Schema({
+	name: {
 		type: String,
-		unique: true,
-		minlength: 3,
+		minlength: 2,
 		maxlength: 128,
+		unique: true,
 		required: true
-	},
-	cost: {
-		type: Number,
-		required: true,
-		max: 9999
 	},
 	info: {
 		type: String,
@@ -26,9 +21,9 @@ const specialtySchema = mongoose.Schema({
 	]
 })
 
-specialtySchema.plugin(uniqueValidator)
+pupilSchema.plugin(uniqueValidator)
 
-specialtySchema.set('toJSON', {
+pupilSchema.set('toJSON', {
 	transform: (document, returnedObject) => {
 		returnedObject.id = returnedObject._id.toString()
 		delete returnedObject._id
@@ -36,6 +31,6 @@ specialtySchema.set('toJSON', {
 	}
 })
 
-const Specialty = mongoose.model('Specialty', specialtySchema)
+const Pupil = mongoose.model('Pupil', pupilSchema)
 
-module.exports = Specialty
+module.exports = Pupil
