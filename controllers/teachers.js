@@ -46,7 +46,6 @@ teachersRouter.get('/', async (request, response) => {
 	const teachers = await Teacher
 		.find({})
 		.populate('specialties', { title: 1 })
-		// .populate('payments', { description: 1, create_date: 1 })
 		.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
 	return response.send(teachers.map(teacher => teacher.toJSON()))
 })
@@ -76,12 +75,14 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 
 // update teacher details
 teachersRouter.put('/:id', async (request, response, next) => {
+
+	console.log('Request body', request.body)
 	try {
 		await Teacher.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 		const newlyUpdatedTeacher =
 			await Teacher.findById(request.params.id)
 				.populate('specialties', { title: 1 })
-				.populate('payments', { description: 1, create_date: 1 })
+				.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
 
 		return response.status(200).json(newlyUpdatedTeacher.toJSON())
 	} catch (exception) {
@@ -144,7 +145,6 @@ teachersRouter.post('/:id', async (request, response, next) => {
 		const teacher = await Teacher.findOne({ _id: request.params.id })
 			.populate('specialties', { title: 1 } )
 			.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
-			// .populate('payments', { description: 1, create_date: 1 })
 		if (!teacher) return response.status(404).json({
 			error: 'Викладача із цим ID не знайдено.'
 		})
