@@ -17,7 +17,8 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const pupil = new Pupil(request.body)
 			await pupil.save()
 
-			response.status(200).send(pupil.toJSON())
+			const newlyCreatedPupil = await Pupil.findOne({ name }).populate('specialty', { title: 1 })
+			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
 	} catch (exception) {
 		next(exception)
@@ -31,6 +32,7 @@ pupilsRouter.get('/', async (request, response, next) => {
 			const pupils = await Pupil
 				.find({})
 				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
 			response.send(pupils.map(pupil => pupil.toJSON()))
 		}
 	} catch (exception) {
@@ -62,6 +64,7 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 			const updatedPupil = await Pupil
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
 			response.status(200).json(updatedPupil.toJSON())
 		}
 	} catch (exception) {

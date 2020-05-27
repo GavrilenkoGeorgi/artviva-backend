@@ -53,7 +53,27 @@ const pupilSchema = mongoose.Schema({
 		minlength: 2,
 		maxlength: 128,
 	},
+	fathersPhone: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
+	fathersEmploymentInfo: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
 	mothersName: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
+	mothersPhone: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
+	mothersEmploymentInfo: {
 		type: String,
 		minlength: 2,
 		maxlength: 128,
