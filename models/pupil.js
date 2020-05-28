@@ -19,6 +19,11 @@ const pupilSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Specialty'
 	},
+	artSchoolClass: {
+		type: Number,
+		min: 1,
+		max: 8,
+	},
 	dateOfBirth: {
 		type: Date,
 		required: true,
