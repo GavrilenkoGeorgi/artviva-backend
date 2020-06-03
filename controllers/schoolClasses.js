@@ -35,7 +35,11 @@ classesRouter.post('/', async (request, response, next) => {
 				return response.status(404).send({
 					message: 'Вчителя з таким ім\'ям не існує.'
 				}) // else assign teacher
-			} else schoolClass.teacher = teacherData._id
+			} else {
+				schoolClass.teacher = teacherData._id
+				teacherData.schoolClasses = teacherData.schoolClasses.concat(schoolClass._id)
+				teacherData.save()
+			}
 
 			// get specialty data
 			const specialtyData = await Specialty.findOne({ title: specialty })
@@ -142,6 +146,10 @@ classesRouter.delete('/:id', async (request, response, next) => {
 				// remove ref from specialty
 				await Specialty.findByIdAndUpdate({ _id: schoolClass.specialty },
 					{ $pull: { schoolClasses: schoolClass._id } })
+
+				// remove class from teacher
+				await Teacher.findByIdAndUpdate({ _id: schoolClass.teacher.id },
+					{ $pull: { schoolClasses: schoolClass._id } })
 			}
 
 			await SchoolClass.findByIdAndRemove(schoolClass.id)
@@ -158,7 +166,7 @@ classesRouter.put('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const { title, info, teacher, specialty, pupils } = { ...request.body }
 
-			if (!title || !info || !teacher || !specialty || !pupils )
+			if (!title || !teacher || !specialty || !pupils )
 				return response.status(400).send({
 					message: 'Деякі поля даних відсутні.'
 				})
