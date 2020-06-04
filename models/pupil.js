@@ -9,6 +9,92 @@ const pupilSchema = mongoose.Schema({
 		unique: true,
 		required: true
 	},
+	applicantName: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+		required: true
+	},
+	specialty: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Specialty'
+	},
+	artSchoolClass: {
+		type: Number,
+		min: 1,
+		max: 8,
+	},
+	dateOfBirth: {
+		type: Date,
+		required: true,
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now,
+		required: true,
+	},
+	mainSchool: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+		required: true
+	},
+	mainSchoolClass: {
+		type: Number,
+		min: 1,
+		max: 11,
+	},
+	gender: {
+		type: String,
+		max: 16,
+	},
+	hasBenefit: {
+		type: Number,
+		max: 100,
+		default: 0
+	},
+	fathersName: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
+	fathersPhone: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
+	fathersEmploymentInfo: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
+	mothersName: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
+	mothersPhone: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
+	mothersEmploymentInfo: {
+		type: String,
+		minlength: 2,
+		maxlength: 128,
+	},
+	contactEmail: {
+		type: String,
+		maxlength: 128,
+	},
+	homeAddress: {
+		type: String,
+		maxlength: 255
+	},
+	docsPresent: {
+		type: Boolean,
+		default: false
+	},
 	info: {
 		type: String,
 		maxlength: 255

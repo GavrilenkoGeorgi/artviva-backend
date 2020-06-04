@@ -7,13 +7,7 @@ pupilsRouter.post('/', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const { name } = { ...request.body }
-			if (!name) {
-				return response.status(400).send({
-					error: 'Деякі обов\'язкові поля даних відсутні.'
-				})
-			}
-
-			// check if specialty with this title already exists
+			// check if pupil with this name already exists
 			const existingPupil = await Pupil.findOne({ name })
 			if (existingPupil) return response.status(400).json({
 				message: 'Учень з таким ім’ям вже існує.',
@@ -23,7 +17,8 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const pupil = new Pupil(request.body)
 			await pupil.save()
 
-			response.status(200).send(pupil.toJSON())
+			const newlyCreatedPupil = await Pupil.findOne({ name }).populate('specialty', { title: 1 })
+			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
 	} catch (exception) {
 		next(exception)
@@ -37,6 +32,7 @@ pupilsRouter.get('/', async (request, response, next) => {
 			const pupils = await Pupil
 				.find({})
 				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
 			response.send(pupils.map(pupil => pupil.toJSON()))
 		}
 	} catch (exception) {
@@ -68,6 +64,7 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 			const updatedPupil = await Pupil
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
 			response.status(200).json(updatedPupil.toJSON())
 		}
 	} catch (exception) {
