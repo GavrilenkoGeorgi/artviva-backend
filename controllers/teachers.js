@@ -1,68 +1,75 @@
 const teachersRouter = require('express').Router()
 const Teacher = require('../models/teacher')
-const jwt = require('jsonwebtoken')
-const { getTokenFromReq } = require('../utils/getTokenFromReq')
+const Specialty = require('../models/specialty')
+const { filterIds } = require('../utils/arrayHelpers')
+const { checkAuth } = require('../utils/checkAuth')
 
 // create new teacher
 teachersRouter.post('/', async (request, response, next) => {
-
-	const token = getTokenFromReq(request)
-
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
+		if (checkAuth(request)) {
+			const { name } = { ...request.body }
+
+			// check if teacher with this name already exists
+			const existingTeacher = await Teacher.findOne({ name })
+			if (existingTeacher) return response.status(400).json({
+				message: 'Вчитель з таким ім’ям вже існує.',
+				cause: 'name'
 			})
+
+			const teacher = new Teacher(request.body)
+			await teacher.save()
+
+			// add teacher to specialty
+			for (let id of teacher.specialties) {
+				await Specialty.findByIdAndUpdate({ _id: id },
+					{ $push: { teachers: teacher._id } })
+			}
+
+			const newlyCreatedTeacher =
+				await Teacher.findOne({ name })
+					.populate('specialties', { title: 1 })
+			response.status(200).send(newlyCreatedTeacher.toJSON())
 		}
-		const { name } = { ...request.body }
-
-		// check if specialty with this title already exists
-		const existingTeacher = await Teacher.findOne({ name })
-		if (existingTeacher) return response.status(400).json({
-			message: 'Вчитель з таким ім’ям вже існує.',
-			cause: 'name'
-		})
-
-		const teacher = new Teacher(request.body)
-		await teacher.save()
-
-		const newlyCreatedTeacher = await Teacher.findOne({ name }).populate('specialties', { title: 1 })
-		return response.status(200).send(newlyCreatedTeacher.toJSON())
-
 	} catch (exception) {
 		next(exception)
 	}
 })
 
 // get all teachers
+// without auth check for use in the public payment form
+// really has to be a different route
 teachersRouter.get('/', async (request, response) => {
 	const teachers = await Teacher
 		.find({})
 		.populate('specialties', { title: 1 })
 		.populate('schoolClasses', { title: 1 })
 		.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
-	return response.send(teachers.map(teacher => teacher.toJSON()))
+	response.send(teachers.map(teacher => teacher.toJSON()))
 })
 
 // delete single teacher
 teachersRouter.delete('/:id', async (request, response, next) => {
-	const token = getTokenFromReq(request)
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({ error: 'Неаутентифіковані. Маркер відсутній або недійсний.' })
+		if (checkAuth(request)) {
+			const teacher = await Teacher.findById(request.params.id)
+
+			if (!teacher) {
+				return response.status(404)
+					.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
+			} else if (teacher.schoolClasses.length > 0) {
+				return response.status(409)
+					.send({ message: 'Неможливо видалити вчителя, у нього є активні класи, видаліть їх, а потім спробуйте ще раз.' })
+			}
+
+			for (let id of teacher.specialties) {
+				await Specialty.findByIdAndUpdate({ _id: id },
+					{ $pull: { teachers: teacher._id } })
+			}
+
+			await Teacher.findByIdAndRemove(teacher._id)
+			response.status(204).end()
 		}
-
-		const teacher = await Teacher.findById(request.params.id)
-
-		if (!teacher) {
-			return response.status(404).send({ error: 'Викладача із цим ідентифікатором не знайдено.' })
-		}
-
-		await Teacher.findByIdAndRemove(teacher._id)
-		response.status(204).end()
-
 	} catch (exception) {
 		next(exception)
 	}
@@ -71,23 +78,50 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 // update teacher details
 teachersRouter.put('/:id', async (request, response, next) => {
 	try {
-		await Teacher.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
-		const newlyUpdatedTeacher =
-			await Teacher.findById(request.params.id)
-				.populate('specialties', { title: 1 })
-				.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
+		if (checkAuth(request)) {
+			const teacherID = request.params.id
+			// get unupdated teacher
+			const unUpdatedTeacher = await Teacher.findById(teacherID)
 
-		if (!newlyUpdatedTeacher)
-			return response.status(404)
-				.json({ message: 'Викладача із заданим ідентифікатором не знайдено.' })
+			if (!unUpdatedTeacher)
+				return response.status(404)
+					.json({ message: 'Викладача із заданим ідентифікатором не знайдено.' })
 
-		response.status(200).json(newlyUpdatedTeacher.toJSON())
+			const unUpdatedSpecialtiesIds = unUpdatedTeacher.specialties
+			const idsData = {
+				oldIds: unUpdatedSpecialtiesIds,
+				newIds: request.body.specialties
+			}
+			// filter ids to get ids from which to remove and add teacher
+			const resultingIds = filterIds(idsData.oldIds, idsData.newIds)
+
+			// remove teacher from these specialties
+			for (let id of resultingIds.idsToRemove) {
+				await Specialty.findByIdAndUpdate({ _id: id },
+					{ $pull: { teachers: teacherID } })
+			}
+
+			// add teacher to these specialties
+			for (let id of resultingIds.idsToAdd) {
+				await Specialty.findByIdAndUpdate({ _id: id },
+					{ $push: { teachers: teacherID } })
+			}
+
+			// finally update teacher
+			await Teacher.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+			const updatedTeacher =
+				await Teacher.findById(request.params.id)
+					.populate('specialties', { title: 1 })
+					.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
+
+			response.status(200).json(updatedTeacher.toJSON())
+		}
 	} catch (exception) {
 		next(exception)
 	}
 })
 
-// add teacher specialty
+// add teacher specialty whats this??
 teachersRouter.post('/:id/specialties', async (request, response, next) => {
 	try {
 		const { specialtyId } = { ...request.body }
@@ -111,7 +145,7 @@ teachersRouter.post('/:id/specialties', async (request, response, next) => {
 	}
 })
 
-// delete teacher specialty
+// delete teacher specialty and this?
 teachersRouter.patch('/:id/specialties', async (request, response, next) => {
 	try {
 		const { specialtyId } = { ...request.body }
@@ -139,15 +173,16 @@ teachersRouter.patch('/:id/specialties', async (request, response, next) => {
 // get single teacher info
 teachersRouter.post('/:id', async (request, response, next) => {
 	try {
-		const teacher = await Teacher.findOne({ _id: request.params.id })
-			.populate('specialties', { title: 1 } )
-			.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
-		if (!teacher) return response.status(404).json({
-			error: 'Викладача із цим ID не знайдено.'
-		})
+		if (checkAuth(request)) {
+			const teacher = await Teacher.findOne({ _id: request.params.id })
+				.populate('specialties', { title: 1 } )
+				.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
+			if (!teacher) return response.status(404).json({
+				message: 'Викладача із цим ID не знайдено.'
+			})
 
-		response.status(200).json(teacher.toJSON())
-
+			response.status(200).json(teacher.toJSON())
+		}
 	} catch(exception) {
 		next(exception)
 	}

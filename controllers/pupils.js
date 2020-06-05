@@ -17,7 +17,10 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const pupil = new Pupil(request.body)
 			await pupil.save()
 
-			const newlyCreatedPupil = await Pupil.findOne({ name }).populate('specialty', { title: 1 })
+			const newlyCreatedPupil =
+				await Pupil.findOne({ name })
+					.populate('specialty', { title: 1 })
+
 			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
 	} catch (exception) {
@@ -33,6 +36,7 @@ pupilsRouter.get('/', async (request, response, next) => {
 				.find({})
 				.populate('schoolClasses', { title: 1 })
 				.populate('specialty', { title: 1 })
+
 			response.send(pupils.map(pupil => pupil.toJSON()))
 		}
 	} catch (exception) {
@@ -46,7 +50,11 @@ pupilsRouter.delete('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const pupil = await Pupil.findById(request.params.id)
 			if (!pupil) {
-				return response.status(404).send({ error: 'Учня із цим ідентифікатором не знайдено.' })
+				return response.status(404)
+					.send({ message: 'Учня із цим ідентифікатором не знайдено.' })
+			} else if (pupil.schoolClasses.length > 0) {
+				return response.status(409)
+					.send({ message: 'Неможливо видалити учня, видаліть його з класу, а потім спробуйте ще раз.' })
 			}
 
 			await Pupil.findByIdAndRemove(pupil._id)
@@ -65,6 +73,11 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 				.populate('schoolClasses', { title: 1 })
 				.populate('specialty', { title: 1 })
+
+			if (!updatedPupil)
+				return response.status(404)
+					.send({ message: 'Учня із цим ідентифікатором не знайдено.' })
+
 			response.status(200).json(updatedPupil.toJSON())
 		}
 	} catch (exception) {

@@ -18,6 +18,12 @@ const specialtySchema = mongoose.Schema({
 		type: String,
 		maxlength: 255
 	},
+	teachers: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Teacher'
+		}
+	],
 	schoolClasses: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
