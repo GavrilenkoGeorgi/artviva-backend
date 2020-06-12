@@ -1,7 +1,5 @@
 const specialtiesRouter = require('express').Router()
 const Specialty = require('../models/specialty')
-// const jwt = require('jsonwebtoken')
-// const { getTokenFromReq } = require('../utils/getTokenFromReq')
 const { checkAuth } = require('../utils/checkAuth')
 
 // create new specialty
@@ -12,7 +10,7 @@ specialtiesRouter.post('/', async (request, response, next) => {
 			const { title, cost } = { ...request.body }
 			if (!title || !cost ) {
 				return response.status(400).send({
-					error: 'Деякі обов\'язкові поля даних відсутні.'
+					message: 'Деякі обов\'язкові поля даних відсутні.'
 				})
 			}
 
@@ -38,6 +36,7 @@ specialtiesRouter.get('/', async (request, response, next) => {
 	try {
 		const specialties = await Specialty
 			.find({})
+
 		response.status(200)
 			.send(specialties.map(specialty => specialty.toJSON()))
 	} catch (exception) {
@@ -52,10 +51,13 @@ specialtiesRouter.delete('/:id', async (request, response, next) => {
 			const specialty = await Specialty.findById(request.params.id)
 
 			if (!specialty) {
-				return response.status(404).send({ message: 'Спеціальність з цім ID не знайдена.' })
-			} else if (specialty.schoolClasses.length > 0)
-				return response.status(405).send({ message: 'Ви повинні видалити всі класи, які використовують цю спеціальність.' })
+				return response.status(404)
+					.send({ message: 'Спеціальність з цім ID не знайдена.' })
+			} else if (specialty.schoolClasses.length > 0 || specialty.teachers.length > 0)
+				return response.status(409)
+					.send({ message: 'Ви повинні видалити всі класи або викладачів, які використовують цю спеціальність.' })
 			await Specialty.findByIdAndRemove(specialty.id)
+
 			response.status(204).end()
 		}
 	} catch (exception) {

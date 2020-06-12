@@ -1,3 +1,4 @@
+const { sortMonthsNames } = require('./dateAndTime')
 /**
  * Get payment data object from payment description string
  * from liqpay
@@ -7,11 +8,12 @@
  * Учень: Bobby Hill.
  * Предмет: Саксофон.`
  * @param {string} descrStr - Payment description
+ * @param {string} locale - Locale used for dates
  *
  * @returns {object} - Payment data object
  */
 
-const getPaymentDataFromString = descrStr => {
+const getPaymentDataFromString = (descrStr, locale) => {
 
 	// initial payment data
 	let paymentData = {
@@ -31,10 +33,14 @@ const getPaymentDataFromString = descrStr => {
 		return str.slice(start + 1, end).trim()
 	}
 
-	// substring with months data into array
+	// index of months data
 	const monthsIdx = getDataIdx(descrStr)
-	const months = extractString(descrStr, monthsIdx.start, monthsIdx.end)
-	paymentData.months = months.split(',').map(item => item.trim())
+	// extract months string
+	let months = extractString(descrStr, monthsIdx.start, monthsIdx.end)
+	// split to array and sort
+	months = sortMonthsNames(months.split(',').map(item => item.trim()), locale)
+	// save to description
+	paymentData.months = months
 
 	// get teacher name
 	let remainingData = descrStr.substr(monthsIdx.end + 1).trim()

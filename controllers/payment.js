@@ -45,7 +45,7 @@ paymentRouter.post('/result', async (request, response, next) => {
 				if (!existingPayment) { // process payment
 					const payment = new Payment({ ...paymentData })
 					// parse descr string into object
-					const parsedDescr = getPaymentDataFromString(payment.description)
+					const parsedDescr = getPaymentDataFromString(payment.description, 'uk-UA')
 
 					// create new payment description
 					const paymentDescr = new PaymentDescr({ ...parsedDescr })
