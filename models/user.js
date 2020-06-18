@@ -26,6 +26,14 @@ const userSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
+	approvedUser: {
+		type: Boolean,
+		default: false
+	},
+	superUser: {
+		type: Boolean,
+		default: false
+	},
 	passwordHash: {
 		type: String,
 		maxlength: 60
