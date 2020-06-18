@@ -17,15 +17,15 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError' && error.kind === 'ObjectId') {
 		return response.status(400).send({
-			error: 'Перевірте вказаний вами ідентифікатор. Схоже, це неправильний формат.'
+			message: 'Перевірте вказаний вами ідентифікатор. Схоже, це неправильний формат.'
 		})
 	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({
-			error: `Помилка перевірки: ${error.message}`,
+			message: `Помилка перевірки: ${error.message}`,
 		})
 	} else if (error.name === 'JsonWebTokenError') {
 		return response.status(401).json({
-			error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
+			message: 'Неаутентифіковані. Маркер відсутній або недійсний.'
 		})
 	}
 
