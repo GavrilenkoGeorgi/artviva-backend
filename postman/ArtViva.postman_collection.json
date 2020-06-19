@@ -1,0 +1,1320 @@
+{
+	"info": {
+		"_postman_id": "55b3f1b6-3e7a-4669-9010-848233ee394c",
+		"name": "ArtViva",
+		"description": "ArtViva API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "reset user password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"passResetToken\": \"33953f75-182b-4725-8c74-096288f020c9\",\n\t\"password\": \"SomePassword1234\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/password/reset",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"password",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activate user by UUID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"activationToken\": \"36ee09d9-18b8-4751-adbd-6397885dd46a\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/users/activate",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send activation email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob\",\n\t\"email\": \"user@example.com\",\n\t\"activationUUID\": \"7af4b43b-dc8e-4d21-8bc9-fee4c1659798\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/password/activation",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"password",
+								"activation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send password reset email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/password/recover",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"password",
+								"recover"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"password\": \"SomePassword1234\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5000/api/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"email\": \"user@example.com\",\n      \"name\": \"John\",\n      \"middlename\": \"Middle\",\n      \"lastname\": \"Doe\",\n      \"password\": \"SomeFakePassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user detail",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Bob\",\r\n    \"middlename\": \"Some\",\r\n    \"lastname\": \"Doe\",\r\n    \"approvedUser\": false,\r\n    \"superUser\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/5e81ece33f5adc10909bd9fd",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"5e81ece33f5adc10909bd9fd"
+							]
+						},
+						"description": "updating user details, name and account status, super user and approved."
+					},
+					"response": []
+				}
+			],
+			"description": "Account activation, password resets",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "test payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"teacher\": \"Some User\",\n\t\"specialty\": \"Саксофон\",\n\t\"public_key\": \"sandbox_ixxxxxxxxx\",\n\t\"version\": \"3\",\n\t\"action\": \"pay\",\n\t\"amount\": \"1\",\n\t\"currency\": \"UAH\",\n\t\"description\": \"test\",\n\t\"paytypes\": \"card\",\n\t\"card\": \"4242424242424242\",\n\t\"card_exp_month\": \"42\",\n\t\"card_exp_year\": \"42\",\n\t\"card_cvv\": \"424\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment"
+							]
+						},
+						"description": "First test payment"
+					},
+					"response": []
+				},
+				{
+					"name": "generate liqpay from data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"action\": \"pay\",\n\t\"amount\": \"1\",\n\t\"currency\": \"UAH\",\n\t\"description\": \"description text\",\n\t\"order_id\": \"order_id_1\",\n\t\"version\": \"3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/payment/form",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"payment",
+								"form"
+							]
+						},
+						"description": "Returns data for the form on the frontend"
+					},
+					"response": []
+				},
+				{
+					"name": "LiqPay server test payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": \"eyJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOiIxIiwiY3VycmVuY3kiOiJVQUgiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uIHRleHQiLCJvcmRlcl9pZCI6Im9yZGVyX2lkXzEiLCJ2ZXJzaW9uIjoiMyIsInB1YmxpY19rZXkiOiJzYW5kYm94X2k0MTIzMTM2MzIwOCJ9\",\r\n    \"signature\": \"kkDdYFPy+MWju9x3wg1aiCpoe+4=\",\r\n    \"language\": \"ru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://www.liqpay.ua/api/3/checkout",
+							"protocol": "https",
+							"host": [
+								"www",
+								"liqpay",
+								"ua"
+							],
+							"path": [
+								"api",
+								"3",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "liqpay payment result",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": \"eyJwYXltZW50X2lkIjoxMjkwOTkyMTY4LCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzdWNjZXNzIiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJjYXJkIiwicHVibGljX2tleSI6InNhbmRib3hfaTQxMjMxMzYzMjA4IiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoiNzhkYzgzOGMtZGFjZS00NzE4LWE4MTktM2Y2NTk5NDFmZTlkIiwibGlxcGF5X29yZGVyX2lkIjoiMUVIOTJNWjYxNTg2NDQwOTQ0MDg2Njg4IiwiZGVzY3JpcHRpb24iOiLQntC/0LvQsNGC0LAg0LfQsCAxMSDQvNGW0YEuINCj0YfQtdC90Yw6IEJvYmJ5IEN1dGllIEhpbGwsINCy0LjQutC70LDQtNCw0Yc6IEVsdmlzIEFhcm9uIFByZXNsZXksINC/0YDQtdC00LzQtdGCOiBHdWl0YXIuIiwic2VuZGVyX2NhcmRfbWFzazIiOiI0MjQyNDIqNDIiLCJzZW5kZXJfY2FyZF9iYW5rIjoiVGVzdCIsInNlbmRlcl9jYXJkX3R5cGUiOiJ2aXNhIiwic2VuZGVyX2NhcmRfY291bnRyeSI6ODA0LCJpcCI6IjEzMC4xODAuMjE4LjI0NiIsImFtb3VudCI6Mi4yZTMsImN1cnJlbmN5IjoiVUFIIiwic2VuZGVyX2NvbW1pc3Npb24iOjAuMCwicmVjZWl2ZXJfY29tbWlzc2lvbiI6NjAuNSwiYWdlbnRfY29tbWlzc2lvbiI6MC4wLCJhbW91bnRfZGViaXQiOjIuMmUzLCJhbW91bnRfY3JlZGl0IjoyLjJlMywiY29tbWlzc2lvbl9kZWJpdCI6MC4wLCJjb21taXNzaW9uX2NyZWRpdCI6NjAuNSwiY3VycmVuY3lfZGViaXQiOiJVQUgiLCJjdXJyZW5jeV9jcmVkaXQiOiJVQUgiLCJzZW5kZXJfYm9udXMiOjAuMCwiYW1vdW50X2JvbnVzIjowLjAsIm1waV9lY2kiOiI3IiwiaXNfM2RzIjpmYWxzZSwibGFuZ3VhZ2UiOiJ1ayIsImNyZWF0ZV9kYXRlIjoxNTg2NDQwOTQ0MDg4LCJlbmRfZGF0ZSI6MTU4NjQ0MDk0NDY5MCwidHJhbnNhY3Rpb25faWQiOjEyOTA5OTIxNjh9\",\n\t\"signature\": \"q9fODAMnDs/u0Y/wG7lI93KaqG0=\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/result",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"result"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list all payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"list"
+							]
+						},
+						"description": "Get list of all payments"
+					},
+					"response": []
+				},
+				{
+					"name": "single payment details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/5ec68caf414f3b2fd43a53fc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"5ec68caf414f3b2fd43a53fc"
+							]
+						},
+						"description": "Get single payment details"
+					},
+					"response": []
+				},
+				{
+					"name": "single payment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/5ec690e9d79a4a2f48b94bfc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"5ec690e9d79a4a2f48b94bfc"
+							]
+						},
+						"description": "Delete payment by given ID and remove it from the teacher's payment list. I doubt this will be availiable in the UI."
+					},
+					"response": []
+				},
+				{
+					"name": "all payment descriptions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/descr",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"descr"
+							]
+						},
+						"description": "List all payment descriptions"
+					},
+					"response": []
+				}
+			],
+			"description": "Payment related requests",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Teachers",
+			"item": [
+				{
+					"name": "new teacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Some User\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"жіноча\",\n    \"maritalStatus\": \"одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Full education\",\n    \"educationDegree\": \"Magister\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda2a88294d96316099796e\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teachers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update teacher's details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Some User updated\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"Чоловіча\",\n    \"maritalStatus\": \"Одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Повна віща освіта\",\n    \"educationDegree\": \"Магистр\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний співробітник\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda3fcc2604980cf4f78a8d\"],\n    \"schoolClasses\": [\"5eda443be3c09817f097af35\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teachers/5eda3c241529d81558cb4e35",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers",
+								"5eda3c241529d81558cb4e35"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all teachers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/teachers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single teacher details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/teachers/5eda29ad837e4e29e07eba5a",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers",
+								"5eda29ad837e4e29e07eba5a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new specialty to the teacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"specialtyId\": \"5ea167a7da6baf32305cb260\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teachers/5ea19ce58239e42d1cfc9039/specialties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers",
+								"5ea19ce58239e42d1cfc9039",
+								"specialties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single teacher",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/teachers/5eda3c241529d81558cb4e35",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers",
+								"5eda3c241529d81558cb4e35"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Branches",
+			"item": [
+				{
+					"name": "new branch",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Шпитьківська Дитяча Школа Мистецтв\",\n\t\"town\": \"Шпитьки\",\n\t\"address\": \"08122, Київська обл., Києво-Святошинський район, с. Шпитьки, вул. Господарська, 3.\",\n\t\"phone\": \"+38 (050) 555-55-55\",\n\t\"info\": \"Заняття також проходять в приміщенні Будинку культури, за адресою Покровська, 8.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/branches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all branches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/branches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single branch",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/branches/5e9ec3a2eae57c2c8896773c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches",
+								"5e9ec3a2eae57c2c8896773c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "branch details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Horenichi\",\n    \"town\": \"Гореничі\",\n    \"address\": \"08114, Київська обл., Києво-Святошинський район, c. Гореничі, вул. Соборна, 203.\",\n    \"phone\": \"+38 (095) 555-55-55\",\n    \"info\": \"Заняття проходять в приміщенні Будинку культури.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/branches/5ea00e81c2795c1fec25f619",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches",
+								"5ea00e81c2795c1fec25f619"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Specialties",
+			"item": [
+				{
+					"name": "new specialty",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Саксофон\",\n\t\"cost\": 200,\n\t\"info\": \"Some info\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/specialties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"specialties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all specialties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/specialties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"specialties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update specialty",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Саксофон\",\n\t\"cost\": 200,\n\t\"info\": \"Some info\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/specialties/5ea167a7da6baf32305cb260",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"specialties",
+								"5ea167a7da6baf32305cb260"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove specialty",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"specialtyId\": \"5ea6d3a60b4dcaa01eb24148\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teachers/5ea19ce58239e42d1cfc9039/specialties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teachers",
+								"5ea19ce58239e42d1cfc9039",
+								"specialties"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0ee219d8-488e-4fe8-8431-0e9d6f34f094",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "51f7c6ad-12c4-4a62-92ce-7def41b4c48e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Pupils",
+			"item": [
+				{
+					"name": "new pupil",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Luanne\",\n\t\"applicantName\": \"John Doe\",\n\t\"specialty\": \"5eb9452d40aaa533c480ff76\",\n\t\"dateOfBirth\": \"2020-08-01\",\n\t\"mainSchool\": \"Some school #34\",\n\t\"mainSchoolClass\": 3,\n\t\"gender\": \"male\",\n\t\"hasBenefit\": 50,\n\t\"fathersName\": \"Hank Hill\",\n\t\"fathersPhone\": \"+38(050)888-44-77\",\n\t\"fathersEmploymentInfo\": \"Assistant manager at Strickland propane\",\n\t\"mothersName\": \"Peggy Hill\",\n\t\"mothersPhone\": \"+38(050)555-44-33\",\n\t\"mothersEmploymentInfo\": \"Substitute spanish teacher\",\n\t\"contactEmail\": \"email@example.com\",\n\t\"homeAddress\": \"Street, 13, flat #56\",\n\t\"docsPresent\": false,\n\t\"info\": \"some info about him\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/pupils",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single pupil",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pupils/5ec65130ac136429fcc3dac9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils",
+								"5ec65130ac136429fcc3dac9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all pupils",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pupils",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update pupil details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bobby\",\n\t\"applicantName\": \"John Doe\",\n\t\"specialty\": \"5eb9452d40aaa533c480ff76\",\n\t\"dateOfBirth\": \"1995-08-01\",\n\t\"mainSchool\": \"Some school #34\",\n\t\"mainSchoolClass\": 3,\n\t\"gender\": \"male\",\n\t\"hasBenefit\": 50,\n\t\"fathersName\": \"Hank Hill\",\n\t\"fathersPhone\": \"+38(050)888-44-77\",\n\t\"fathersEmploymentInfo\": \"Assistant manager at Strickland propane\",\n\t\"mothersName\": \"Peggy Hill\",\n\t\"mothersPhone\": \"+38(050)555-44-33\",\n\t\"mothersEmploymentInfo\": \"Substitute spanish teacher\",\n\t\"contactEmail\": \"email@example.com\",\n\t\"homeAddress\": \"Street, 13, flat #56\",\n\t\"docsPresent\": false,\n\t\"info\": \"some info about him\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/pupils/5ece5c57a843e43178cf7e9e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils",
+								"5ece5c57a843e43178cf7e9e"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Pupils requests",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "School Classes",
+			"item": [
+				{
+					"name": "new school class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title1\": \"Don't delete\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"👨‍🦱 Hank Hill\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Dale\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/schoolclasses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"schoolclasses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all classes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/schoolclasses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"schoolclasses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update school class details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Перший 345345345\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"Some user\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Bobby\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/schoolclasses/5ed0f7b355f5251038f6a9ca",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"schoolclasses",
+								"5ed0f7b355f5251038f6a9ca"
+							]
+						},
+						"description": "Update school class details by given id."
+					},
+					"response": []
+				},
+				{
+					"name": "single school class",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/schoolclasses/5ed5092436d33b14b8e730cf",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"schoolclasses",
+								"5ed5092436d33b14b8e730cf"
+							]
+						},
+						"description": "Delete school class by given id."
+					},
+					"response": []
+				},
+				{
+					"name": "single class details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/schoolclasses/5eba998697b4c533dc21ab84",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"schoolclasses",
+								"5eba998697b4c533dc21ab84"
+							]
+						},
+						"description": "Get signle school class details by given ID."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "School",
+			"item": [
+				{
+					"name": "school stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/school",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"school"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "teachers names list by search value",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"value\": \"Hill\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/search/teachers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pupils names list by search value",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"value\": \"о\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/search/pupils",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"pupils"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "specialties names list by search value",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"value\": \"та\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/search/specialties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"specialties"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "send contact form email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Dale\",\n\t\"email\": \"user@example.com\",\n\t\"message\": \"Please don't ban me, I'm using crappy 3G internet, hence the ever changin ip addresses.\"\n}"
+				},
+				"url": {
+					"raw": "localhost:5000/api/email/contact",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"email",
+						"contact"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login user PROD",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"password\": \"SomePassword1234\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify recaptcha google.com",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "secret",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "response",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.google.com/recaptcha/api/siteverify",
+					"protocol": "https",
+					"host": [
+						"www",
+						"google",
+						"com"
+					],
+					"path": [
+						"recaptcha",
+						"api",
+						"siteverify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify recaptcha api",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"response\": \"\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3003/api/users/recaptcha/verify",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"users",
+						"recaptcha",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "single user info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/5e5fcdce337bc32c64913b54",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"5e5fcdce337bc32c64913b54"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ac3af8c3-ac24-4471-bd1f-66c430fedbf8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "066a9e5f-d4aa-4e9a-91d1-1b31b463ffa8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
