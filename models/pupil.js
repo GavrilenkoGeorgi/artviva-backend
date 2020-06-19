@@ -9,6 +9,10 @@ const pupilSchema = mongoose.Schema({
 		unique: true,
 		required: true
 	},
+	currentlyEnrolled: {
+		type: Boolean,
+		default: false
+	},
 	applicantName: {
 		type: String,
 		minlength: 2,

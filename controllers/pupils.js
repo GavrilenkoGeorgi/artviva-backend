@@ -1,6 +1,7 @@
 const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
 const { checkAuth } = require('../utils/checkAuth')
+const { checkAllPropsArePresent } = require('../utils/objectHelpers')
 
 // create new pupil
 pupilsRouter.post('/', async (request, response, next) => {
@@ -23,6 +24,42 @@ pupilsRouter.post('/', async (request, response, next) => {
 
 			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// create new pupil from public form
+pupilsRouter.post('/apply', async (request, response, next) => {
+	try {
+		const pupilsData =
+			['name', 'applicantName', 'specialty', 'dateOfBirth', 'mainSchool',
+				'mainSchoolClass', 'gender', 'hasBenefit',
+				'fathersName', 'fathersPhone', 'fathersEmploymentInfo',
+				'mothersName', 'mothersPhone', 'mothersEmploymentInfo',
+				'contactEmail', 'homeAddress']
+		// check all fields are present
+		try {
+			checkAllPropsArePresent(request.body, pupilsData)
+		} catch (error) {
+			return response.status(400).json({ message: error })
+		}
+
+		// check if pupil with this name already exists
+		const { name } = { ...request.body }
+		const existingPupil = await Pupil.findOne({ name })
+		if (existingPupil) return response.status(400).json({
+			message: 'Учень з таким ім’ям вже існує.',
+			cause: 'name'
+		})
+
+		// send email to admin about new pupil added by public form!
+
+		// create new pupil and save
+		const pupil = new Pupil(request.body)
+		await pupil.save()
+
+		response.status(200).end()
 	} catch (exception) {
 		next(exception)
 	}
