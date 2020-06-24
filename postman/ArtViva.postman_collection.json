@@ -22,19 +22,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"passResetToken\": \"33953f75-182b-4725-8c74-096288f020c9\",\n\t\"password\": \"SomePassword1234\"\n}",
+							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"passResetToken\": \"e4a6e229-1458-43cf-adb3-3f2d505c77b4\",\n\t\"password\": \"{{default_password}}\"\n}",
 							"options": {
 								"raw": {}
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/password/reset",
+							"raw": "{{base_url}}/password/reset",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
 								"password",
 								"reset"
 							]
@@ -55,16 +53,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"activationToken\": \"36ee09d9-18b8-4751-adbd-6397885dd46a\"\n}"
+							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"activationToken\": \"36ee09d9-18b8-4751-adbd-6397885dd46a\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/users/activate",
+							"raw": "{{base_url}}/users/activate",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
 								"users",
 								"activate"
 							]
@@ -85,16 +84,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Bob\",\n\t\"email\": \"user@example.com\",\n\t\"activationUUID\": \"7af4b43b-dc8e-4d21-8bc9-fee4c1659798\"\n}"
+							"raw": "{\n\t\"name\": \"John\",\n\t\"email\": \"{{user_email}}\",\n\t\"activationUUID\": \"7af4b43b-dc8e-4d21-8bc9-fee4c1659798\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/password/activation",
+							"raw": "{{base_url}}/password/activation",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
 								"password",
 								"activation"
 							]
@@ -115,48 +115,19 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"user@example.com\"\n}"
+							"raw": "{\n\t\"email\": \"{{user_email}}\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/password/recover",
+							"raw": "{{base_url}}/password/recover",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
 								"password",
 								"recover"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login user",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"password\": \"SomePassword1234\"\n}"
-						},
-						"url": {
-							"raw": "localhost:5000/api/login",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"login"
 							]
 						}
 					},
@@ -176,7 +147,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"email\": \"user@example.com\",\n      \"name\": \"John\",\n      \"middlename\": \"Middle\",\n      \"lastname\": \"Doe\",\n      \"password\": \"SomeFakePassword\"\n}"
+							"raw": "{\n      \"email\": \"{{user_email}}\",\n      \"name\": \"John\",\n      \"middlename\": \"Some\",\n      \"lastname\": \"Doe\",\n      \"password\": \"{{default_password}}\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{base_url}}/users",
@@ -226,7 +200,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Bob\",\r\n    \"middlename\": \"Some\",\r\n    \"lastname\": \"Doe\",\r\n    \"approvedUser\": false,\r\n    \"superUser\": true\r\n}",
+							"raw": "{\r\n    \"name\": \"John\",\r\n    \"middlename\": \"Some\",\r\n    \"lastname\": \"Doe\",\r\n    \"approvedUser\": false,\r\n    \"superUser\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -246,6 +220,55 @@
 						"description": "updating user details, name and account status, super user and approved."
 					},
 					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{default_password}}\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single user info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/5e5fcdce337bc32c64913b54",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"5e5fcdce337bc32c64913b54"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"description": "Account activation, password resets",
@@ -261,7 +284,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"teacher\": \"Some User\",\n\t\"specialty\": \"Саксофон\",\n\t\"public_key\": \"sandbox_ixxxxxxxxx\",\n\t\"version\": \"3\",\n\t\"action\": \"pay\",\n\t\"amount\": \"1\",\n\t\"currency\": \"UAH\",\n\t\"description\": \"test\",\n\t\"paytypes\": \"card\",\n\t\"card\": \"4242424242424242\",\n\t\"card_exp_month\": \"42\",\n\t\"card_exp_year\": \"42\",\n\t\"card_cvv\": \"424\"\n}",
+							"raw": "{\n\t\"teacher\": \"John Someone Doe\",\n\t\"specialty\": \"Саксофон\",\n\t\"public_key\": \"sandbox_i41231363208\",\n\t\"version\": \"3\",\n\t\"action\": \"pay\",\n\t\"amount\": \"1\",\n\t\"currency\": \"UAH\",\n\t\"description\": \"postman test paymment\",\n\t\"paytypes\": \"card\",\n\t\"card\": \"4242 4242 4242 4242\",\n\t\"card_exp_month\": \"42\",\n\t\"card_exp_year\": \"42\",\n\t\"card_cvv\": \"424\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -296,13 +319,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/payment/form",
+							"raw": "{{base_url}}/payment/form",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
 								"payment",
 								"form"
 							]
@@ -459,7 +480,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Some User\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"жіноча\",\n    \"maritalStatus\": \"одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Full education\",\n    \"educationDegree\": \"Magister\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda2a88294d96316099796e\"]\n}",
+							"raw": "{\n    \"name\": \"John Someone Doe\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"жіноча\",\n    \"maritalStatus\": \"одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Full education\",\n    \"educationDegree\": \"Magister\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda2a88294d96316099796e\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -485,7 +506,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Some User updated\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"Чоловіча\",\n    \"maritalStatus\": \"Одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Повна віща освіта\",\n    \"educationDegree\": \"Магистр\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний співробітник\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda3fcc2604980cf4f78a8d\"],\n    \"schoolClasses\": [\"5eda443be3c09817f097af35\"]\n}",
+							"raw": "{\n\t\"name\": \"John Someone Doe\",\n    \"dateOfBirth\": \"1988-07-13\",\n    \"employmentDate\": \"2000-01-01\",\n    \"experienceToDate\": { \"years\": 1, \"months\": 1, \"days\": 1},\n    \"phone\": \"+38(050)555-55-55\",\n    \"contactEmail\": \"email@example.com\",\n    \"residence\": \"Село\",\n    \"gender\": \"Чоловіча\",\n    \"maritalStatus\": \"Одружений\",\n    \"university\": \"Crimean KGU\",\n    \"educationType\": \"Повна віща освіта\",\n    \"educationDegree\": \"Магистр\",\n    \"qualification\": \"Немає\",\n    \"teacherTitle\": \"Викладач-методист\",\n    \"scienceDegree\": \"Немає\",\n    \"category\": 9,\n    \"employeeType\": \"Штатний співробітник\",\n    \"isAdministration\": true,\n    \"isRetired\": false,\n    \"employeeIsAStudent\": false,\n    \"info\": \"Some info\",\n    \"specialties\": [\"5eda298e837e4e29e07eba59\", \"5eda3fcc2604980cf4f78a8d\"],\n    \"schoolClasses\": [\"5eda443be3c09817f097af35\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -528,41 +549,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/teachers/5eda29ad837e4e29e07eba5a",
+							"raw": "{{base_url}}/teachers/5eda3c241529d81558cb4e35",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"teachers",
-								"5eda29ad837e4e29e07eba5a"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "new specialty to the teacher",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"specialtyId\": \"5ea167a7da6baf32305cb260\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/teachers/5ea19ce58239e42d1cfc9039/specialties",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"teachers",
-								"5ea19ce58239e42d1cfc9039",
-								"specialties"
+								"5eda3c241529d81558cb4e35"
 							]
 						}
 					},
@@ -599,7 +592,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Шпитьківська Дитяча Школа Мистецтв\",\n\t\"town\": \"Шпитьки\",\n\t\"address\": \"08122, Київська обл., Києво-Святошинський район, с. Шпитьки, вул. Господарська, 3.\",\n\t\"phone\": \"+38 (050) 555-55-55\",\n\t\"info\": \"Заняття також проходять в приміщенні Будинку культури, за адресою Покровська, 8.\"\n}",
+							"raw": "{\n\t\"name\": \"Шпитьківська Дитяча Школа Мистецтв\",\n\t\"town\": \"Шпитьки\",\n\t\"address\": \"08122, Київська обл., Києво-Святошинський район, с. Шпитьки, вул. Господарська, 3.\",\n\t\"phone\": \"+38(050)555-55-55\",\n\t\"info\": \"Заняття також проходять в приміщенні Будинку культури, за адресою Покровська, 8.\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -660,7 +653,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Horenichi\",\n    \"town\": \"Гореничі\",\n    \"address\": \"08114, Київська обл., Києво-Святошинський район, c. Гореничі, вул. Соборна, 203.\",\n    \"phone\": \"+38 (095) 555-55-55\",\n    \"info\": \"Заняття проходять в приміщенні Будинку культури.\"\n}",
+							"raw": "{\n\t\"name\": \"Horenichi\",\n    \"town\": \"Гореничі\",\n    \"address\": \"08114, Київська обл., Києво-Святошинський район, c. Гореничі, вул. Соборна, 203.\",\n    \"phone\": \"+38(095)555-55-55\",\n    \"info\": \"Заняття проходять в приміщенні Будинку культури.\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -757,28 +750,36 @@
 					"response": []
 				},
 				{
-					"name": "remove specialty",
+					"name": "specialty details by id",
 					"request": {
-						"method": "PATCH",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"specialtyId\": \"5ea6d3a60b4dcaa01eb24148\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_url}}/teachers/5ea19ce58239e42d1cfc9039/specialties",
+							"raw": "{{base_url}}/specialties/5eda3fd82604980cf4f78a8e",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"teachers",
-								"5ea19ce58239e42d1cfc9039",
-								"specialties"
+								"specialties",
+								"5eda3fd82604980cf4f78a8e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete specialty by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/specialties/5eda298e837e4e29e07eba59",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"specialties",
+								"5eda298e837e4e29e07eba59"
 							]
 						}
 					},
@@ -880,7 +881,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Bobby\",\n\t\"applicantName\": \"John Doe\",\n\t\"specialty\": \"5eb9452d40aaa533c480ff76\",\n\t\"dateOfBirth\": \"1995-08-01\",\n\t\"mainSchool\": \"Some school #34\",\n\t\"mainSchoolClass\": 3,\n\t\"gender\": \"male\",\n\t\"hasBenefit\": 50,\n\t\"fathersName\": \"Hank Hill\",\n\t\"fathersPhone\": \"+38(050)888-44-77\",\n\t\"fathersEmploymentInfo\": \"Assistant manager at Strickland propane\",\n\t\"mothersName\": \"Peggy Hill\",\n\t\"mothersPhone\": \"+38(050)555-44-33\",\n\t\"mothersEmploymentInfo\": \"Substitute spanish teacher\",\n\t\"contactEmail\": \"email@example.com\",\n\t\"homeAddress\": \"Street, 13, flat #56\",\n\t\"docsPresent\": false,\n\t\"info\": \"some info about him\"\n}\n",
+							"raw": "{\n\t\"currentlyEnrolled\": false,\n\t\"hasBenefit\": 50,\n\t\"docsPresent\": false,\n\t\"name\": \"Bobby\",\n\t\"applicantName\": \"John Doe\",\n\t\"specialty\": \"5eb9452d40aaa533c480ff76\",\n\t\"artSchoolClass\": 1,\n\t\"dateOfBirth\": \"1995-08-01\",\n\t\"mainSchool\": \"Some school #34\",\n\t\"mainSchoolClass\": 3,\n\t\"gender\": \"male\",\n\t\"fathersName\": \"Hank Hill\",\n\t\"fathersPhone\": \"+38(050)888-44-77\",\n\t\"fathersEmploymentInfo\": \"Assistant manager at Strickland propane\",\n\t\"mothersName\": \"Peggy Hill\",\n\t\"mothersPhone\": \"+38(050)555-44-33\",\n\t\"mothersEmploymentInfo\": \"Substitute spanish teacher\",\n\t\"contactEmail\": \"email@example.com\",\n\t\"homeAddress\": \"Street, 13, flat #56\",\n\t\"info\": \"some info about him\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -895,6 +896,55 @@
 							"path": [
 								"pupils",
 								"5ece5c57a843e43178cf7e9e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "public new pupil form",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Public Pupil\",\r\n\t\"applicantName\": \"John Doe\",\r\n\t\"specialty\": \"5eb9452d40aaa533c480ff76\",\r\n\t\"dateOfBirth\": \"2020-08-01\",\r\n\t\"mainSchool\": \"Some public school #34\",\r\n\t\"mainSchoolClass\": 3,\r\n\t\"gender\": \"male\",\r\n\t\"hasBenefit\": 50,\r\n\t\"fathersName\": \"Hank Hill\",\r\n\t\"fathersPhone\": \"+38(050)888-44-77\",\r\n\t\"fathersEmploymentInfo\": \"Assistant manager at Strickland propane\",\r\n\t\"mothersName\": \"Peggy Hill\",\r\n\t\"mothersPhone\": \"+38(050)555-44-33\",\r\n\t\"mothersEmploymentInfo\": \"Substitute spanish teacher\",\r\n\t\"contactEmail\": \"email@example.com\",\r\n\t\"homeAddress\": \"Street, 13, flat #56\",\r\n\t\"info\": \"some info about him\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/pupils/apply",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils",
+								"apply"
+							]
+						},
+						"description": "Public form to add pupil"
+					},
+					"response": []
+				},
+				{
+					"name": "pupil details by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pupils/5eda4430e3c09817f097af34",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pupils",
+								"5eda4430e3c09817f097af34"
 							]
 						}
 					},
@@ -914,7 +964,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title1\": \"Don't delete\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"👨‍🦱 Hank Hill\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Dale\"]\n}",
+							"raw": "{\n\t\"title\": \"Postman test class\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"Hank Hill\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Dale\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -957,7 +1007,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\": \"Перший 345345345\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"Some user\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Bobby\"]\n}",
+							"raw": "{\n\t\"title\": \"Postman updated class\",\n\t\"info\": \"Тестовий клас\",\n\t\"teacher\": \"Peggy Hill\",\n\t\"specialty\": \"Саксофон\",\n\t\"pupils\": [\"Bobby\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1130,158 +1180,124 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "send contact form email",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Dale\",\n\t\"email\": \"user@example.com\",\n\t\"message\": \"Please don't ban me, I'm using crappy 3G internet, hence the ever changin ip addresses.\"\n}"
-				},
-				"url": {
-					"raw": "localhost:5000/api/email/contact",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"email",
-						"contact"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login user PROD",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"email\": \"user@example.com\",\n\t\"password\": \"SomePassword1234\"\n}"
-				},
-				"url": {
-					"raw": "{{base_url}}/login",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "verify recaptcha google.com",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "secret",
-							"value": "",
-							"type": "text"
+			"name": "ReCaptcha",
+			"item": [
+				{
+					"name": "verify recaptcha google.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "secret",
+									"value": "recaptcha-secret",
+									"type": "text"
+								},
+								{
+									"key": "response",
+									"value": "03AERD8XouUqZE_1bTHfZcQFy9tyjshQtx0SdEZyfMyIeIsdJV5B5FNQuFjJRH4YMctzQaCunq7ZF3Dh7LyaXSse4C4HTkYDVeGvtzbvMXiv-To5iZcIPYepig5S5KM0ligqtpfRNnp7XxhOB-i38sQxzmXLxGjz78dpfErFNA2kPx7Jt5ugiWwTTR6efg5aDUCvHoGfiOxCiaeTqqIRN-a3ztpALJsqtGCgDrS5sO4UH43PgO_jEbfniGttVoe8pwX-8OI59BaCuvtjrbFYY-gWp3bUsdNdhUXm0LLE1DAr15FPRg9MZxZLwaKaXwmOOw8fm2KTCBrxuSihA9VyJFUsuYgWbidD9MQxY8GkNCBh7XTNobmwjD3GQ",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "response",
-							"value": "",
-							"type": "text"
+						"url": {
+							"raw": "https://www.google.com/recaptcha/api/siteverify",
+							"protocol": "https",
+							"host": [
+								"www",
+								"google",
+								"com"
+							],
+							"path": [
+								"recaptcha",
+								"api",
+								"siteverify"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "https://www.google.com/recaptcha/api/siteverify",
-					"protocol": "https",
-					"host": [
-						"www",
-						"google",
-						"com"
-					],
-					"path": [
-						"recaptcha",
-						"api",
-						"siteverify"
-					]
+				{
+					"name": "verify recaptcha response",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"response\": \"03AERD8Xo4mVUHgn6p_KqydyXpJem6eBtKCUUq6e2rhxWLkl31fSgP_B7omzJxZnUFo9vFZp2ZdGaNVShsLxU8OKbyfBlp5zAggFTGM5iEJh1cOk2mOccNtgAkWF9MKl1KIUrAzQ8nrYbjCLZ3H_bSW1ms371MKdDGGYGAb8A4kUFjjzC_bSR3gwE7tE_DQ0P7G8rPMMVYQBbbR-bCmkIn56PLMkxECcvkflVMpSzzDlZYDtRquTiPy3FtWdPnhMfBRVryZzGCJV71UvlliTA9uLMUAUNtlZAuliBg35hXo1EGgSzrwso8v-dxpq3XIB428A826Qnsa3vVMR-2-7DBgho9FjoYe152gq56V59M4-db7WtM4TCj4ws\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/recaptcha/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"recaptcha",
+								"verify"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "verify recaptcha api",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"response\": \"\"\n}"
-				},
-				"url": {
-					"raw": "localhost:3003/api/users/recaptcha/verify",
-					"host": [
-						"localhost"
-					],
-					"port": "3003",
-					"path": [
-						"api",
-						"users",
-						"recaptcha",
-						"verify"
-					]
+			"name": "Send emails",
+			"item": [
+				{
+					"name": "send contact form email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Dale Gribble\",\n\t\"email\": \"{{user_email}}\",\n\t\"message\": \"Please don't ban me, I'm using crappy 3G internet, hence the ever changin ip addresses.\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/email/contact",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"email",
+								"contact"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "single user info",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:5000/api/users/5e5fcdce337bc32c64913b54",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"users",
-						"5e5fcdce337bc32c64913b54"
-					]
-				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -1314,6 +1330,18 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"id": "60bb1428-0229-4b53-bb83-05ef1f155c3c",
+			"key": "user_email",
+			"value": "user@example.com"
+		},
+		{
+			"id": "34acbcf2-f7d0-4010-a4aa-c09f86ba7163",
+			"key": "default_password",
+			"value": "SomePassword1"
 		}
 	],
 	"protocolProfileBehavior": {}
