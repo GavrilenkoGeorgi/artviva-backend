@@ -199,7 +199,7 @@ usersRouter.post('/recaptcha/verify', async (request, response, next) => {
 		}
 
 		const result = await requestPromise(options)
-		response.status(200).json({ result })
+		response.status(200).json(result)
 
 	} catch (exception) {
 		next(exception)
