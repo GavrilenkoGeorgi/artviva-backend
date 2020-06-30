@@ -32,6 +32,14 @@ const errorHandler = (error, request, response, next) => {
 		return response.status(409).json({
 			message: `Це значення має бути унікальним: "${value[Object.keys(value)[0]]}"`
 		})
+	} else if (error.name === 'MailGunError') {
+		return response.status(500).json({
+			message: error.message
+		})
+	} else if (error.name === 'ObjectPropsCheck') {
+		return response.status(500).json({
+			message: error.message
+		})
 	}
 
 	next(error)

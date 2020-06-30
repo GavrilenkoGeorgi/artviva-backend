@@ -11,7 +11,10 @@ const checkAllPropsArePresent = (obj, propsList) => {
 	if (missingProps.length === 0 || missingProps.length === propsList.length) {
 		return true
 	} else {
-		throw `Відсутні деякі поля: ${missingProps.join(', ')}`
+		throw ({
+			name: 'ObjectPropsCheck',
+			message: `Відсутні деякі поля: ${missingProps.join(', ')}`
+		})
 	}
 }
 

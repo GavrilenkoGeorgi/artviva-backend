@@ -7,11 +7,15 @@ const { v4: uuidv4 } = require('uuid')
 const { hashString } = require('../utils/hashString')
 const { sendAccountActivationMessage } = require('../utils/sendEmailMessage')
 const { checkAuth } = require('../utils/checkAuth')
+const { checkAllPropsArePresent } = require('../utils/objectHelpers')
 
 // create user
 usersRouter.post('/', async (request, response, next) => {
 	try {
 		// check if all data fields are present
+		const newUserData = ['email', 'name', 'middlename', 'lastname', 'password']
+		checkAllPropsArePresent(request.body, newUserData)
+
 		const {
 			email,
 			name,
@@ -20,12 +24,6 @@ usersRouter.post('/', async (request, response, next) => {
 			password
 		} = { ...request.body }
 
-		if (!email || !name || !middlename || !lastname || !password) {
-			return response.status(400).json({
-				message: 'У запиті відсутні деякі поля даних.'
-			})
-		}
-
 		// check if email is correctly formatted
 		if (!validateEmail(email)) return response.status(400).json({
 			message: 'Електронна пошта користувача неправильно сформована.'
@@ -33,12 +31,12 @@ usersRouter.post('/', async (request, response, next) => {
 
 		// check if email is already taken
 		const existingUser = await User.findOne({ email })
-		if (existingUser) return response.status(400).json({
+		if (existingUser) return response.status(409).json({
 			message: 'Адреса електронної пошти вже зайнята, вкажіть іншу.',
 			cause: 'email'
 		})
 
-		if (validateUserRegData(email, name, middlename, lastname, password)) {
+		if (validateUserRegData(request.body)) {
 			const passwordHash = await hashString(password)
 			const activationUUID = uuidv4()
 			const activationHash = await hashString(activationUUID)
@@ -50,8 +48,6 @@ usersRouter.post('/', async (request, response, next) => {
 				passwordHash,
 				activationHash
 			})
-			// save user
-			await user.save()
 
 			// send activation email
 			const data = {
@@ -60,7 +56,13 @@ usersRouter.post('/', async (request, response, next) => {
 				activationUUID,
 				response
 			}
-			sendAccountActivationMessage(data)  //???
+			// send message with details about activation
+			// of newly created user account
+			await sendAccountActivationMessage(data)
+
+			// message sent, no errors, add new user account
+			await user.save()
+			response.status(200).end()
 
 		} else {
 			return response.status(422).json({
@@ -84,7 +86,7 @@ usersRouter.get('/', async (request, response, next) => {
 	}
 })
 
-// update usert details
+// update user details
 usersRouter.put('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
@@ -125,6 +127,22 @@ usersRouter.get('/:id', async (request, response, next) => {
 
 			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
 			response.status(200).json({ user })
+		}
+	} catch(exception) {
+		next(exception)
+	}
+})
+
+// delete single user by given id
+usersRouter.delete('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			// const id = request.params.id
+			const user = await User.findById(request.params.id)
+
+			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
+			await User.findByIdAndRemove(user._id)
+			response.status(204).end()
 		}
 	} catch(exception) {
 		next(exception)

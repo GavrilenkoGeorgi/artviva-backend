@@ -2,6 +2,7 @@ const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
+const { sendNewPupilMessage } = require('../utils/sendEmailMessage')
 
 // create new pupil
 pupilsRouter.post('/', async (request, response, next) => {
@@ -39,11 +40,7 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 				'mothersName', 'mothersPhone', 'mothersEmploymentInfo',
 				'contactEmail', 'homeAddress']
 		// check all fields are present
-		try {
-			checkAllPropsArePresent(request.body, pupilsData)
-		} catch (error) {
-			return response.status(400).json({ message: error })
-		}
+		checkAllPropsArePresent(request.body, pupilsData)
 
 		// check if pupil with this name already exists
 		const { name } = { ...request.body }
@@ -54,6 +51,16 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 		})
 
 		// send email to admin about new pupil added by public form!
+		const { applicantName, contactEmail } = { ...request.body }
+		const data = {
+			name,
+			applicantName,
+			contactEmail
+		}
+		// send email
+		// if unsuccessfull, throws an error
+		// and pupil is not saved
+		await sendNewPupilMessage(data)
 
 		// create new pupil and save
 		const pupil = new Pupil(request.body)
@@ -96,6 +103,18 @@ pupilsRouter.delete('/:id', async (request, response, next) => {
 
 			await Pupil.findByIdAndRemove(pupil._id)
 			response.status(204).end()
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get pupil details
+pupilsRouter.get('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const pupil = await Pupil.findById(request.params.id)
+			response.status(200).json(pupil)
 		}
 	} catch (exception) {
 		next(exception)
