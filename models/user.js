@@ -46,7 +46,11 @@ const userSchema = mongoose.Schema({
 		type: String,
 		maxlength: 60
 	},
-	passResetHashExpiresAt: Date
+	passResetHashExpiresAt: Date,
+	teacher: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Teacher'
+	}
 })
 
 userSchema.plugin(uniqueValidator)
