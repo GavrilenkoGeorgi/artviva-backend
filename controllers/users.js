@@ -8,6 +8,7 @@ const { hashString } = require('../utils/hashString')
 const { sendAccountActivationMessage } = require('../utils/sendEmailMessage')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
+const Teacher = require('../models/teacher')
 
 // create user
 usersRouter.post('/', async (request, response, next) => {
@@ -95,7 +96,8 @@ usersRouter.put('/:id', async (request, response, next) => {
 			const {
 				name,
 				middlename,
-				lastname
+				lastname,
+				teacher
 			} = { ...request.body }
 
 			if (!name || !middlename || !lastname) {
@@ -104,8 +106,18 @@ usersRouter.put('/:id', async (request, response, next) => {
 				})
 			}
 
+			let values = request.body
+			if (teacher === '') {
+				values = { ...values, teacher: null }
+			} else {
+				const foundTeacher = await Teacher.findOneAndUpdate({ name: teacher }, { linkedUserAccountId: id })
+				if (!foundTeacher) return response.status(404)
+					.send({ message: 'Перевірте ім\'я вчителя в полі анкети.' })
+				values = { ...values, teacher: foundTeacher._id }
+			}
+
 			const updatedUser = await User
-				.findOneAndUpdate({ _id: id }, request.body, { new: true })
+				.findOneAndUpdate({ _id: id }, values, { new: true })
 
 			if (!updatedUser)
 				return response.status(400)
@@ -126,7 +138,7 @@ usersRouter.get('/:id', async (request, response, next) => {
 			const user = await User.findOne({ _id: id })
 
 			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
-			response.status(200).json({ user })
+			response.status(200).json(user)
 		}
 	} catch(exception) {
 		next(exception)

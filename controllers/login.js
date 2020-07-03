@@ -53,6 +53,8 @@ loginRouter.post('/', async (request, response, next) => {
 				email: user.email,
 				approvedUser: user.approvedUser,
 				superUser: user.superUser,
+				isActive: user.isActive,
+				teacher: user.teacher,
 				id: user.id
 			})
 
