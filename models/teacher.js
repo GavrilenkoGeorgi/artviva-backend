@@ -106,6 +106,10 @@ const teacherSchema = mongoose.Schema({
 		maxlength: 255,
 		default: null
 	},
+	linkedUserAccountId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	},
 	schoolClasses: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

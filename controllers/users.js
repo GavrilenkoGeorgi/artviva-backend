@@ -2,24 +2,21 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 const { validateUserRegData, validateUUIDv4, validateEmail } = require('../utils/val_user_input')
-const jwt = require('jsonwebtoken')
 const requestPromise = require('request-promise')
 const { v4: uuidv4 } = require('uuid')
 const { hashString } = require('../utils/hashString')
 const { sendAccountActivationMessage } = require('../utils/sendEmailMessage')
-
-const getTokenFrom = request => {
-	const authorization = request.get('authorization')
-	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-		return authorization.substring(7)
-	}
-	return null
-}
+const { checkAuth } = require('../utils/checkAuth')
+const { checkAllPropsArePresent } = require('../utils/objectHelpers')
+const Teacher = require('../models/teacher')
 
 // create user
 usersRouter.post('/', async (request, response, next) => {
 	try {
 		// check if all data fields are present
+		const newUserData = ['email', 'name', 'middlename', 'lastname', 'password']
+		checkAllPropsArePresent(request.body, newUserData)
+
 		const {
 			email,
 			name,
@@ -28,12 +25,6 @@ usersRouter.post('/', async (request, response, next) => {
 			password
 		} = { ...request.body }
 
-		if (!email || !name || !middlename || !lastname || !password) {
-			return response.status(400).json({
-				message: 'У запиті відсутні деякі поля даних.'
-			})
-		}
-
 		// check if email is correctly formatted
 		if (!validateEmail(email)) return response.status(400).json({
 			message: 'Електронна пошта користувача неправильно сформована.'
@@ -41,12 +32,12 @@ usersRouter.post('/', async (request, response, next) => {
 
 		// check if email is already taken
 		const existingUser = await User.findOne({ email })
-		if (existingUser) return response.status(400).json({
+		if (existingUser) return response.status(409).json({
 			message: 'Адреса електронної пошти вже зайнята, вкажіть іншу.',
 			cause: 'email'
 		})
 
-		if (validateUserRegData(email, name, middlename, lastname, password)) {
+		if (validateUserRegData(request.body)) {
 			const passwordHash = await hashString(password)
 			const activationUUID = uuidv4()
 			const activationHash = await hashString(activationUUID)
@@ -58,8 +49,6 @@ usersRouter.post('/', async (request, response, next) => {
 				passwordHash,
 				activationHash
 			})
-			// save user
-			await user.save()
 
 			// send activation email
 			const data = {
@@ -68,7 +57,13 @@ usersRouter.post('/', async (request, response, next) => {
 				activationUUID,
 				response
 			}
-			sendAccountActivationMessage(data)  //???
+			// send message with details about activation
+			// of newly created user account
+			await sendAccountActivationMessage(data)
+
+			// message sent, no errors, add new user account
+			await user.save()
+			response.status(200).end()
 
 		} else {
 			return response.status(422).json({
@@ -80,21 +75,60 @@ usersRouter.post('/', async (request, response, next) => {
 	}
 })
 
-// get all users
+// get list of all users
 usersRouter.get('/', async (request, response, next) => {
-	const token = getTokenFrom(request)
-
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET)
-		if (!token || !decodedToken.id) {
-			return response.status(401).json({
-				error: 'Токен відсутній або недійсний.'
-			})
+		if (checkAuth(request)) {
+			const users = await User.find({})
+			response.json(users.map(user => user.toJSON()))
 		}
-
-		const users = await User.find({}).populate('blogs', { url: 1, title: 1, author: 1 })
-		response.json(users.map(user => user.toJSON()))
 	} catch (exception) {
+		next(exception)
+	}
+})
+
+// update user details
+usersRouter.put('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			// check if all data fields are present
+			const id = request.params.id
+			const {
+				name,
+				middlename,
+				lastname,
+				teacher
+			} = { ...request.body }
+
+			if (!name || !middlename || !lastname) {
+				return response.status(400).json({
+					message: 'У запиті відсутні деякі поля даних.'
+				})
+			}
+
+			let values = request.body
+			if (teacher === '') {
+				values = { ...values, teacher: null }
+			} else {
+				const foundTeacher = await Teacher.findOneAndUpdate({ name: teacher }, { linkedUserAccountId: id })
+				if (!foundTeacher) return response.status(404)
+					.send({
+						message: 'Перевірте ім\'я вчителя в полі анкети.',
+						cause: 'teacher'
+					})
+				values = { ...values, teacher: foundTeacher._id }
+			}
+
+			const updatedUser = await User
+				.findOneAndUpdate({ _id: id }, values, { new: true })
+
+			if (!updatedUser)
+				return response.status(400)
+					.json({ message: 'Щось пішло не так під час обробки вашого запиту.' })
+
+			response.status(200).json({ updatedUser })
+		}
+	} catch(exception) {
 		next(exception)
 	}
 })
@@ -102,12 +136,29 @@ usersRouter.get('/', async (request, response, next) => {
 // get single user info
 usersRouter.get('/:id', async (request, response, next) => {
 	try {
-		const id = request.params.id
-		const user = await User.findOne({ _id: id })
+		if (checkAuth(request)) {
+			const id = request.params.id
+			const user = await User.findOne({ _id: id })
 
-		if (!user) return response.status(400).json({ error: 'Користувача не знайдено, перевірте ID.' })
-		return response.status(200).json({ user })
+			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
+			response.status(200).json(user)
+		}
+	} catch(exception) {
+		next(exception)
+	}
+})
 
+// delete single user by given id
+usersRouter.delete('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			// const id = request.params.id
+			const user = await User.findById(request.params.id)
+
+			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
+			await User.findByIdAndRemove(user._id)
+			response.status(204).end()
+		}
 	} catch(exception) {
 		next(exception)
 	}
@@ -150,7 +201,7 @@ usersRouter.post('/activate', async (request, response, next) => {
 
 		await User.findOneAndUpdate(filter, update, { new: true })
 
-		return response.status(200).json({
+		response.status(200).json({
 			message: 'Обліковий запис активовано.'
 		})
 
@@ -166,7 +217,7 @@ usersRouter.post('/recaptcha/verify', async (request, response, next) => {
 
 		if (!captchaResp) {
 			return response.status(400).json({
-				error: 'Відсутня відповідь recaptcha з фронтенда.'
+				message: 'Відсутня відповідь recaptcha з фронтенда.'
 			})
 		}
 
@@ -181,7 +232,7 @@ usersRouter.post('/recaptcha/verify', async (request, response, next) => {
 		}
 
 		const result = await requestPromise(options)
-		return response.status(200).json({ result })
+		response.status(200).json(result)
 
 	} catch (exception) {
 		next(exception)

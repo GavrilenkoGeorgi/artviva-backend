@@ -1,6 +1,8 @@
 const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
 const { checkAuth } = require('../utils/checkAuth')
+const { checkAllPropsArePresent } = require('../utils/objectHelpers')
+const { sendNewPupilMessage } = require('../utils/sendEmailMessage')
 
 // create new pupil
 pupilsRouter.post('/', async (request, response, next) => {
@@ -9,7 +11,7 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const { name } = { ...request.body }
 			// check if pupil with this name already exists
 			const existingPupil = await Pupil.findOne({ name })
-			if (existingPupil) return response.status(400).json({
+			if (existingPupil) return response.status(409).json({
 				message: 'Учень з таким ім’ям вже існує.',
 				cause: 'name'
 			})
@@ -20,9 +22,52 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const newlyCreatedPupil =
 				await Pupil.findOne({ name })
 					.populate('specialty', { title: 1 })
+					.populate('assignedTo', { lastname: 1 })
 
 			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// create new pupil from public form
+pupilsRouter.post('/apply', async (request, response, next) => {
+	try {
+		const pupilsData =
+			['name', 'applicantName', 'specialty', 'dateOfBirth', 'mainSchool',
+				'mainSchoolClass', 'gender', 'hasBenefit',
+				'fathersName', 'fathersPhone', 'fathersEmploymentInfo',
+				'mothersName', 'mothersPhone', 'mothersEmploymentInfo',
+				'contactEmail', 'homeAddress']
+		// check all fields are present
+		checkAllPropsArePresent(request.body, pupilsData)
+
+		// check if pupil with this name already exists
+		const { name } = { ...request.body }
+		const existingPupil = await Pupil.findOne({ name })
+		if (existingPupil) return response.status(409).json({
+			message: 'Учень з таким ім’ям вже існує.',
+			cause: 'name'
+		})
+
+		// send email to admin about new pupil added by public form!
+		const { applicantName, contactEmail } = { ...request.body }
+		const data = {
+			name,
+			applicantName,
+			contactEmail
+		}
+		// send email
+		// if unsuccessfull, throws an error
+		// and pupil is not saved
+		await sendNewPupilMessage(data)
+
+		// create new pupil and save
+		const pupil = new Pupil(request.body)
+		await pupil.save()
+
+		response.status(200).end()
 	} catch (exception) {
 		next(exception)
 	}
@@ -37,7 +82,23 @@ pupilsRouter.get('/', async (request, response, next) => {
 				.populate('schoolClasses', { title: 1 })
 				.populate('specialty', { title: 1 })
 
-			response.send(pupils.map(pupil => pupil.toJSON()))
+			response.send(pupils)
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get all pupils with given user id
+pupilsRouter.get('/user/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const pupils = await Pupil
+				.find({ assignedTo: request.params.id })
+				.populate('teachers', { name: 1 })
+				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
+			response.status(200).send(pupils)
 		}
 	} catch (exception) {
 		next(exception)
@@ -59,6 +120,18 @@ pupilsRouter.delete('/:id', async (request, response, next) => {
 
 			await Pupil.findByIdAndRemove(pupil._id)
 			response.status(204).end()
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get pupil details
+pupilsRouter.get('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const pupil = await Pupil.findById(request.params.id)
+			response.status(200).json(pupil)
 		}
 	} catch (exception) {
 		next(exception)

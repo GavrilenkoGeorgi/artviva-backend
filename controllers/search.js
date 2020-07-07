@@ -74,4 +74,17 @@ searchRouter.post('/specialties', async (request, response, next) => {
 	}
 })
 
+// get teacher name by id
+searchRouter.get('/teachers/name/:id', async (request, response, next) => {
+	try {
+		const teacher = await Teacher.findById(request.params.id)
+		if (!teacher)
+			return response.status(404)
+				.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
+		response.send({ name: teacher.name })
+	} catch (exception) {
+		next(exception)
+	}
+})
+
 module.exports = searchRouter

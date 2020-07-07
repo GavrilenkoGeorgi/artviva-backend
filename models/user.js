@@ -26,6 +26,14 @@ const userSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
+	approvedUser: {
+		type: Boolean,
+		default: false
+	},
+	superUser: {
+		type: Boolean,
+		default: false
+	},
 	passwordHash: {
 		type: String,
 		maxlength: 60
@@ -38,7 +46,11 @@ const userSchema = mongoose.Schema({
 		type: String,
 		maxlength: 60
 	},
-	passResetHashExpiresAt: Date
+	passResetHashExpiresAt: Date,
+	teacher: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Teacher'
+	}
 })
 
 userSchema.plugin(uniqueValidator)

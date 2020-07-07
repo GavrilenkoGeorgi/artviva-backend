@@ -2,13 +2,14 @@ const validEmailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(
 const validUUIDv4Pattern = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
 const validPassPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
 const validNamePattern = /^[^0-9]{3,45}$/
+
 // check user reg creds
-const validateUserRegData = (email, name, middlename, lastname, pass) => {
+const validateUserRegData = ({ email, name, middlename, lastname, password }) => {
 	const validEmail = email.match(validEmailPattern)
 	const validName = name.match(validNamePattern)
 	const validMiddlename = middlename.match(validNamePattern)
 	const validLastname = lastname.match(validNamePattern)
-	const validPass = pass.match(validPassPattern)
+	const validPass = password.match(validPassPattern)
 
 	return (validEmail && validName && validMiddlename && validLastname && validPass ? true : false)
 }

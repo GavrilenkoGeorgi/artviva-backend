@@ -1,6 +1,7 @@
 const teachersRouter = require('express').Router()
 const Teacher = require('../models/teacher')
 const Specialty = require('../models/specialty')
+const User = require('../models/user')
 const { filterIds } = require('../utils/arrayHelpers')
 const { checkAuth } = require('../utils/checkAuth')
 
@@ -8,7 +9,7 @@ const { checkAuth } = require('../utils/checkAuth')
 teachersRouter.post('/', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
-			const { name } = { ...request.body }
+			const { name, linkedUserAccountId } = { ...request.body }
 
 			// check if teacher with this name already exists
 			const existingTeacher = await Teacher.findOne({ name })
@@ -19,6 +20,12 @@ teachersRouter.post('/', async (request, response, next) => {
 
 			const teacher = new Teacher(request.body)
 			await teacher.save()
+
+			if (linkedUserAccountId) {
+				const user = await User.findById(linkedUserAccountId)
+				user.teacher = teacher._id
+				await user.save()
+			}
 
 			// add teacher to specialty
 			for (let id of teacher.specialties) {
@@ -67,6 +74,10 @@ teachersRouter.delete('/:id', async (request, response, next) => {
 					{ $pull: { teachers: teacher._id } })
 			}
 
+			// remove teacher ref from user account
+			if (teacher.linkedUserAccountId)
+				await User.findByIdAndUpdate(teacher.linkedUserAccountId, { teacher: null })
+			// remove teacher
 			await Teacher.findByIdAndRemove(teacher._id)
 			response.status(204).end()
 		}

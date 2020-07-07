@@ -9,6 +9,10 @@ const pupilSchema = mongoose.Schema({
 		unique: true,
 		required: true
 	},
+	currentlyEnrolled: {
+		type: Boolean,
+		default: false
+	},
 	applicantName: {
 		type: String,
 		minlength: 2,
@@ -104,7 +108,17 @@ const pupilSchema = mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'SchoolClass'
 		}
-	]
+	],
+	teachers: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Teacher'
+		}
+	],
+	assignedTo:	{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	}
 })
 
 pupilSchema.plugin(uniqueValidator)

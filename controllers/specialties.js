@@ -78,4 +78,17 @@ specialtiesRouter.put('/:id', async (request, response, next) => {
 	}
 })
 
+// get specialty details
+specialtiesRouter.get('/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const specialty = await Specialty
+				.findById(request.params.id)
+			response.status(200).json(specialty.toJSON())
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
 module.exports = specialtiesRouter

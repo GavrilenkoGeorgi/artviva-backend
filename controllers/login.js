@@ -27,8 +27,14 @@ loginRouter.post('/', async (request, response, next) => {
 			return response.status(401).json({
 				message: 'Невірна адреса електронної пошти або пароль.'
 			})
-		} else if (!user.isActive) return response.status(401).json({
-			message: 'Ви повинні активувати свій акаунт, щоб мати можливість увійти.'
+		} else if (!user.isActive) {
+			return response.status(401).json({
+				message: 'Ви повинні активувати свій акаунт, щоб мати можливість увійти.',
+				variant: 'warning'
+			})
+		} else if (!user.approvedUser) return response.status(401).json({
+			message: 'Зачекайте, коли адміністратор сайту перегляне та затвердить ваш обліковий запис.',
+			variant: 'warning'
 		})
 
 		const userForToken = {
@@ -45,6 +51,10 @@ loginRouter.post('/', async (request, response, next) => {
 				middlename: user.middlename,
 				lastname: user.lastname,
 				email: user.email,
+				approvedUser: user.approvedUser,
+				superUser: user.superUser,
+				isActive: user.isActive,
+				teacher: user.teacher,
 				id: user.id
 			})
 

@@ -4,10 +4,10 @@ const User = require('../models/user')
 const { validateEmail, validateUserPass, validateUUIDv4 }  = require('../utils/val_user_input')
 const { v4: uuidv4 } = require('uuid')
 const { passResetHashExpiry } = require('../utils/dateAndTime')
-const { sendPassResetMessage, sendAccountActivationMessage } = require('../utils/sendEmailMessage')
+const { sendPassResetMessage } = require('../utils/sendEmailMessage')
 const { hashString } = require('../utils/hashString')
 
-// send account activation email
+/* send account activation email
 passwordRouter.post('/activation', async (request, response, next) => {
 	try {
 		const { name, email, activationUUID } = { ...request.body }
@@ -28,7 +28,7 @@ passwordRouter.post('/activation', async (request, response, next) => {
 	} catch (exception) {
 		next(exception)
 	}
-})
+})*/
 
 // send password reset email
 passwordRouter.post('/recover', async (request, response, next) => {
@@ -67,11 +67,11 @@ passwordRouter.post('/recover', async (request, response, next) => {
 		const data = {
 			name: user.name,
 			email,
-			passResetToken,
-			response
+			passResetToken
 		}
 
-		sendPassResetMessage(data)
+		await sendPassResetMessage(data)
+		response.status(200).end()
 	} catch (exception) {
 		next(exception)
 	}

@@ -17,15 +17,28 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError' && error.kind === 'ObjectId') {
 		return response.status(400).send({
-			error: 'Перевірте вказаний вами ідентифікатор. Схоже, це неправильний формат.'
+			message: 'Перевірте вказаний вами ідентифікатор. Схоже, це неправильний формат.'
 		})
 	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({
-			error: `Помилка перевірки: ${error.message}`,
+			message: `Помилка перевірки: ${error.message}`
 		})
 	} else if (error.name === 'JsonWebTokenError') {
 		return response.status(401).json({
-			error: 'Неаутентифіковані. Маркер відсутній або недійсний.'
+			message: 'Неаутентифіковані. Маркер відсутній або недійсний.'
+		})
+	} else if (error.name === 'MongoError' && error.codeName === 'DuplicateKey') {
+		const value = error.keyValue
+		return response.status(409).json({
+			message: `Це значення має бути унікальним: "${value[Object.keys(value)[0]]}"`
+		})
+	} else if (error.name === 'MailGunError') {
+		return response.status(500).json({
+			message: error.message
+		})
+	} else if (error.name === 'ObjectPropsCheck') {
+		return response.status(500).json({
+			message: error.message
 		})
 	}
 
