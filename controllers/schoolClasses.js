@@ -60,10 +60,12 @@ classesRouter.post('/', async (request, response, next) => {
 			for (let person of pupils) {
 				const pupil = await Pupil.findOne({ name: person })
 				if (pupil) {
+					// add class to refs
 					pupil.schoolClasses = pupil.schoolClasses.concat(schoolClass._id)
 					await pupil.save()
-					// add id to the list
 					pupilsIds.push(pupil._id)
+					// add current teacher to refs
+					pupil.schoolClasses = pupil.schoolClasses.concat(teacherData._id)
 				} else return response.status(404).send({
 					message: 'Перевірте правильність імен учнів.'
 				})
@@ -100,6 +102,22 @@ classesRouter.get('/', async (request, response, next) => {
 				.populate('specialty', { title: 1 })
 				.populate('pupils', { name: 1, info: 1 })
 			response.send(schoolClasses.map(schoolClass => schoolClass.toJSON()))
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get all classes with given teacher id
+classesRouter.get('/teacher/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const schoolClasses = await SchoolClass
+				.find({ teacher: request.params.id })
+				.populate('teacher', { name: 1 })
+				.populate('specialty', { title: 1 })
+				.populate('pupils', { name: 1, info: 1 })
+			response.status(200).send(schoolClasses)
 		}
 	} catch (exception) {
 		next(exception)
@@ -235,6 +253,9 @@ classesRouter.put('/:id', async (request, response, next) => {
 				const pupil = await Pupil.findById(id)
 				pupil.schoolClasses = pupil.schoolClasses
 					.filter(schoolClass => schoolClass !== request.params.id)
+				// remove teacher
+				pupil.teachers = pupil.teachers
+					.filter(teacher => teacher !== teacherData._id)
 				pupil.save()
 			}
 
@@ -243,6 +264,8 @@ classesRouter.put('/:id', async (request, response, next) => {
 				const pupil = await Pupil.findById(id)
 				if (pupil.schoolClasses.indexOf(request.params.id) === -1) {
 					pupil.schoolClasses = pupil.schoolClasses.concat(request.params.id)
+					// add teacher
+					pupil.teachers = pupil.teachers.concat(teacherData._id)
 					await pupil.save()
 				}
 			}

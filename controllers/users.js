@@ -112,7 +112,10 @@ usersRouter.put('/:id', async (request, response, next) => {
 			} else {
 				const foundTeacher = await Teacher.findOneAndUpdate({ name: teacher }, { linkedUserAccountId: id })
 				if (!foundTeacher) return response.status(404)
-					.send({ message: 'Перевірте ім\'я вчителя в полі анкети.' })
+					.send({
+						message: 'Перевірте ім\'я вчителя в полі анкети.',
+						cause: 'teacher'
+					})
 				values = { ...values, teacher: foundTeacher._id }
 			}
 

@@ -11,7 +11,7 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const { name } = { ...request.body }
 			// check if pupil with this name already exists
 			const existingPupil = await Pupil.findOne({ name })
-			if (existingPupil) return response.status(400).json({
+			if (existingPupil) return response.status(409).json({
 				message: 'Учень з таким ім’ям вже існує.',
 				cause: 'name'
 			})
@@ -22,6 +22,7 @@ pupilsRouter.post('/', async (request, response, next) => {
 			const newlyCreatedPupil =
 				await Pupil.findOne({ name })
 					.populate('specialty', { title: 1 })
+					.populate('assignedTo', { lastname: 1 })
 
 			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
@@ -45,7 +46,7 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 		// check if pupil with this name already exists
 		const { name } = { ...request.body }
 		const existingPupil = await Pupil.findOne({ name })
-		if (existingPupil) return response.status(400).json({
+		if (existingPupil) return response.status(409).json({
 			message: 'Учень з таким ім’ям вже існує.',
 			cause: 'name'
 		})
@@ -81,7 +82,23 @@ pupilsRouter.get('/', async (request, response, next) => {
 				.populate('schoolClasses', { title: 1 })
 				.populate('specialty', { title: 1 })
 
-			response.send(pupils.map(pupil => pupil.toJSON()))
+			response.send(pupils)
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get all pupils with given user id
+pupilsRouter.get('/user/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const pupils = await Pupil
+				.find({ assignedTo: request.params.id })
+				.populate('teachers', { name: 1 })
+				.populate('schoolClasses', { title: 1 })
+				.populate('specialty', { title: 1 })
+			response.status(200).send(pupils)
 		}
 	} catch (exception) {
 		next(exception)
