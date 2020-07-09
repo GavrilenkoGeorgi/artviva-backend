@@ -95,6 +95,11 @@ const pupilSchema = mongoose.Schema({
 		type: String,
 		maxlength: 255
 	},
+	phoneNumber: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
 	docsPresent: {
 		type: Boolean,
 		default: false
