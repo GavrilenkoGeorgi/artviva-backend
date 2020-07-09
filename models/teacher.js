@@ -101,6 +101,11 @@ const teacherSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
+	accomplishmentsDscr: {
+		type: String,
+		maxlength: 2500,
+		default: null
+	},
 	info: {
 		type: String,
 		maxlength: 255,
