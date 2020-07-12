@@ -1,5 +1,6 @@
 const searchRouter = require('express').Router()
 const Teacher = require('../models/teacher')
+const User = require('../models/user')
 const Pupil = require('../models/pupil')
 const Specialty = require('../models/specialty')
 const jwt = require('jsonwebtoken')
@@ -19,6 +20,26 @@ searchRouter.post('/teachers', async (request, response, next) => {
 		const teachers = await Teacher
 			.find({ name: { $regex: request.body.value, $options: 'ig' } })
 		response.send(teachers.map(teacher => teacher.name))
+
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// search users by given value
+searchRouter.post('/users', async (request, response, next) => {
+	try {
+		const { value } = { ...request.body }
+
+		if (!value) {
+			return response.status(400).send({
+				error: 'Перевірте тіло запиту, поле \'значення\' відсутнє.'
+			})
+		}
+
+		const users = await User
+			.find({ email: { $regex: request.body.value, $options: 'ig' } })
+		response.send(users.map(({ email, name, lastname, _id }) => ({ email, name, lastname, id: _id })))
 
 	} catch (exception) {
 		next(exception)
@@ -82,6 +103,19 @@ searchRouter.get('/teachers/name/:id', async (request, response, next) => {
 			return response.status(404)
 				.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
 		response.send({ name: teacher.name })
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get user email by id (some auth check, huh?)
+searchRouter.get('/users/email/:id', async (request, response, next) => {
+	try {
+		const user = await User.findById(request.params.id)
+		if (!user)
+			return response.status(404)
+				.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
+		response.send(user.email)
 	} catch (exception) {
 		next(exception)
 	}
