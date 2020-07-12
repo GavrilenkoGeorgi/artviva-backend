@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
+const { checkAuth } = require('../utils/checkAuth')
 
 loginRouter.post('/', async (request, response, next) => {
 
@@ -58,6 +59,23 @@ loginRouter.post('/', async (request, response, next) => {
 				id: user.id
 			})
 
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// refresh user data after account changes
+loginRouter.post('/refresh/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const user = await User.findById(request.params.id)
+			if (!user) {
+				return response.status(404).json({
+					message: 'Користувача із цим ідентифікатором не знайдено.'
+				})
+			}
+			response.status(200).send(user)
+		}
 	} catch (exception) {
 		next(exception)
 	}
