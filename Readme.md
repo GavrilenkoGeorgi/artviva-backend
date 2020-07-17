@@ -2,6 +2,7 @@
 ### Node.js, Express, MongoDB, Mongoose, Jest, ESLint
 
 Master branch is on https://artviva.herokuapp.com
+[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
 
 Frontend [repo](https://github.com/GavrilenkoGeorgi/artviva-frontend)
 
