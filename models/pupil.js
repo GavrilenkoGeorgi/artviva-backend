@@ -120,7 +120,7 @@ const pupilSchema = mongoose.Schema({
 			ref: 'Teacher'
 		}
 	],
-	assignedTo:	{
+	assignedTo: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}
