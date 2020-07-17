@@ -95,6 +95,11 @@ const pupilSchema = mongoose.Schema({
 		type: String,
 		maxlength: 255
 	},
+	phoneNumber: {
+		type: String,
+		minlength: 3,
+		maxlength: 19
+	},
 	docsPresent: {
 		type: Boolean,
 		default: false
@@ -115,7 +120,7 @@ const pupilSchema = mongoose.Schema({
 			ref: 'Teacher'
 		}
 	],
-	assignedTo:	{
+	assignedTo: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}

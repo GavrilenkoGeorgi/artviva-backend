@@ -1,5 +1,6 @@
 const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
+const User = require('../models/user')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
 const { sendNewPupilMessage } = require('../utils/sendEmailMessage')
@@ -99,6 +100,11 @@ pupilsRouter.get('/user/:id', async (request, response, next) => {
 				.populate('schoolClasses', { title: 1 })
 				.populate('specialty', { title: 1 })
 			response.status(200).send(pupils)
+			// get user teacher id, if exists
+			// const user = User.findById(request.params.id)
+
+			// if (user.teacher) console.log('User has a teacher id', user.teacher)
+			// response.status(200).end()
 		}
 	} catch (exception) {
 		next(exception)
