@@ -1,10 +1,14 @@
 ## ArtViva school backend
+![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)
 ### Node.js, Express, MongoDB, Mongoose, Jest, ESLint
 
 Master branch is on https://artviva.herokuapp.com
-[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
 
-Frontend [repo](https://github.com/GavrilenkoGeorgi/artviva-frontend)
+Link to front-end [repo](https://github.com/GavrilenkoGeorgi/artviva-frontend)
+
+Users can register, login, activate account, reset password.
+Two types of users, admins and users. Users can create groups and pupils, admin all the
+other stuff like approving/deleting user accounts, creating teachers and departments.
 
 ### Build Setup
 
