@@ -30,16 +30,23 @@ searchRouter.post('/teachers', async (request, response, next) => {
 searchRouter.post('/users', async (request, response, next) => {
 	try {
 		const { value } = { ...request.body }
+		// can't find users by email when using
+		// mailbox+1@example.com or mailbox+something@example.com
+		// anyway it is the same inbox in the end
+		// behold a Quick Fix
+		let query = ''
 
-		if (!value) {
-			return response.status(400).send({
-				error: 'Перевірте тіло запиту, поле \'значення\' відсутнє.'
-			})
-		}
+		if (value) {
+			const specCharIdx = value.indexOf('+')
+			query = value.slice(0, specCharIdx)
+		} else return response.status(400).send({
+			error: 'Перевірте тіло запиту, поле \'значення\' відсутнє.'
+		})
 
 		const users = await User
-			.find({ email: { $regex: request.body.value, $options: 'ig' } })
-		response.send(users.map(({ email, name, lastname, _id }) => ({ email, name, lastname, id: _id })))
+			.find({ email: { $regex: query, $options: 'ig' } })
+		response.send(users.map(({ email, name, lastname, _id }) =>
+			({ email, name, lastname, id: _id })))// this looks strange
 
 	} catch (exception) {
 		next(exception)
