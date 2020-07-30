@@ -86,7 +86,8 @@ paymentRouter.get('/list', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const fields = 'description amount create_date status amount'
-			const payments = await Payment.find({}, fields).populate('paymentDescr')
+			const payments = await Payment.find({}, fields)
+				.populate('paymentDescr', { amount: 1, teacher: 1 })
 			response.status(200).send(payments.map(payment => payment.toJSON()))
 		}
 	} catch (exception) {
