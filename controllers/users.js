@@ -152,10 +152,10 @@ usersRouter.get('/:id', async (request, response, next) => {
 usersRouter.delete('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
-			// const id = request.params.id
 			const user = await User.findById(request.params.id)
 
-			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
+			if (!user) return response.status(400)
+				.json({ message: 'Користувача не знайдено, перевірте ID.' })
 			await User.findByIdAndRemove(user._id)
 			response.status(204).end()
 		}
@@ -174,36 +174,44 @@ usersRouter.post('/activate', async (request, response, next) => {
 			return response.status(404).json({
 				message: 'Користувача з цією електронною адресою не існує.'
 			})
+		} else {
+			const { isActive, approvedUser } = user
+			if (isActive && !approvedUser) return response.status(401).json({
+				message: 'Зачекайте, коли адміністратор сайту перегляне та затвердить ваш обліковий запис.',
+				variant: 'warning'
+			})
 		}
 
+		if (user.activationHash) {
 		// check token
-		if (!validateUUIDv4(activationToken)) {
-			return response.status(422).send({
-				message: 'UUID сформований неправильно.'
+			if (!validateUUIDv4(activationToken)) {
+				return response.status(422).send({
+					message: 'UUID сформований неправильно.'
+				})
+			}
+			const correctActivationToken = user === null
+				? false
+				: await bcrypt.compare(activationToken, user.activationHash)
+
+			if (!correctActivationToken) {
+				return response.status(400).send({
+					message: 'UUID для активації користувача не відповідає тому, який знаходиться в базі даних.'
+				})
+			}
+
+			// update user account
+			const filter = { email }
+			const update = {
+				isActive: true,
+				activationHash: null
+			}
+
+			await User.findOneAndUpdate(filter, update, { new: true })
+
+			response.status(200).json({
+				message: 'Обліковий запис активовано.'
 			})
 		}
-		const correctActivationToken = user === null
-			? false
-			: await bcrypt.compare(activationToken, user.activationHash)
-
-		if (!correctActivationToken) {
-			return response.status(400).send({
-				message: 'UUID для активації користувача не відповідає тому, який знаходиться в базі даних.'
-			})
-		}
-
-		// update user account
-		const filter = { email }
-		const update = {
-			isActive: true,
-			activationHash: null
-		}
-
-		await User.findOneAndUpdate(filter, update, { new: true })
-
-		response.status(200).json({
-			message: 'Обліковий запис активовано.'
-		})
 
 	} catch(exception) {
 		next(exception)
