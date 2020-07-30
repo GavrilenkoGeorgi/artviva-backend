@@ -9,7 +9,9 @@ schoolRouter.get('/', async (request, response) => {
 	const teachers = await Teacher.find({})
 	const pupils = await Pupil.find({})
 	const specialties = await Specialty.find({})
-	const schoolClasses = await SchoolClass.find({})
+	const schoolClasses =
+		await SchoolClass.find({})
+			.populate('teacher', { name: 1, teacherTitle: 1 })
 
 	const data = {
 		teachers,
