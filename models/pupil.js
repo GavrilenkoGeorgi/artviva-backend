@@ -13,15 +13,18 @@ const pupilSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
+	graduated: {
+		type: Boolean,
+		default: false
+	},
+	suspended: {
+		type: Boolean,
+		default: false
+	},
 	applicantName: {
 		type: String,
 		minlength: 2,
 		maxlength: 128,
-		required: true
-	},
-	specialty: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Specialty'
 	},
 	artSchoolClass: {
 		type: Number,
@@ -29,19 +32,16 @@ const pupilSchema = mongoose.Schema({
 		max: 8,
 	},
 	dateOfBirth: {
-		type: Date,
-		required: true,
+		type: Date
 	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
-		required: true,
 	},
 	mainSchool: {
 		type: String,
 		minlength: 2,
 		maxlength: 128,
-		required: true
 	},
 	mainSchoolClass: {
 		type: Number,
@@ -107,6 +107,10 @@ const pupilSchema = mongoose.Schema({
 	info: {
 		type: String,
 		maxlength: 255
+	},
+	specialty: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Specialty'
 	},
 	schoolClasses: [
 		{
