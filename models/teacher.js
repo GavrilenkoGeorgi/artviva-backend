@@ -11,78 +11,67 @@ const teacherSchema = mongoose.Schema({
 	},
 	dateOfBirth: {
 		type: Date,
-		required: true
 	},
 	employmentDate: {
 		type: Date,
-		required: true
 	},
 	experienceToDate: {
 		years: { type: Number, default: 0 },
 		months: { type: Number, default: 0 },
 		days: { type: Number, default: 0 }
 	},
+	weekWorkHours: {
+		type: Number,
+		max: 100
+	},
 	phone: {
 		type: String,
 		minlength: 3,
 		maxlength: 19,
-		required: true
 	},
 	contactEmail: {
 		type: String,
 		maxlength: 128
-		// required: true
-		// unique: true
 	},
 	residence: {
 		type: String,
 		max: 64,
-		required: true
 	},
 	gender: {
 		type: String,
 		max: 16,
-		required: true
 	},
 	university: {
 		type: String,
 		max: 255,
-		required: true
 	},
 	educationType: {
 		type: String,
 		max: 128,
-		required: true
 	},
 	educationDegree: {
 		type: String,
 		max: 128,
-		required: true
 	},
 	qualification: {
 		type: String,
 		max: 64,
-		required: true
 	},
 	teacherTitle: {
 		type: String,
 		max: 64,
-		default: null
 	},
 	scienceDegree: {
 		type: String,
 		max: 64,
-		default: null
 	},
 	category: {
 		type: Number,
 		max: 17,
-		required: true
 	},
 	employeeType: {
 		type: String,
 		max: 64,
-		required: true
 	},
 	isAdministration: {
 		type: Boolean,
@@ -91,7 +80,6 @@ const teacherSchema = mongoose.Schema({
 	maritalStatus: {
 		type: String,
 		max: 32,
-		required: true
 	},
 	isRetired: {
 		type: Boolean,
