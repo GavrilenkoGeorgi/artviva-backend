@@ -107,6 +107,24 @@ paymentRouter.get('/descr', async (request, response, next) => {
 	}
 })
 
+// Edit payment description pupil name
+paymentRouter.patch('/descr/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const updatedDescr =
+				await PaymentDescr.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+
+			if (!updatedDescr)
+				return response.status(404)
+					.send({ error: 'Платежу із цим ідентифікатором не знайдено.' })
+
+			response.status(200).send(updatedDescr.toJSON())
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
 // get single payment detail by given ID
 paymentRouter.get('/:id', async (request, response, next) => {
 	try {
