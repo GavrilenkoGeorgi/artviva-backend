@@ -250,13 +250,8 @@ classesRouter.put('/:id', async (request, response, next) => {
 
 			// remove class from these pupils
 			for (let id of resultingIds.idsToRemove) {
-				const pupil = await Pupil.findById(id)
-				pupil.schoolClasses = pupil.schoolClasses
-					.filter(schoolClass => schoolClass !== request.params.id)
-				// remove teacher
-				pupil.teachers = pupil.teachers
-					.filter(teacher => teacher !== teacherData._id)
-				pupil.save()
+				await Pupil.findByIdAndUpdate({ _id: id },
+					{ $pull: { schoolClasses: request.params.id, teachers: teacherData._id } })
 			}
 
 			// add class to these pupils

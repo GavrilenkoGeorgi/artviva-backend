@@ -188,7 +188,7 @@ teachersRouter.post('/:id', async (request, response, next) => {
 			const teacher = await Teacher.findOne({ _id: request.params.id })
 				.populate('specialties', { title: 1 } )
 				.populate('schoolClasses', { title: 1 } )
-				.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
+				.populate({ path: 'payments', select: 'description create_date amount teacher', populate: { path: 'paymentDescr' } })
 			if (!teacher) return response.status(404).json({
 				message: 'Викладача із цим ID не знайдено.'
 			})
