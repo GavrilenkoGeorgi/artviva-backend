@@ -1,6 +1,6 @@
 const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
-const User = require('../models/user')
+// const User = require('../models/user')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
 const { sendNewPupilMessage } = require('../utils/sendEmailMessage')
@@ -76,12 +76,14 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 
 // get all pupils
 pupilsRouter.get('/', async (request, response, next) => {
+	console.log('That')
 	try {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({})
-				.populate('schoolClasses', { title: 1 })
-				.populate('specialty', { title: 1 })
+				.populate({ path: 'teachers', select: 'name' })
+				.populate({ path: 'specialty', select: 'title' })
+				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
 
 			response.send(pupils)
 		}
@@ -92,19 +94,15 @@ pupilsRouter.get('/', async (request, response, next) => {
 
 // get all pupils with given user id
 pupilsRouter.get('/user/:id', async (request, response, next) => {
+	console.log('This')
 	try {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({ assignedTo: request.params.id })
-				.populate('teachers', { name: 1 })
-				.populate('schoolClasses', { title: 1 })
-				.populate('specialty', { title: 1 })
+				.populate({ path: 'teachers', select: 'name' })
+				.populate({ path: 'specialty', select: 'title' })
+				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
 			response.status(200).send(pupils)
-			// get user teacher id, if exists
-			// const user = User.findById(request.params.id)
-
-			// if (user.teacher) console.log('User has a teacher id', user.teacher)
-			// response.status(200).end()
 		}
 	} catch (exception) {
 		next(exception)
