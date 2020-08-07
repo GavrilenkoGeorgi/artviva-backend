@@ -44,9 +44,9 @@ const pupilSchema = mongoose.Schema({
 		maxlength: 128,
 	},
 	mainSchoolClass: {
-		type: Number,
+		type: String,
 		min: 1,
-		max: 11,
+		max: 16,
 	},
 	gender: {
 		type: String,
