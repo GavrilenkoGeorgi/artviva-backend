@@ -130,7 +130,7 @@ classesRouter.post('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const schoolClass = await SchoolClass
 				.findById(request.params.id)
-				.populate('pupils', { name: 1 })
+				.populate({ path: 'pupils', select: 'name info artSchoolClass', populate: { path: 'assignedTo', select: 'name lastname' } })
 				.populate('teacher', { name: 1 })
 				.populate('specialty', { title: 1 })
 
