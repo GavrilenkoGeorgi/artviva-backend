@@ -148,8 +148,11 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 		if(checkAuth(request)) {
 			const updatedPupil = await Pupil
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
-				.populate('schoolClasses', { title: 1 })
-				.populate('specialty', { title: 1 })
+				.populate({ path: 'teachers', select: 'name' })
+				.populate({ path: 'specialty', select: 'title' })
+				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
+				// .populate('schoolClasses', { title: 1 })
+				// .populate('specialty', { title: 1 })
 
 			if (!updatedPupil)
 				return response.status(404)

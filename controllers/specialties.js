@@ -44,6 +44,17 @@ specialtiesRouter.get('/', async (request, response, next) => {
 	}
 })
 
+// get current specialty prices
+specialtiesRouter.get('/prices', async (request, response, next) => {
+	try {
+		const prices =
+			await Specialty.find({ cost: { $gt: 1 } }, { title: 1, cost: 1 })
+		response.status(200).json(prices)
+	} catch (exception) {
+		next(exception)
+	}
+})
+
 // delete specialty
 specialtiesRouter.delete('/:id', async (request, response, next) => {
 	try {
