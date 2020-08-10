@@ -64,13 +64,13 @@ const sendAccountActivationMessage = async data => {
 				Добрий день, ${name}.
 			</li>
 			<li>
-				Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${email}/${activationUUID}
+				Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.school/activate/${email}/${activationUUID}
 			</li>
 			<li>
 				Після активації облікового запису адміністратору сайту доведеться переглянути та затвердити ваш рахунок. Після цього ви зможете увійти на сайт і використовувати всі його функції. Ви отримаєте електронне повідомлення з результатами затвердження вашого облікового запису. Дякуємо за терпіння та розуміння.
 			</li>
 		</ul>`
-	const textOutput = `Добрий день, ${name}. Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.herokuapp.com/activate/${email}/${activationUUID}`
+	const textOutput = `Добрий день, ${name}. Щоб активувати свій обліковий запис, натисніть на посилання: https://artviva.school/activate/${email}/${activationUUID}`
 
 	const message = {
 		from: process.env.PROD_EMAIL,
@@ -106,13 +106,13 @@ const sendPassResetMessage = async data => {
 				Добрий день, ${name}.
 			</li>
 			<li>
-				Щоб скинути пароль, натисніть на посилання: https://artviva.herokuapp.com/reset/${email}/${passResetToken}
+				Щоб скинути пароль, натисніть на посилання: https://artviva.school/reset/${email}/${passResetToken}
 			</li>
 			<li>
-			 <a href="https://artviva.herokuapp.com/reset/${email}/${passResetToken}">Human readable</a>
+			 <a href="https://artviva.school/reset/${email}/${passResetToken}">Human readable</a>
 			</li>
 		</ul>`
-	const textOutput = `Добрий день, ${name}. Щоб скинути пароль, перейдіть за посиланням: https://artviva.herokuapp.com/reset//${email}/${passResetToken}`
+	const textOutput = `Добрий день, ${name}. Щоб скинути пароль, перейдіть за посиланням: https://artviva.school/reset/${email}/${passResetToken}`
 
 	const message = {
 		from: process.env.PROD_EMAIL,
