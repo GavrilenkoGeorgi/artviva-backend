@@ -166,7 +166,7 @@ classesRouter.delete('/:id', async (request, response, next) => {
 					{ $pull: { schoolClasses: schoolClass._id } })
 
 				// remove class from teacher
-				await Teacher.findByIdAndUpdate({ _id: schoolClass.teacher.id },
+				await Teacher.findByIdAndUpdate({ _id: schoolClass.teacher },
 					{ $pull: { schoolClasses: schoolClass._id } })
 			}
 
@@ -207,6 +207,11 @@ classesRouter.put('/:id', async (request, response, next) => {
 				}) // check if teacher has changed
 			} else if (JSON.stringify(unupdatedClass.teacher) !== JSON.stringify(teacherData._id)) {
 				dataToSave.teacher = teacherData._id
+				// update teachers
+				await Teacher.findByIdAndUpdate({ _id: unupdatedClass.teacher },
+					{ $pull: { schoolClasses: request.params.id } })
+				await Teacher.findByIdAndUpdate({ _id: teacherData._id },
+					{ $push: { schoolClasses: request.params.id } })
 			} else {
 				dataToSave.teacher = unupdatedClass.teacher
 			}
