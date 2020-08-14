@@ -1,6 +1,6 @@
 {
-	"short_name": "ArtViva",
-	"name": "ArtViva — дитяча школа мистецтв",
+	"short_name": "React App",
+	"name": "Create React App Sample",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -10,6 +10,6 @@
 	],
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#f7f2ff",
+	"theme_color": "#f8f9fa",
 	"background_color": "#ffffff"
 }
