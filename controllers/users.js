@@ -80,6 +80,11 @@ usersRouter.get('/', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const users = await User.find({})
+				.populate({ path: 'teacher', select: 'name',
+					populate: { path: 'schoolClasses', select: 'title specialty',
+						populate: { path: 'specialty', select: 'title' } } })
+				// even more population inception with an array
+				// .populate({ path: 'teacher', select: 'name', populate: [{ path: 'specialties', select: 'title' }, { path: 'schoolClasses', select: 'title specialty', populate: { path: 'specialty', select: 'title' } }] })
 			response.json(users.map(user => user.toJSON()))
 		}
 	} catch (exception) {
@@ -121,6 +126,10 @@ usersRouter.put('/:id', async (request, response, next) => {
 
 			const updatedUser = await User
 				.findOneAndUpdate({ _id: id }, values, { new: true })
+
+			updatedUser.populate({ path: 'teacher', select: 'name',
+				populate: { path: 'schoolClasses', select: 'title specialty',
+					populate: { path: 'specialty', select: 'title' } } })
 
 			if (!updatedUser)
 				return response.status(400)

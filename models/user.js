@@ -51,7 +51,11 @@ const userSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Teacher'
 	}
-})
+},
+{
+	timestamps: true
+}
+)
 
 userSchema.plugin(uniqueValidator)
 
