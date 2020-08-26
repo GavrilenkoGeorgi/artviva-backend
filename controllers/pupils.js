@@ -135,6 +135,31 @@ pupilsRouter.get('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const pupil = await Pupil.findById(request.params.id)
+				.populate({ path: 'teachers', select: 'name' })
+				.populate({ path: 'specialty', select: 'title' })
+				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
+			if (!pupil) return response.status(404)
+				.send({ message: 'Учня із цим ідентифікатором не знайдено.' })
+			response.status(200).json(pupil)
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get pupil f1-form data
+pupilsRouter.get('/f1/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			const f1Fields = `name applicantName
+				homeAddress dateOfBirth
+				specialty mainSchool mainSchoolClass
+				fathersName fathersEmploymentInfo fathersPhone
+				mothersName mothersEmploymentInfo mothersPhone`
+			const pupil = await Pupil.findById(request.params.id)
+				.select(f1Fields).populate({ path: 'specialty', select: 'title' })
+			if (!pupil) return response.status(404)
+				.send({ message: 'Учня із цим ідентифікатором не знайдено.' })
 			response.status(200).json(pupil)
 		}
 	} catch (exception) {
