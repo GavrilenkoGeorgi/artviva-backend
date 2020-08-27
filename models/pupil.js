@@ -44,9 +44,9 @@ const pupilSchema = mongoose.Schema({
 		maxlength: 128,
 	},
 	mainSchoolClass: {
-		type: Number,
+		type: String,
 		min: 1,
-		max: 11,
+		max: 16,
 	},
 	gender: {
 		type: String,
@@ -59,32 +59,26 @@ const pupilSchema = mongoose.Schema({
 	},
 	fathersName: {
 		type: String,
-		minlength: 2,
 		maxlength: 128,
 	},
 	fathersPhone: {
 		type: String,
-		minlength: 3,
 		maxlength: 19
 	},
 	fathersEmploymentInfo: {
 		type: String,
-		minlength: 2,
 		maxlength: 128,
 	},
 	mothersName: {
 		type: String,
-		minlength: 2,
 		maxlength: 128,
 	},
 	mothersPhone: {
 		type: String,
-		minlength: 3,
 		maxlength: 19
 	},
 	mothersEmploymentInfo: {
 		type: String,
-		minlength: 2,
 		maxlength: 128,
 	},
 	contactEmail: {
@@ -97,7 +91,6 @@ const pupilSchema = mongoose.Schema({
 	},
 	phoneNumber: {
 		type: String,
-		minlength: 3,
 		maxlength: 19
 	},
 	docsPresent: {
@@ -128,6 +121,9 @@ const pupilSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}
+},
+{
+	timestamps: true
 })
 
 pupilSchema.plugin(uniqueValidator)
