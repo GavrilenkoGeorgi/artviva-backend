@@ -97,7 +97,6 @@ const pupilSchema = mongoose.Schema({
 	},
 	phoneNumber: {
 		type: String,
-		minlength: 3,
 		maxlength: 19
 	},
 	docsPresent: {
