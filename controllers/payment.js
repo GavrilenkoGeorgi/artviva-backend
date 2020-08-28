@@ -38,8 +38,8 @@ paymentRouter.post('/result', async (request, response, next) => {
 					.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
 			}
 
-			if (paymentData.status === 'success') {
-				const { payment_id, status } = { ...paymentData }
+			if (paymentData.status) {
+				const { payment_id } = { ...paymentData }
 				const existingPayment = await Payment.findOne({ payment_id })
 
 				if (!existingPayment) { // process payment
@@ -72,7 +72,7 @@ paymentRouter.post('/result', async (request, response, next) => {
 					if (savedPayment) return response.status(204).send()
 				} else { // redirect to result page
 					return response
-						.redirect(303, `${process.env.PAYMENT_RESULT_URL}/${status}`)
+						.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
 				}
 			}
 		}
