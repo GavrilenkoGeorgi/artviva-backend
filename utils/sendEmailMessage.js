@@ -181,7 +181,7 @@ const sendContactMessage = async data => {
 
 const sendNewPupilMessage = async data => {
 
-	const subject = 'Додано нового учня.'
+	const subject = 'Додано нового учня'
 	const htmlOutput = `
 	<h1>Додано нового учня</h1>
 	<ul>
@@ -199,7 +199,7 @@ const sendNewPupilMessage = async data => {
 
 	const message = {
 		from: process.env.PROD_EMAIL,
-		to: process.env.TEST_EMAIL,
+		to: [process.env.PUBLIC_APPLY_EMAIL, process.env.TEST_EMAIL],
 		subject,
 		htmlOutput,
 		textOutput
