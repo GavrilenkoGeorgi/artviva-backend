@@ -8,6 +8,7 @@ const LiqPay = require('../utils/liqpay')
 
 const { getPaymentDataFromString } = require('../utils/processPaymentDescr')
 const { checkAuth } = require('../utils/checkAuth')
+const { pureObjectIsEmpty } = require('../utils/objectHelpers')
 
 const liqpay = new LiqPay(process.env.LIQPAY_PUBLIC_KEY, process.env.LIQPAY_PRIVATE_KEY)
 
@@ -81,11 +82,47 @@ paymentRouter.post('/result', async (request, response, next) => {
 	}
 })
 
+// redirect to our form from liqpay page
+paymentRouter.get('/result', async (request, response, next) => {
+	try {
+		console.log('Saving payment GET')
+		if (pureObjectIsEmpty(request.body)) {
+			console.log('Empty request body, redirect from liqpay after payment.')
+			response.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
+		} else {
+			console.log('Request body have to be empty to redirect.')
+			response.status(502).send({ message: 'Can\'t redirect, req body from liqpay have to be empty.' })
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+/*
+paymentRouter.get('/status/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+			console.log('Getting status for this id:', request.params.id)
+			liqpay.api('request', {
+				'action'   : 'status',
+				'version'  : '3',
+				'order_id' : ''
+			}, function(json){
+				console.log(json.status)
+				console.log(json)
+			})
+			response.status(200).send({ message: 'current payment status' })
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})*/
+
 // list all payments
 paymentRouter.get('/list', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
-			const fields = 'description amount create_date status'
+			const fields = 'description amount create_date order_id status'
 			const payments = await Payment.find({}, fields)
 				.populate({ path: 'paymentDescr', select: 'pupil teacher specialty months' })
 			response.status(200).send(payments.map(payment => payment.toJSON()))
