@@ -1,6 +1,6 @@
 {
 	"short_name": "ArtViva",
-	"name": "Дитяча школа мистецтв",
+	"name": "ArtViva — Дитяча школа мистецтв",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -13,14 +13,21 @@
 			"type": "image/png"
 		},
 		{
-				"src": "/icons/android-chrome-512x512.png",
-				"sizes": "512x512",
-				"type": "image/png"
+			"src": "/icons/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
 		}
 	],
 	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#F8F9FA",
 	"scope": "/",
-	"background_color": "#F8F9FA"
+	"background_color": "#F8F9FA",
+	"shortcuts" : [
+		{
+			"name": "List of users",
+			"url": "/school/users",
+			"description": "Список користувачів"
+		}
+	]
 }
