@@ -99,19 +99,16 @@ const sendPassResetMessage = async data => {
 	const { name, email, passResetToken } = data
 
 	const subject = 'Скидання пароля на сайті ArtViva'
+
 	const htmlOutput = `
 		<h1>Скидання пароля на сайті ArtViva</h1>
-		<ul>
-			<li>
+			<h3>
 				Добрий день, ${name}.
-			</li>
-			<li>
-				Щоб скинути пароль, натисніть на посилання: https://artviva.school/reset/${email}/${passResetToken}
-			</li>
-			<li>
-			 <a href="https://artviva.school/reset/${email}/${passResetToken}">Human readable</a>
-			</li>
-		</ul>`
+			</h3>
+			<p>
+				Щоб <a href="https://artviva.school/reset/${email}/${passResetToken}">скинути пароль</a>, перейдіть за посиланням: https://artviva.school/reset/${email}/${passResetToken}
+			</p>`
+
 	const textOutput = `Добрий день, ${name}. Щоб скинути пароль, перейдіть за посиланням: https://artviva.school/reset/${email}/${passResetToken}`
 
 	const message = {
@@ -153,12 +150,15 @@ const sendContactMessage = async data => {
 			<li>
 				Повідомлення: ${text}
 			</li>
+			<li>
+				Відповісти ${name} <a href="mailto:info@artviva.school?subject=Питання%20про%20навчання">${email}</a>
+			</>
 		</ul>`
 	const textOutput = `У вас є повідомлення від ${name}. Електронна пошта: ${email} Повідомлення: ${text}`
 
 	const message = {
 		from: process.env.PROD_EMAIL,
-		to: process.env.TEST_EMAIL,
+		to: [process.env.CONTACT_FORM_HANDLER_EMAIL, process.env.TEST_EMAIL],
 		subject,
 		htmlOutput,
 		textOutput
@@ -209,6 +209,43 @@ const sendNewPupilMessage = async data => {
 }
 
 /**
+ * Send an email with a feedback message to the
+ * user that filled public form informing that
+ * a form has been accepted
+ *
+ * @param {object} data - New pupil data.
+ * @param {string} data.name - New pupil name.
+ * @param {string} data.applicantName - Form appicant name.
+ * @param {string} data.contactEmail - Form apppicant contact email.
+ *
+ * @returns {Object} - Status of the email
+ */
+
+const sendPublicApplyFeedbackMessage = async data => {
+
+	const subject = 'Заява на навчання. ArtViva.'
+	const htmlOutput = `
+	<h1>Добрий день, ${data.applicantName}!</h1>
+	<p>Ваша заявка була прийнята, зачекайте, з вами зв’яжемся.</p>
+	<p style="color: gray;">
+		Будь ласка, звертайтесь із усіма запитаннями до <a href="mailto:info@artviva.school?subject=Питання%20про%20навчання">info@artviva.school</a>
+	</p>`
+
+	const textOutput = `Добрий день, ${data.applicantName}! Ваша заявка була прийнята, зачекайте, поки ми з вами зв’яжемся.
+		Будь ласка, звертайтесь із усіма запитаннями на цю електронну адресу info@artviva.school`
+
+	const message = {
+		from: process.env.PROD_EMAIL,
+		to: data.contactEmail,
+		subject,
+		htmlOutput,
+		textOutput
+	}
+
+	return await sendEmailMessage(message)
+}
+
+/**
  * Send test email
  *
  * @param {object} data - Test email data
@@ -245,5 +282,6 @@ module.exports = {
 	sendContactMessage,
 	sendAccountActivationMessage,
 	sendNewPupilMessage,
+	sendPublicApplyFeedbackMessage,
 	sendTestMessage
 }
