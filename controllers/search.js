@@ -118,11 +118,11 @@ searchRouter.get('/teachers/name/:id', async (request, response, next) => {
 // get user email by id (some auth check, huh?)
 searchRouter.get('/users/email/:id', async (request, response, next) => {
 	try {
-		const user = await User.findById(request.params.id)
+		const user = await User.findById(request.params.id).select('email name middlename lastname')
 		if (!user)
 			return response.status(404)
 				.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
-		response.send(user.email)
+		response.status(200).send(user)
 	} catch (exception) {
 		next(exception)
 	}

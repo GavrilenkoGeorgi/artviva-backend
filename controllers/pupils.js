@@ -77,16 +77,16 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 
 // get all pupils
 pupilsRouter.get('/', async (request, response, next) => {
-	console.log('That')
 	try {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({})
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
-				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
-
-			response.send(pupils)
+				.populate({ path: 'schoolClasses', select: 'title',
+					populate: [{ path: 'teacher', select: 'name' },
+						{ path: 'specialty', select: 'title' }] })
+			response.status(200).send(pupils)
 		}
 	} catch (exception) {
 		next(exception)
@@ -95,14 +95,15 @@ pupilsRouter.get('/', async (request, response, next) => {
 
 // get all pupils with given user id
 pupilsRouter.get('/user/:id', async (request, response, next) => {
-	console.log('This')
 	try {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({ assignedTo: request.params.id })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
-				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
+				.populate({ path: 'schoolClasses', select: 'title',
+					populate: [{ path: 'teacher', select: 'name' },
+						{ path: 'specialty', select: 'title' }] })
 			response.status(200).send(pupils)
 		}
 	} catch (exception) {
@@ -176,9 +177,9 @@ pupilsRouter.put('/:id', async (request, response, next) => {
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
-				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
-				// .populate('schoolClasses', { title: 1 })
-				// .populate('specialty', { title: 1 })
+				.populate({ path: 'schoolClasses', select: 'title',
+					populate: [{ path: 'teacher', select: 'name' },
+						{ path: 'specialty', select: 'title' }] })
 
 			if (!updatedPupil)
 				return response.status(404)
