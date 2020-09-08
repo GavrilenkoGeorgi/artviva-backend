@@ -18,6 +18,15 @@ const checkAllPropsArePresent = (obj, propsList) => {
 	}
 }
 
+/**
+* Check if object is empty
+* @param {Object} obj - Object to check
+*
+* @returns {boolean} - True if object exists, false otherwise
+*/
+const pureObjectIsEmpty = obj => obj && obj.constructor === Object && Object.keys(obj).length === 0
+
 module.exports = {
-	checkAllPropsArePresent
+	checkAllPropsArePresent,
+	pureObjectIsEmpty
 }

@@ -110,7 +110,7 @@ passwordRouter.post('/reset', async (request, response, next) => {
 
 		if (!correctResetToken) {
 			return response.status(400).send({
-				message: 'UUID не відповідає тому, який знаходиться в базі даних.'
+				message: 'Ви вже використовували це посилання для скидання пароля, або UUID у посиланні не відповідає тому, який знаходиться в базі даних.'
 			})
 		}
 

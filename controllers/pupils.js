@@ -3,7 +3,7 @@ const Pupil = require('../models/pupil')
 // const User = require('../models/user')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
-const { sendNewPupilMessage } = require('../utils/sendEmailMessage')
+const { sendNewPupilMessage, sendPublicApplyFeedbackMessage } = require('../utils/sendEmailMessage')
 
 // create new pupil
 pupilsRouter.post('/', async (request, response, next) => {
@@ -63,6 +63,7 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 		// if unsuccessfull, throws an error
 		// and pupil is not saved
 		await sendNewPupilMessage(data)
+		await sendPublicApplyFeedbackMessage(data)
 
 		// create new pupil and save
 		const pupil = new Pupil(request.body)
