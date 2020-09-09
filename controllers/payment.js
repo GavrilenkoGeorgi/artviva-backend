@@ -39,7 +39,8 @@ paymentRouter.post('/result', async (request, response, next) => {
 					.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
 			}
 
-			if (paymentData.status) {
+			if (paymentData.status === 'success') {
+				console.log('Saving success response from liqpay', paymentData.status)
 				const { payment_id } = { ...paymentData }
 				const existingPayment = await Payment.findOne({ payment_id })
 
