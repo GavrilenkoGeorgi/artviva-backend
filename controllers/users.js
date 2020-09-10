@@ -148,6 +148,9 @@ usersRouter.get('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const id = request.params.id
 			const user = await User.findOne({ _id: id })
+				.populate({ path: 'teacher', select: 'name',
+					populate: { path: 'schoolClasses', select: 'title specialty',
+						populate: { path: 'specialty', select: 'title' } } })
 
 			if (!user) return response.status(400).json({ message: 'Користувача не знайдено, перевірте ID.' })
 			response.status(200).json(user)

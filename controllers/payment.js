@@ -39,7 +39,8 @@ paymentRouter.post('/result', async (request, response, next) => {
 					.redirect(303, `${process.env.PAYMENT_RESULT_URL}/form`)
 			}
 
-			if (paymentData.status) {
+			if (paymentData.status === 'success') {
+				console.log('Saving success response from liqpay', paymentData.status)
 				const { payment_id } = { ...paymentData }
 				const existingPayment = await Payment.findOne({ payment_id })
 
@@ -98,25 +99,50 @@ paymentRouter.get('/result', async (request, response, next) => {
 	}
 })
 
-/*
-paymentRouter.get('/status/:id', async (request, response, next) => {
+// get payment statuses from liqpay server for a given date range
+paymentRouter.post('/reports', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
-			console.log('Getting status for this id:', request.params.id)
+
+			const { date_from, date_to } = request.body
+
 			liqpay.api('request', {
-				'action'   : 'status',
+				'action'   : 'reports',
 				'version'  : '3',
-				'order_id' : ''
-			}, function(json){
-				console.log(json.status)
-				console.log(json)
+				'date_from' : date_from,
+				'date_to' : date_to
+			}, json => {
+				json.err_code
+					? response.status(404).send({ message: `Перевірьте свій запит. (${json.err_description})` })
+					: response.status(200).send({ ...json, range: { date_from, date_to } })
 			})
-			response.status(200).send({ message: 'current payment status' })
 		}
+
 	} catch (exception) {
 		next(exception)
 	}
-})*/
+})
+
+// get payment status from liqpay server
+paymentRouter.post('/status/:id', async (request, response, next) => {
+	try {
+		if (checkAuth(request)) {
+
+			liqpay.api('request', {
+				'action'   : 'status',
+				'version'  : '3',
+				'order_id' : request.params.id
+			}, json => {
+				json.err_code === 'payment_not_found'
+					? response.status(404).send({ message: `Перевірьте order_id. (${json.err_description})` })
+					: response.status(200).send(json)
+			})
+		}
+
+	} catch (exception) {
+		next(exception)
+	}
+})
 
 // list all payments
 paymentRouter.get('/list', async (request, response, next) => {
