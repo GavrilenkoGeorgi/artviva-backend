@@ -21,17 +21,17 @@ beforeAll((done) => {
 		})
 })
 
-beforeEach(async () => {
-	await Specialty.deleteMany({})
-
-	const specialtiesObjects = helper.initialSpecialties
-		.map(spec => new Specialty(spec))
-
-	const promiseArray = specialtiesObjects.map(spec => spec.save())
-	await Promise.all(promiseArray)
-})
-
 describe('When there are initially some specialties present', () => {
+	beforeEach(async () => {
+		await Specialty.deleteMany({})
+
+		const specialtiesObjects = helper.initialSpecialties
+			.map(spec => new Specialty(spec))
+
+		const promiseArray = specialtiesObjects.map(spec => spec.save())
+		await Promise.all(promiseArray)
+	})
+
 	test('specialties are returned as json', async () => {
 		await api
 			.get('/api/specialties')
@@ -53,6 +53,16 @@ describe('When there are initially some specialties present', () => {
 })
 
 describe('Viewing a specified specialty', () => {
+	beforeEach(async () => {
+		await Specialty.deleteMany({})
+
+		const specialtiesObjects = helper.initialSpecialties
+			.map(spec => new Specialty(spec))
+
+		const promiseArray = specialtiesObjects.map(spec => spec.save())
+		await Promise.all(promiseArray)
+	})
+
 	test('succeeds with a valid id', async () => {
 
 		const specialtiesAtStart = await helper.specialtiesInDb()
@@ -86,6 +96,16 @@ describe('Viewing a specified specialty', () => {
 })
 
 describe('Adding of a new specialty', () => {
+	beforeEach(async () => {
+		await Specialty.deleteMany({})
+
+		const specialtiesObjects = helper.initialSpecialties
+			.map(spec => new Specialty(spec))
+
+		const promiseArray = specialtiesObjects.map(spec => spec.save())
+		await Promise.all(promiseArray)
+	})
+
 	test('succeeds with valid data', async () => {
 		const newSpecialty = {
 			title: 'TypeScript',
@@ -127,6 +147,16 @@ describe('Adding of a new specialty', () => {
 })
 
 describe('Deletion of a specialty', () => {
+	beforeEach(async () => {
+		await Specialty.deleteMany({})
+
+		const specialtiesObjects = helper.initialSpecialties
+			.map(spec => new Specialty(spec))
+
+		const promiseArray = specialtiesObjects.map(spec => spec.save())
+		await Promise.all(promiseArray)
+	})
+
 	test('succeeds with a status code of 204 if id is valid', async () => {
 		const specialtiesAtStart = await helper.specialtiesInDb()
 		const specialtyToDelete = specialtiesAtStart[0]
