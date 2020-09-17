@@ -1,5 +1,5 @@
 ## ArtViva school backend
-[![Node.js CI Actions Status](https://github.com/GavrilenkoGeorgi/artviva-backend/workflows/node.js/badge.svg)](https://github.com/GavrilenkoGeorgi/artviva-backend/actions)
+[![CI-tests CI Actions Status](https://github.com/GavrilenkoGeorgi/artviva-backend/workflows/CI-tests/badge.svg)](https://github.com/GavrilenkoGeorgi/artviva-backend/actions)
 ![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)
 ### Node.js, Express, MongoDB, Mongoose, Jest, ESLint
 
