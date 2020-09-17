@@ -27,3 +27,4 @@ jobs:
         MAILGUN_API_KEY: ${{secrets.MAILGUN_API_KEY}}
         MAILGUN_DOMAIN: ${{secrets.MAILGUN_DOMAIN}}
         TEST_MONGODB_URI: ${{secrets.TEST_MONGODB_URI}}
+        SECRET: ${secrets.SECRET}
