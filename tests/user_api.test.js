@@ -76,7 +76,7 @@ describe('When there is initially one user at db', () => {
 		expect(usernames).toContain(newUser.username)
 	})
 
-	test('Creation fails with proper status code and message if the username is already taken', async () => {
+	test('Creation fails with proper status code and message if the email is already taken', async () => {
 		const usersAtStart = await helper.usersInDb()
 
 		const newUser = {
@@ -84,7 +84,7 @@ describe('When there is initially one user at db', () => {
 			name: 'Joe',
 			middlename: 'Tester',
 			lastname: 'Doe',
-			password: 'Propane_1'
+			password: 'TestPassword1'
 		}
 
 		const result = await api
@@ -106,6 +106,23 @@ describe('When there is initially one user at db', () => {
 			.delete(`/api/users/${usersAtStart[0].id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(204)
+	})
+
+	test('Update succeeds and returns json', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const updatedUserData = {
+			name: 'Updated',
+			middlename: 'User',
+			lastname: 'Data',
+			teacher: ''
+		}
+
+		await api
+			.put(`/api/users/${usersAtStart[0].id}`)
+			.send(updatedUserData)
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200)
 	})
 })
 

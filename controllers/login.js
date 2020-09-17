@@ -18,6 +18,15 @@ loginRouter.post('/', async (request, response, next) => {
 			})
 		}
 
+		if (process.env.NODE_ENV === 'test') {
+			const testUserToken = {
+				email: email,
+				id: password //use pwd as test id
+			}
+			const token = jwt.sign(testUserToken, process.env.SECRET)
+			return response.status(200).send({ token })
+		}
+
 		const user = await User.findOne({ email: email })
 
 		const passwordCorrect = user === null
