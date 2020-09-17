@@ -23,3 +23,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm test
+      env:
+        MAILGUN_API_KEY: ${{secrets.MAILGUN_API_KEY}}
+        MAILGUN_DOMAIN: ${{secrets.MAILGUN_DOMAIN}}
