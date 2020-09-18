@@ -38,18 +38,26 @@ describe('When there are initially some teachers present', () => {
 		await api
 			.get('/api/teachers')
 			.expect(200)
-			.expect('Content-Type', /application\/json/)
+			//.expect('Content-Type', /application\/json/)
 	})
 
 	test('all teachers are returned', async () => {
-		const response = await api.get('/api/teachers')
+		const response =
+			await api.get('/api/teachers')
+				.expect(200)
 		expect(response.body.length).toBe(helper.sampleTeacherData.length)
 	})
 
 	test('a specific teacher is within the returned teachers', async () => {
-		const response = await api.get('/api/teachers')
-		const names = response.body.map(teacher => teacher.name)
+		const response =
+			await api.get('/api/teachers')
+				.expect(200)
 
+		const names = response.body.map(teacher => teacher.name)
 		expect(names).toContain('John Tester Doe')
 	})
+})
+
+afterAll(() => {
+	mongoose.connection.close()
 })
