@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const User = require('../models/user')
-const helper = require('./test_helper')
+const helper = require('./test_helpers/user_helper')
 const app = require('../app')
 const api = supertest(app)
 
@@ -20,7 +20,6 @@ beforeAll((done) => {
 			done()
 		})
 })
-
 
 describe('When there is initially one user at db', () => {
 	beforeEach(async () => {

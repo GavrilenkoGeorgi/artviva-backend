@@ -1,6 +1,4 @@
-const Specialty = require('../models/specialty')
-const User = require('../models/user')
-
+const Specialty = require('../../models/specialty')
 
 const initialSpecialties = [
 	{
@@ -28,13 +26,7 @@ const specialtiesInDb = async () => {
 	return specialties.map(spec => spec.toJSON())
 }
 
-const usersInDb = async () => {
-	const users = await User.find({})
-	return users.map(user => user.toJSON())
-}
-
 module.exports = {
-	usersInDb,
 	initialSpecialties,
 	specialtiesInDb,
 	nonExistingSpecId

@@ -1,12 +1,18 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const helper = require('./test_helper')
+const helper = require('./test_helpers/specialties_helper')
 const app = require('../app')
 const api = supertest(app)
 const Specialty = require('../models/specialty')
 
 // auth token var
 let token
+
+const updatedSpecialty = {
+	title: 'Updated title',
+	cost: 999,
+	info: 'Updated info'
+}
 
 beforeAll((done) => {
 	supertest(app)
@@ -141,6 +147,45 @@ describe('Deletion of a specialty', () => {
 
 		const titles = specialtiesAtEnd.map(response => response.title)
 		expect(titles).not.toContain(specialtyToDelete.title)
+	})
+})
+
+describe('Updating specialty', () => {
+	test('succeeds with a status code of 200', async () => {
+		const specialtiesAtStart = await helper.specialtiesInDb()
+		const specialtyToUpdate = specialtiesAtStart[0]
+
+		await api
+			.put(`/api/specialties/${specialtyToUpdate.id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(updatedSpecialty)
+			.expect(200)
+
+		const specialtiesAtEnd = await helper.specialtiesInDb()
+		const updatedSpec = specialtiesAtEnd.find(spec => spec.id === specialtyToUpdate.id)
+		expect(updatedSpec.title).toBe('Updated title')
+		expect(updatedSpec.cost).toBe(999)
+		expect(updatedSpec.info).toBe('Updated info')
+	})
+
+	test('fails with status code of 404 if non existent id is supplied', async () => {
+		const validNonExistingId = await helper.nonExistingSpecId()
+
+		await api
+			.put(`/api/specialties/${validNonExistingId}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(updatedSpecialty)
+			.expect(404)
+	})
+
+	test('fails with status code 400 if id is invalid', async () => {
+		const invalidId = '5a3d5da59070081a82a3445'
+
+		await api
+			.put(`/api/specialties/${invalidId}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(updatedSpecialty)
+			.expect(400)
 	})
 })
 
