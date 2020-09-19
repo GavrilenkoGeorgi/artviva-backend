@@ -60,17 +60,15 @@ describe('When there are initially some specialties present', () => {
 
 describe('Viewing a specified specialty', () => {
 	test('succeeds with a valid id', async () => {
-
-		const specialtiesAtStart = await helper.specialtiesInDb()
-		const specialtyToView = specialtiesAtStart[0]
+		const [ firstSpecialty ] = await helper.specialtiesInDb()
 
 		const resultSpec = await api
-			.get(`/api/specialties/${specialtyToView.id}`)
+			.get(`/api/specialties/${firstSpecialty.id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200)
 			.expect('Content-Type', /application\/json/)
 
-		expect(resultSpec.body).toEqual(specialtyToView)
+		expect(resultSpec.body).toEqual(firstSpecialty)
 	})
 
 	test('fails with status code 404 if specialty doesn\'t exist', async () => {
@@ -134,11 +132,10 @@ describe('Adding of a new specialty', () => {
 
 describe('Deletion of a specialty', () => {
 	test('succeeds with a status code of 204 if id is valid', async () => {
-		const specialtiesAtStart = await helper.specialtiesInDb()
-		const specialtyToDelete = specialtiesAtStart[0]
+		const [ firstSpecialty ] = await helper.specialtiesInDb()
 
 		await api
-			.delete(`/api/specialties/${specialtyToDelete.id}`)
+			.delete(`/api/specialties/${firstSpecialty.id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(204)
 
@@ -146,23 +143,22 @@ describe('Deletion of a specialty', () => {
 		expect(specialtiesAtEnd.length).toBe(helper.initialSpecialties.length - 1)
 
 		const titles = specialtiesAtEnd.map(response => response.title)
-		expect(titles).not.toContain(specialtyToDelete.title)
+		expect(titles).not.toContain(firstSpecialty.title)
 	})
 })
 
 describe('Updating specialty', () => {
 	test('succeeds with a status code of 200', async () => {
-		const specialtiesAtStart = await helper.specialtiesInDb()
-		const specialtyToUpdate = specialtiesAtStart[0]
+		const [ firstSpecialty ] = await helper.specialtiesInDb()
 
 		await api
-			.put(`/api/specialties/${specialtyToUpdate.id}`)
+			.put(`/api/specialties/${firstSpecialty.id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(updatedSpecialty)
 			.expect(200)
 
 		const specialtiesAtEnd = await helper.specialtiesInDb()
-		const updatedSpec = specialtiesAtEnd.find(spec => spec.id === specialtyToUpdate.id)
+		const updatedSpec = specialtiesAtEnd.find(spec => spec.id === firstSpecialty.id)
 		expect(updatedSpec.title).toBe('Updated title')
 		expect(updatedSpec.cost).toBe(999)
 		expect(updatedSpec.info).toBe('Updated info')
