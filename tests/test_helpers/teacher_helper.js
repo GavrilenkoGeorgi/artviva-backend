@@ -1,6 +1,66 @@
 
 const Teacher = require('../../models/teacher')
 
+const updatedTeacher = {
+	experienceToDate: { 'years': 1, 'months': 1, 'days': 1 },
+	isAdministration: true,
+	isRetired: false,
+	employeeIsAStudent: false,
+	accomplishmentsDscr: '',
+	info: 'Some info',
+	schoolClasses: [],
+	specialties: [],
+	payments: [],
+	branches: [],
+	name: 'Updated Teacher Data',
+	dateOfBirth: '1988-07-13',
+	employmentDate: '2000-01-01',
+	weekWorkHours: 10,
+	phone: '+38(050)555-55-55',
+	contactEmail: 'email@example.com',
+	residence: 'Село',
+	gender: 'Жіноча',
+	maritalStatus: 'одружений',
+	university: 'Stanford',
+	educationType: 'Базова віща освіта',
+	educationDegree: 'Бакалавр',
+	qualification: 'Немає',
+	teacherTitle: 'Викладач-методист',
+	scienceDegree: 'Немає',
+	category: 9,
+	employeeType: 'Штатний співробітник'
+}
+
+const teacherWithAGroup = {
+	experienceToDate: { 'years': 1, 'months': 1, 'days': 1 },
+	isAdministration: true,
+	isRetired: false,
+	employeeIsAStudent: false,
+	accomplishmentsDscr: '',
+	info: 'Some info',
+	schoolClasses: ['5f64d9ed2403ee152005ce78'],
+	specialties: [],
+	payments: [],
+	branches: [],
+	name: 'Teacher With A Class',
+	dateOfBirth: '1988-07-13',
+	employmentDate: '2000-01-01',
+	weekWorkHours: 10,
+	phone: '+38(050)555-55-55',
+	contactEmail: 'email@example.com',
+	residence: 'Село',
+	gender: 'Жіноча',
+	maritalStatus: 'одружений',
+	university: 'Stanford',
+	educationType: 'Базова віща освіта',
+	educationDegree: 'Бакалавр',
+	qualification: 'Немає',
+	teacherTitle: 'Викладач-методист',
+	scienceDegree: 'Немає',
+	category: 9,
+	employeeType: 'Штатний співробітник'
+}
+
 const sampleTeacherData = [
 	{
 		experienceToDate: { 'years': 1, 'months': 1, 'days': 1 },
@@ -78,5 +138,7 @@ const teachersInDb = async () => {
 module.exports = {
 	nonExistingTeacherId,
 	teachersInDb,
-	sampleTeacherData
+	sampleTeacherData,
+	updatedTeacher,
+	teacherWithAGroup
 }
