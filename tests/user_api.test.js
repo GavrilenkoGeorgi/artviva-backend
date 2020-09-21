@@ -1,61 +1,130 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const User = require('../models/user')
-const helper = require('./test_helper')
+const helper = require('./test_helpers/user_helper')
 const app = require('../app')
 const api = supertest(app)
 
-describe('when there is initially one user at db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-    const user = new User({ username: 'root', password: 'sekret' })
-    await user.save()
-  })
+// auth token var
+let token
 
-  test('creation succeeds with a fresh username', async () => {
-    const usersAtStart = await helper.usersInDb()
+beforeAll((done) => {
+	supertest(app)
+		.post('/api/login')
+		.send({
+			email: 'test@example.com',
+			password: 'TestPassword1',
+		})
+		.end((err, response) => {
+			token = response.body.token
+			done()
+		})
+})
 
-    const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
-    }
+describe('When there is initially one user at db', () => {
+	beforeEach(async () => {
+		await User.deleteMany({})
+		const user = new User({
+			email: 'test@example.com',
+			name: 'Joe',
+			middlename: 'Tester',
+			lastname: 'Doe',
+			password: 'TestPassword1'
+		})
+		await user.save()
+	})
 
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
+	test('It should require authorization', async () => {
+		await api
+			.get('/api/users')
+			.then(response => {
+				expect(response.statusCode).toBe(401)
+			})
+	})
 
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
+	test('It responds with JSON', async () => {
+		await api
+			.get('/api/users')
+			.set('Authorization', `Bearer ${token}`)
+			.then((response) => {
+				expect(response.statusCode).toBe(200)
+				expect(response.type).toBe('application/json')
+			})
+	})
 
-    const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).toContain(newUser.username)
-  })
+	test('Creation succeeds with a fresh username', async () => {
+		const usersAtStart = await helper.usersInDb()
 
-  test('creation fails with proper statuscode and message if username already taken', async () => {
-    const usersAtStart = await helper.usersInDb()
+		const newUser = {
+			email: 'test2@example.com',
+			name: 'Jack',
+			middlename: 'Second',
+			lastname: 'Doe',
+			password: 'TestPassword2'
+		}
 
-    const newUser = {
-      username: 'root',
-      name: 'Superuser',
-      password: 'salainen',
-    }
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(200)
 
-    const result = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
-      .expect('Content-Type', /application\/json/)
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
 
-    expect(result.body.error).toContain('`username` to be unique')
+		const usernames = usersAtEnd.map(u => u.username)
+		expect(usernames).toContain(newUser.username)
+	})
 
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd.length).toBe(usersAtStart.length)
-  })
+	test('Creation fails with proper status code and message if the email is already taken', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const newUser = {
+			email: 'test@example.com',
+			name: 'Joe',
+			middlename: 'Tester',
+			lastname: 'Doe',
+			password: 'TestPassword1'
+		}
+
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(409)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.message).toContain('Адреса електронної пошти вже зайнята, вкажіть іншу.')
+
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd.length).toBe(usersAtStart.length)
+	})
+
+	test('Deletion succeeds with a proper status code', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		await api
+			.delete(`/api/users/${usersAtStart[0].id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.expect(204)
+	})
+
+	test('Update succeeds and returns json', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const updatedUserData = {
+			name: 'Updated',
+			middlename: 'User',
+			lastname: 'Data',
+			teacher: ''
+		}
+
+		await api
+			.put(`/api/users/${usersAtStart[0].id}`)
+			.send(updatedUserData)
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200)
+	})
 })
 
 afterAll(() => {
-  mongoose.connection.close()
+	mongoose.connection.close()
 })

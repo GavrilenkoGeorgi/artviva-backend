@@ -82,6 +82,10 @@ specialtiesRouter.put('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const updatedSpecialty = await Specialty
 				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+
+			if (!updatedSpecialty) return response.status(404)
+				.send({ message: 'Спеціальність з цім ID не знайдена.' })
+
 			response.status(200).json(updatedSpecialty.toJSON())
 		}
 	} catch (exception) {
@@ -95,6 +99,10 @@ specialtiesRouter.get('/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const specialty = await Specialty
 				.findById(request.params.id)
+
+			if (!specialty) return response.status(404)
+				.send({ message: 'Спеціальність з цім ID не знайдена.' })
+
 			response.status(200).json(specialty.toJSON())
 		}
 	} catch (exception) {
