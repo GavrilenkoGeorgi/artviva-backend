@@ -19,9 +19,9 @@ const sampleSchoolClasses = [
 
 const updatedClass = {
 	title: 'Updated Test Class',
-	info: '',
-	teacher: 'John Tester Doe',
-	specialty: 'Java',
+	info: 'Updated info',
+	teacher: 'Teacher With A Class',
+	specialty: 'Basic programming language',
 	pupils: ['First Test Pupil', 'Second Test Pupil']
 }
 

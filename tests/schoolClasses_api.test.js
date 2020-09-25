@@ -195,12 +195,11 @@ describe('Updating school class', () => {
 		await api
 			.put(`${route}/${tempClass.id}`)
 			.set('Authorization', `Bearer ${token}`)
-			.send(helper.updatedClass)
+			.send(tempClass)
 			.expect(404)
 	})
 
-	/*
-	test.only('succeeds with status code 200', async () => {
+	test('succeeds with status code 200', async () => {
 		const [ classToUpdate ] = await helper.classesInDb()
 
 		const result = await api
@@ -210,7 +209,8 @@ describe('Updating school class', () => {
 			.expect(200)
 
 		expect(result.body.title).toBe('Updated Test Class')
-	})*/
+		expect(result.body.info).toBe('Updated info')
+	})
 })
 
 describe('Deleting school class', () => {
