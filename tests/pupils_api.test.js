@@ -1,11 +1,8 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Pupil = require('../models/pupil')
-// const Teacher = require('../models/teacher')
-// const User = require('../models/user')
 const Specialty = require('../models/specialty')
 const helper = require('./test_helpers/pupil_helper')
-// const userHelper = require('./test_helpers/user_helper')
 const specialtyHelper = require('./test_helpers/specialties_helper')
 const app = require('../app')
 const api = supertest(app)
@@ -15,7 +12,7 @@ let token
 
 beforeAll((done) => {
 	supertest(app)
-		.post('/api/login')
+		.post('/api/testing/login')
 		.send({
 			email: 'test@example.com',
 			password: 'TestPassword1',
