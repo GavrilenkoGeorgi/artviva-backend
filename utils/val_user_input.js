@@ -14,14 +14,6 @@ const validateUserRegData = ({ email, name, middlename, lastname, password }) =>
 	return (validEmail && validName && validMiddlename && validLastname && validPass ? true : false)
 }
 
-const validateTeacherData = (name, middlename, lastname) => {
-	const validName = name.match(validNamePattern)
-	const validMiddlename = middlename.match(validNamePattern)
-	const validLastname = lastname.match(validNamePattern)
-
-	return (validName && validMiddlename && validLastname ? true : false)
-}
-
 const validateEmail = email => {
 	const validEmail = email.match(validEmailPattern)
 	return validEmail ? true : false

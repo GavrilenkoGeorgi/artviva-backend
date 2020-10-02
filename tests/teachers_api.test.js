@@ -15,7 +15,7 @@ let token
 
 beforeAll((done) => {
 	supertest(app)
-		.post('/api/login')
+		.post('/api/testing/login')
 		.send({
 			email: 'test@example.com',
 			password: 'TestPassword1',
@@ -28,7 +28,6 @@ beforeAll((done) => {
 
 beforeEach(async () => {
 	await Teacher.deleteMany({})
-	// await User.deleteMany({})
 
 	const teachers = helper.sampleTeacherData
 		.map(teacher => new Teacher(teacher))

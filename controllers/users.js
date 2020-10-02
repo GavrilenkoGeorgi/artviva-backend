@@ -63,6 +63,10 @@ usersRouter.post('/', async (request, response, next) => {
 
 			// message sent, no errors, add new user account
 			await user.save()
+
+			if (process.env.NODE_ENV === 'test')
+				response.status(200).send({ testUUID: activationUUID })
+
 			response.status(200).end()
 
 		} else {

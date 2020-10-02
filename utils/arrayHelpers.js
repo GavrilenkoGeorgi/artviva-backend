@@ -1,10 +1,14 @@
 /**
  * Filter two array of strings and get the difference
- * @param {array} idsToRemove - Array of strings with ids to remove
- * @param {array} idsToAdd - Array of strings with ids to add
+ * It removes duplicate (if any) IDs from two arrays,
+ * those that are returned are the ones to add or remove
+ * from respective entities that are being updated
  *
- * @return {object} idsToRemove: ids from which entity needs to be removed,
- * 									idsToadd: ids to add entity to
+ * @param {array} idsToRemove - Array of strings with IDs to remove
+ * @param {array} idsToAdd - Array of strings with IDs to add
+ *
+ * @return {object} idsToRemove: IDs from which entity id needs to be removed,
+ * 									idsToadd: IDs to add to an entity being updated
  */
 
 const filterIds = (idsToRemove, idsToAdd) => {

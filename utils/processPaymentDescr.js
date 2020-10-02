@@ -37,10 +37,12 @@ const getPaymentDataFromString = (descrStr, locale) => {
 	const monthsIdx = getDataIdx(descrStr)
 	// extract months string
 	let months = extractString(descrStr, monthsIdx.start, monthsIdx.end)
-	// split to array and sort
-	months = sortMonthsNames(months.split(',').map(item => item.trim()), locale)
-	// save to description
-	paymentData.months = months
+	if (months) {
+		// split to array and sort
+		months = sortMonthsNames(months.split(',').map(item => item.trim()), locale)
+		// save to description
+		paymentData.months = months
+	} else paymentData.months = []
 
 	// get teacher name
 	let remainingData = descrStr.substr(monthsIdx.end + 1).trim()
@@ -57,6 +59,14 @@ const getPaymentDataFromString = (descrStr, locale) => {
 	const specialtyIdx = getDataIdx(remainingData)
 	paymentData.specialty = extractString(remainingData, specialtyIdx.start, specialtyIdx.end)
 
+	for (const prop in paymentData) {
+		if (!paymentData[prop].length) {
+			throw ({
+				name: 'PaymentDescrParseError',
+				message: 'Не вдається проаналізувати опис платежу, відсутні деякі дані.'
+			})
+		}
+	}
 	return paymentData
 }
 

@@ -1,12 +1,19 @@
 const router = require('express').Router()
-const Blog = require('../models/blog')
-const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
-router.post('/reset', async (request, response) => {
-	await Blog.deleteMany({})
-	await User.deleteMany({})
+router.post('/login', async (request, response) => {
+	const {
+		email,
+		password
+	} = { ...request.body }
 
-	response.status(204).end()
+	const testUserToken = {
+		email: email,
+		id: password //use pwd as test id
+	}
+
+	const token = jwt.sign(testUserToken, process.env.SECRET)
+	response.status(200).send({ token })
 })
 
 module.exports = router
