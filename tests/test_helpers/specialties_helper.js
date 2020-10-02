@@ -10,6 +10,11 @@ const initialSpecialties = [
 		title: 'Java',
 		cost: 350,
 		info: 'Some info'
+	},
+	{
+		title: 'Java advanced',
+		cost: 450,
+		info: ''
 	}
 ]
 

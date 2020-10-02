@@ -85,7 +85,7 @@ classesRouter.post('/', async (request, response, next) => {
 
 			// populate newly created class and send as a response
 			const result = await SchoolClass.populate(schoolClass, options)
-			response.status(200).send(result.toJSON())
+			response.status(201).send(result.toJSON())
 		}
 	} catch (exception) {
 		next(exception)

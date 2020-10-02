@@ -10,7 +10,7 @@ let token
 
 beforeAll((done) => {
 	supertest(app)
-		.post('/api/login')
+		.post('/api/testing/login')
 		.send({
 			email: 'test@example.com',
 			password: 'TestPassword1',
@@ -99,16 +99,16 @@ describe('When there is initially one user at db', () => {
 	})
 
 	test('Deletion succeeds with a proper status code', async () => {
-		const usersAtStart = await helper.usersInDb()
+		const [ testUser ] = await helper.usersInDb()
 
 		await api
-			.delete(`/api/users/${usersAtStart[0].id}`)
+			.delete(`/api/users/${testUser.id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(204)
 	})
 
 	test('Update succeeds and returns json', async () => {
-		const usersAtStart = await helper.usersInDb()
+		const [ testUser ] = await helper.usersInDb()
 
 		const updatedUserData = {
 			name: 'Updated',
@@ -118,7 +118,7 @@ describe('When there is initially one user at db', () => {
 		}
 
 		await api
-			.put(`/api/users/${usersAtStart[0].id}`)
+			.put(`/api/users/${testUser.id}`)
 			.send(updatedUserData)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200)

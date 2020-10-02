@@ -7,29 +7,6 @@ const { passResetHashExpiry } = require('../utils/dateAndTime')
 const { sendPassResetMessage } = require('../utils/sendEmailMessage')
 const { hashString } = require('../utils/hashString')
 
-/* send account activation email
-passwordRouter.post('/activation', async (request, response, next) => {
-	try {
-		const { name, email, activationUUID } = { ...request.body }
-		if (!name || !email || !activationUUID) {
-			return response.status(422).json({
-				message: 'Не вдається надіслати електронний лист, деякі поля даних відсутні.'
-			})
-		}
-
-		// send activation message
-		const data = {
-			name,
-			email,
-			activationUUID,
-			response
-		}
-		sendAccountActivationMessage(data)
-	} catch (exception) {
-		next(exception)
-	}
-})*/
-
 // send password reset email
 passwordRouter.post('/recover', async (request, response, next) => {
 	try {
@@ -71,6 +48,10 @@ passwordRouter.post('/recover', async (request, response, next) => {
 		}
 
 		await sendPassResetMessage(data)
+
+		if (process.env.NODE_ENV === 'test')
+			response.status(200).send({ passResetToken })
+
 		response.status(200).end()
 	} catch (exception) {
 		next(exception)
@@ -87,10 +68,12 @@ passwordRouter.post('/reset', async (request, response, next) => {
 			return response.status(400).send({
 				message: 'Поля email, пароля або UUID відсутні.'
 			})
-		} else if (!validateUUIDv4(passResetToken)
+		}
+
+		if (!validateUUIDv4(passResetToken)
 				|| !validateUserPass(password)
 				|| !validateEmail(email)) {
-			return response.status(422).send({
+			response.status(422).send({
 				message: 'Email, пароль або UUID не відповідають дійсній схемі.'
 			})
 		}
@@ -114,7 +97,7 @@ passwordRouter.post('/reset', async (request, response, next) => {
 			})
 		}
 
-		// check if it is expired
+		// check if reset token is expired
 		const dateNow = new Date()
 		const tokenIsExpired = dateNow > user.passResetHashExpiresAt
 			? true

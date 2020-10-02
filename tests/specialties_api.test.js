@@ -16,7 +16,7 @@ const updatedSpecialty = {
 
 beforeAll((done) => {
 	supertest(app)
-		.post('/api/login')
+		.post('/api/testing/login')
 		.send({
 			email: 'test@example.com',
 			password: 'TestPassword1',

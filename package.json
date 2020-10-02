@@ -1,6 +1,6 @@
 {
   "name": "artviva-backend",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "ArtViva school backend",
   "main": "index.js",
   "repository": {
