@@ -123,6 +123,7 @@ teachersRouter.put('/:id', async (request, response, next) => {
 			const updatedTeacher =
 				await Teacher.findById(request.params.id)
 					.populate('specialties', { title: 1 })
+					.populate('schoolClasses', { title: 1 })
 					.populate({ path: 'payments', select: 'description create_date', populate: { path: 'paymentDescr' } })
 
 			response.status(200).json(updatedTeacher.toJSON())
