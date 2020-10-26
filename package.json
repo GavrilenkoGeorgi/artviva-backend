@@ -10,7 +10,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index",
-    "start:test": "cross-env NODE_ENV=test node index",
+    "start:test": "cross-env NODE_ENV=test nodemon index",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "rm -rf build && cd ../artviva-frontend && npm run build --prod && cp -r build ../artviva-backend/",
     "deploy": "git push heroku master",
