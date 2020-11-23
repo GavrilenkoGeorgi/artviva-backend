@@ -253,6 +253,7 @@ describe('Users email full text search', () => {
 
 		await api
 			.get(`${route}/users/email/${id}`)
+			.set('Authorization', `Bearer ${token}`)
 			.expect(404)
 	})
 
@@ -261,6 +262,7 @@ describe('Users email full text search', () => {
 
 		const result = await api
 			.get(`${route}/users/email/${user.id}`)
+			.set('Authorization', `Bearer ${token}`)
 			.expect(200)
 
 		expect(result.body.email).toContain(user.email)

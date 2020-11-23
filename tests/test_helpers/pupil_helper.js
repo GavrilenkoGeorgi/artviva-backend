@@ -4,10 +4,11 @@ const Pupil = require('../../models/pupil')
 const validSampleId = '5f08454d6f4f2d000468a069'
 
 const updatedPupil = {
+	assignedTo: null,
 	name: 'Updated Test Pupil',
 	phoneNumber: '+38(050)555-55-55',
 	applicantName: 'John Doe',
-	specialty: validSampleId,
+	specialty: 'Basic programming language',
 	dateOfBirth: '2020-08-01',
 	mainSchool: 'Some school #34',
 	mainSchoolClass: 3,
@@ -27,6 +28,7 @@ const updatedPupil = {
 }
 
 const pupilWithAClass = {
+	assignedTo: null,
 	name: 'Test Pupil to delete',
 	phoneNumber: '+38(050)555-55-55',
 	applicantName: 'John Doe',
@@ -52,6 +54,7 @@ const pupilWithAClass = {
 
 const samplePupilData = [
 	{
+		assignedTo: null,
 		name: 'First Test Pupil',
 		phoneNumber: '+38(050)555-55-55',
 		applicantName: 'John Doe',
@@ -77,6 +80,7 @@ const samplePupilData = [
 		info: 'Docs present, currently enrolled, suspended and not graduated yet.'
 	},
 	{
+		assignedTo: null,
 		name: 'Second Test Pupil',
 		phoneNumber: '+38(050)555-55-55',
 		applicantName: 'John Doe',

@@ -5,6 +5,7 @@ const Pupil = require('../models/pupil')
 const Specialty = require('../models/specialty')
 const jwt = require('jsonwebtoken')
 const { getTokenFromReq } = require('../utils/getTokenFromReq')
+const { checkAuth } = require('../utils/checkAuth')
 
 // search teachers by given value
 searchRouter.post('/teachers', async (request, response, next) => {
@@ -115,14 +116,39 @@ searchRouter.get('/teachers/name/:id', async (request, response, next) => {
 	}
 })
 
-// get user email by id (some auth check, huh?)
+// get user email and full name by id
 searchRouter.get('/users/email/:id', async (request, response, next) => {
 	try {
-		const user = await User.findById(request.params.id).select('email name middlename lastname')
-		if (!user)
-			return response.status(404)
-				.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
-		response.status(200).send(user)
+		if (checkAuth(request)) {
+			const user = await User.findById(request.params.id).select('email name middlename lastname id')
+			if (!user)
+				return response.status(404)
+					.send({ message: 'Викладача із цим ідентифікатором не знайдено.' })
+			response.status(200).send(user)
+		}
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get user info by lastname
+searchRouter.post('/users/lastname', async (request, response, next) => {
+	try { // auth check needed
+		const users = await User
+			.find({ lastname: { $regex: request.body.value, $options: 'ig' } }, 'name middlename lastname email')
+
+		response.status(200).json(users)
+	} catch (exception) {
+		next(exception)
+	}
+})
+
+// get user ID by email
+searchRouter.post('/users/idbyemail', async (request, response, next) => {
+	try { // auth check needed
+		const user = await User
+			.findOne({ email: request.body.email }, 'id')
+		response.status(200).json(user)
 	} catch (exception) {
 		next(exception)
 	}
