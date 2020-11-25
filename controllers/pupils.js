@@ -1,9 +1,15 @@
 const pupilsRouter = require('express').Router()
 const Pupil = require('../models/pupil')
-// const User = require('../models/user')
+const Specialty = require('../models/specialty')
 const { checkAuth } = require('../utils/checkAuth')
 const { checkAllPropsArePresent } = require('../utils/objectHelpers')
 const { sendNewPupilMessage, sendPublicApplyFeedbackMessage } = require('../utils/sendEmailMessage')
+
+
+const getSpecId = async (specialty) => {
+	const { id } = await Specialty.findOne({ title: specialty }, 'id')
+	return id
+}
 
 // create new pupil
 pupilsRouter.post('/', async (request, response, next) => {
@@ -17,13 +23,23 @@ pupilsRouter.post('/', async (request, response, next) => {
 				cause: 'name'
 			})
 
-			const pupil = new Pupil(request.body)
+			const specId = await getSpecId(request.body.specialty)
+			if (!specId) return response.status(404).json({
+				message: 'Спеціальності з таким ім\'ям не знайдено.',
+				cause: 'specialty'
+			})
+
+			const pupil = new Pupil({ ...request.body, specialty: specId })
 			await pupil.save()
 
 			const newlyCreatedPupil =
 				await Pupil.findOne({ name })
-					.populate('specialty', { title: 1 })
-					.populate('assignedTo', { lastname: 1 })
+					.populate({ path: 'assignedTo', select: 'email name lastname middlename' })
+					.populate({ path: 'teachers', select: 'name' })
+					.populate({ path: 'specialty', select: 'title' })
+					.populate({ path: 'schoolClasses', select: 'title',
+						populate: [{ path: 'teacher', select: 'name' },
+							{ path: 'specialty', select: 'title' }] })
 
 			response.status(200).send(newlyCreatedPupil.toJSON())
 		}
@@ -52,6 +68,12 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 			cause: 'name'
 		})
 
+		const specId = await getSpecId(request.body.specialty)
+		if (!specId) return response.status(404).json({
+			message: 'Спеціальності з таким ім\'ям не знайдено.',
+			cause: 'specialty'
+		})
+
 		// send email to admin about new pupil added by public form!
 		const { applicantName, contactEmail } = { ...request.body }
 		const data = {
@@ -66,7 +88,7 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 		await sendPublicApplyFeedbackMessage(data)
 
 		// create new pupil and save
-		const pupil = new Pupil(request.body)
+		const pupil = new Pupil({ ...request.body, specialty: specId })
 		await pupil.save()
 
 		response.status(200).end()
@@ -81,6 +103,7 @@ pupilsRouter.get('/', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({})
+				.populate({ path: 'assignedTo', select: 'email name lastname middlename' })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
 				.populate({ path: 'schoolClasses', select: 'title',
@@ -99,6 +122,7 @@ pupilsRouter.get('/user/:id', async (request, response, next) => {
 		if (checkAuth(request)) {
 			const pupils = await Pupil
 				.find({ assignedTo: request.params.id })
+				.populate({ path: 'assignedTo', select: 'email name lastname middlename' })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
 				.populate({ path: 'schoolClasses', select: 'title',
@@ -137,6 +161,7 @@ pupilsRouter.get('/:id', async (request, response, next) => {
 	try {
 		if (checkAuth(request)) {
 			const pupil = await Pupil.findById(request.params.id)
+				.populate({ path: 'assignedTo', select: 'email name lastname middlename' })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
 				.populate({ path: 'schoolClasses', select: 'title', populate: { path: 'teacher', select: 'name' } })
@@ -173,8 +198,16 @@ pupilsRouter.get('/f1/:id', async (request, response, next) => {
 pupilsRouter.put('/:id', async (request, response, next) => {
 	try {
 		if(checkAuth(request)) {
+
+			const specId = await getSpecId(request.body.specialty)
+			if (!specId) return response.status(404).json({
+				message: 'Спеціальності з таким ім\'ям не знайдено.',
+				cause: 'specialty'
+			})
+
 			const updatedPupil = await Pupil
-				.findByIdAndUpdate(request.params.id, { ...request.body }, { new: true })
+				.findByIdAndUpdate(request.params.id, { ...request.body, specialty: specId }, { new: true })
+				.populate({ path: 'assignedTo', select: 'email name lastname middlename' })
 				.populate({ path: 'teachers', select: 'name' })
 				.populate({ path: 'specialty', select: 'title' })
 				.populate({ path: 'schoolClasses', select: 'title',

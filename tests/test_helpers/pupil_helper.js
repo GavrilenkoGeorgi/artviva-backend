@@ -4,10 +4,11 @@ const Pupil = require('../../models/pupil')
 const validSampleId = '5f08454d6f4f2d000468a069'
 
 const updatedPupil = {
+	assignedTo: null,
 	name: 'Updated Test Pupil',
 	phoneNumber: '+38(050)555-55-55',
 	applicantName: 'John Doe',
-	specialty: validSampleId,
+	specialty: 'Basic programming language',
 	dateOfBirth: '2020-08-01',
 	mainSchool: 'Some school #34',
 	mainSchoolClass: 3,
@@ -27,6 +28,7 @@ const updatedPupil = {
 }
 
 const pupilWithAClass = {
+	assignedTo: null,
 	name: 'Test Pupil to delete',
 	phoneNumber: '+38(050)555-55-55',
 	applicantName: 'John Doe',
@@ -52,16 +54,17 @@ const pupilWithAClass = {
 
 const samplePupilData = [
 	{
+		assignedTo: null,
 		name: 'First Test Pupil',
 		phoneNumber: '+38(050)555-55-55',
 		applicantName: 'John Doe',
 		specialty: '',
-		dateOfBirth: '2020-08-01',
+		dateOfBirth: '2010-08-01',
 		mainSchool: 'Some school #34',
-		mainSchoolClass: 3,
+		mainSchoolClass: 1,
 		artSchoolClass: 1,
 		gender: 'Чоловіча',
-		hasBenefit: 50,
+		hasBenefit: 100,
 		fathersName: 'Hank Hill',
 		fathersPhone: '+38(050)888-44-77',
 		fathersEmploymentInfo: 'Assistant manager at Strickland propane',
@@ -70,19 +73,23 @@ const samplePupilData = [
 		mothersEmploymentInfo: 'Substitute spanish teacher',
 		contactEmail: 'email@example.com',
 		homeAddress: 'Street, 13, flat #56',
-		docsPresent: false,
-		info: 'Test pupil'
+		docsPresent: true,
+		currentlyEnrolled: true,
+		graduated: false,
+		suspended: true,
+		info: 'Docs present, currently enrolled, suspended and not graduated yet.'
 	},
 	{
+		assignedTo: null,
 		name: 'Second Test Pupil',
 		phoneNumber: '+38(050)555-55-55',
 		applicantName: 'John Doe',
 		specialty: '',
-		dateOfBirth: '2020-08-01',
+		dateOfBirth: '2015-08-01',
 		mainSchool: 'Some school #34',
-		mainSchoolClass: 3,
-		artSchoolClass: 1,
-		gender: 'Чоловіча',
+		mainSchoolClass: 2,
+		artSchoolClass: 2,
+		gender: 'Жіноча',
 		hasBenefit: 50,
 		fathersName: 'Hank Hill',
 		fathersPhone: '+38(050)888-44-77',
@@ -93,7 +100,10 @@ const samplePupilData = [
 		contactEmail: 'email@example.com',
 		homeAddress: 'Street, 13, flat #56',
 		docsPresent: false,
-		info: ''
+		currentlyEnrolled: false,
+		graduated: true,
+		suspended: false,
+		info: 'School graduate.'
 	}
 ]
 
