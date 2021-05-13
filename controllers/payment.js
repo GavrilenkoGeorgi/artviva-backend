@@ -99,6 +99,21 @@ paymentRouter.get('/result', async (request, response, next) => {
 	}
 })
 
+/**
+ * Get list of payments from liqpay server for a given time range
+ *
+ * @param {Object} request.body
+ * @param {Object} request.body.date_from - Timestamp in milliseconds
+ * @param {Object} request.body.date_to - Timestamp in milliseconds
+ *
+ * @returns {Object} payload - JSON object
+ * @returns {string} payload.result - Status of the operation
+ * @returns {Array} payload.data - Array of payment objects
+ * @returns {Object} payload.range - Range for the current array of payments
+ * @returns {string} payload.range.date_from - Timestamp in milliseconds
+ * @returns {string} payload.range.date_to - Timestamp in milliseconds
+ */
+
 // get payment statuses from liqpay server for a given date range
 paymentRouter.post('/reports', async (request, response, next) => {
 	try {
