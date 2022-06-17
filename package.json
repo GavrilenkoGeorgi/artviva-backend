@@ -33,7 +33,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.5",
     "mongoose-unique-validator": "^2.0.3",
-    "nodemailer": "^6.4.16",
+    "nodemailer": "^6.6.1",
     "nodemailer-mailgun-transport": "^2.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
