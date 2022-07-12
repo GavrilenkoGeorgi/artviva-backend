@@ -269,6 +269,7 @@ describe('Users email full text search', () => {
 	})
 })
 
-afterAll(() => {
-	mongoose.connection.close()
+afterAll(async () => {
+	await User.deleteMany({})
+	await mongoose.connection.close()
 })

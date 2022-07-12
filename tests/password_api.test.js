@@ -8,8 +8,8 @@ const api = supertest(app)
 let passResetToken
 const route = '/api/password'
 
-beforeAll(async (done) => {
-	await User.deleteMany({})
+beforeAll((done) => {
+	// User.deleteMany({})
 	supertest(app)
 		.post('/api/users')
 		.send({
@@ -150,6 +150,7 @@ describe('Password reset', () => {
 	})
 })
 
-afterAll(() => {
-	mongoose.connection.close()
+afterAll(async () => {
+	await User.deleteMany({})
+	await mongoose.connection.close()
 })

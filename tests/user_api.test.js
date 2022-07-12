@@ -125,6 +125,7 @@ describe('When there is initially one user at db', () => {
 	})
 })
 
-afterAll(() => {
+afterAll(async () => {
+	await User.deleteMany({})
 	mongoose.connection.close()
 })

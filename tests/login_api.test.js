@@ -10,8 +10,7 @@ let token
 const loginRoute = '/api/login'
 const accountRoute = '/api/users'
 
-beforeAll(async (done) => {
-	await User.deleteMany({})
+beforeAll((done) => {
 	supertest(app)
 		.post('/api/users')
 		.send({
@@ -116,6 +115,7 @@ describe('User login and register logic', () => {
 	})
 })
 
-afterAll(() => {
-	mongoose.connection.close()
+afterAll(async () => {
+	await User.deleteMany({})
+	await mongoose.connection.close()
 })
