@@ -75,11 +75,26 @@ pupilsRouter.post('/apply', async (request, response, next) => {
 		})
 
 		// send email to admin about new pupil added by public form!
-		const { applicantName, contactEmail } = { ...request.body }
+		const {
+			applicantName,
+			contactEmail,
+			specialty,
+			dateOfBirth,
+			mothersPhone,
+			fathersPhone,
+			homeAddress
+			} = { ...request.body }
+
+		// TODO: Clean this up
 		const data = {
 			name,
 			applicantName,
-			contactEmail
+			contactEmail,
+			specialty,
+			dateOfBirth,
+			mothersPhone,
+			fathersPhone,
+			homeAddress
 		}
 		// send email
 		// if unsuccessfull, throws an error
