@@ -183,18 +183,35 @@ const sendNewPupilMessage = async data => {
 
 	const subject = 'Додано нового учня'
 	const htmlOutput = `
-	<h1>Додано нового учня</h1>
-	<ul>
-		<li>
-			Ім'я: ${data.name}
-		</li>
-		<li>
-			Заяву подав: ${data.applicantName}
-		</li>
-		<li>
-			Електронна пошта: ${data.contactEmail}
-		</li>
-	</ul>`
+		<div style="font-family: Verdana, Geneva, Tahoma, sans-serif; padding: 30px 40px; border-radius: 15px; background-color: #f5f5f5; width: 100%; max-width: 640px; margin-left: auto; margin-right: auto;">
+			<h1 style="margin-top: 0;">Додано нового учня</h1>
+			<ul style="list-style: none; padding: 0; font-size: 125%;">
+				<li style="margin: 15px 0px;">
+					Фах: <strong>${data.specialty}</strong>
+				</li>
+				<li style="margin: 15px 0px;">
+					Ім'я: <strong>${data.name}</strong>
+				</li>
+				<li style="margin: 15px 0px;">
+					Дата народження: <strong>${data.dateOfBirth}</strong>
+				</li>
+				<li style="margin: 15px 0px;">
+					Заяву подав: ${data.applicantName}
+				</li>
+				<li style="margin: 15px 0px;">
+					Номер телефону матері: <strong>${data.mothersPhone}</strong>
+				</li>
+				<li style="margin: 15px 0px;">
+					Номер телефону батька: ${data.fathersPhone}
+				</li>
+				<li style="margin: 15px 0px;">
+					Електронна пошта: ${data.contactEmail}
+				</li>
+				<li style="margin: 15px 0px;">
+					Домашня адреса: ${data.homeAddress}
+				</li>
+			</ul>
+		</div>`
 	const textOutput = `Додано нового учня: ${data.name}. Заяву подав: ${data.applicantName}. Електронна пошта: ${data.contactEmail}`
 
 	const message = {
