@@ -157,7 +157,7 @@ const sendContactMessage = async data => {
 	const textOutput = `У вас є повідомлення від ${name}. Електронна пошта: ${email} Повідомлення: ${text}`
 
 	const message = {
-		from: process.env.PROD_EMAIL,
+		from: email,
 		to: [process.env.CONTACT_FORM_HANDLER_EMAIL, process.env.TEST_EMAIL],
 		replyTo: email,
 		subject,
