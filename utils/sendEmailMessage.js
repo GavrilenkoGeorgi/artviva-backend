@@ -151,7 +151,7 @@ const sendContactMessage = async data => {
 				Повідомлення: ${text}
 			</li>
 			<li>
-				Відповісти ${name} <a href="mailto:info@artviva.school?subject=Питання%20про%20навчання">${email}</a>
+				Відповісти ${name} <a href="mailto:${email}?subject=Питання%20про%20навчання">${email}</a>
 			</>
 		</ul>`
 	const textOutput = `У вас є повідомлення від ${name}. Електронна пошта: ${email} Повідомлення: ${text}`
@@ -159,6 +159,7 @@ const sendContactMessage = async data => {
 	const message = {
 		from: process.env.PROD_EMAIL,
 		to: [process.env.CONTACT_FORM_HANDLER_EMAIL, process.env.TEST_EMAIL],
+		replyTo: email,
 		subject,
 		htmlOutput,
 		textOutput
