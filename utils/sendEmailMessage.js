@@ -159,7 +159,7 @@ const sendContactMessage = async data => {
 	const message = {
 		from: email,
 		to: [process.env.CONTACT_FORM_HANDLER_EMAIL, process.env.TEST_EMAIL],
-		replyTo: email,
+		'replyTo': email,
 		subject,
 		htmlOutput,
 		textOutput
