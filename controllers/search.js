@@ -19,7 +19,7 @@ searchRouter.post('/teachers', async (request, response, next) => {
 		}
 
 		const teachers = await Teacher
-			.find({ name: { $regex: request.body.value, $options: 'ig' } })
+			.find({ name: { $regex: request.body.value, $options: 'i' } })
 		response.send(teachers.map(teacher => teacher.name))
 
 	} catch (exception) {
@@ -45,7 +45,7 @@ searchRouter.post('/users', async (request, response, next) => {
 		})
 
 		const users = await User
-			.find({ email: { $regex: query, $options: 'ig' } })
+			.find({ email: { $regex: query, $options: 'i' } })
 		response.send(users.map(({ email, name, lastname, _id }) =>
 			({ email, name, lastname, id: _id })))// this looks strange
 
@@ -75,7 +75,7 @@ searchRouter.post('/pupils', async (request, response, next) => {
 		}
 
 		const pupils = await Pupil
-			.find({ name: { $regex: request.body.value, $options: 'ig' } })
+			.find({ name: { $regex: request.body.value, $options: 'i' } })
 		response.send(pupils.map(pupil => pupil.name))
 
 	} catch (exception) {
@@ -95,7 +95,7 @@ searchRouter.post('/specialties', async (request, response, next) => {
 		}
 
 		const specialties = await Specialty
-			.find({ title: { $regex: request.body.value, $options: 'ig' } })
+			.find({ title: { $regex: request.body.value, $options: 'i' } })
 		response.send(specialties.map(specialty => specialty.title))
 
 	} catch (exception) {
@@ -135,7 +135,7 @@ searchRouter.get('/users/email/:id', async (request, response, next) => {
 searchRouter.post('/users/lastname', async (request, response, next) => {
 	try { // auth check needed
 		const users = await User
-			.find({ lastname: { $regex: request.body.value, $options: 'ig' } }, 'name middlename lastname email')
+			.find({ lastname: { $regex: request.body.value, $options: 'i' } }, 'name middlename lastname email')
 
 		response.status(200).json(users)
 	} catch (exception) {
