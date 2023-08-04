@@ -166,6 +166,7 @@ describe('Updating school class', () => {
 			.expect(401)
 	})
 
+	// invalid
 	test('fails with status code 400 if invalid ID is given', async () => {
 		const invalidId = '5a3d5da59070081a82a3445'
 
@@ -176,26 +177,28 @@ describe('Updating school class', () => {
 			.expect(400)
 	})
 
-	test('fails with status code 404 if non existent ID is given', async () => {
+	// non-existent!
+	test('fails with status code 404 if non-existent ID is given', async () => {
 		const [ teacher ] = await teacherHelper.teachersInDb()
 		const [ pupil ] = await pupilHelper.pupilsInDb()
 		const [ specialty ] = await specialtyHelper.specialtiesInDb()
 
-		const tempClass = new SchoolClass({
+		const classData = {
 			title: 'Class to Remove',
+			info: 'Test class',
 			teacher: teacher.id,
 			specialty: specialty.id,
 			pupils: [ pupil.id ]
+		}
+
+		const tempClass = new SchoolClass({
+			...classData
 		})
 
-		// save and remove to get ID
-		await tempClass.save()
-		await tempClass.remove()
-
 		await api
-			.put(`${route}/${tempClass.id}`)
+			.put(`${route}/${tempClass._id}`)
 			.set('Authorization', `Bearer ${token}`)
-			.send(tempClass)
+			.send(classData)
 			.expect(404)
 	})
 

@@ -103,7 +103,7 @@ const sampleTeacherData = [
 		payments: [],
 		branches: [],
 		name: 'John Tester Doe',
-		dateOfBirth: '1988-07-13',
+		dateOfBirth: '2000-07-13',
 		employmentDate: '2015-01-01',
 		weekWorkHours: 10,
 		phone: '+38 (050) 555-55-55',
